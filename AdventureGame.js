@@ -14,7 +14,7 @@ console.log("<- Become the new sheriff who defeats the werewolf in the badlands!
 console.log("=================================\n");
 
 // Create variables for player stats
-let playerHealth = 100;
+let playerHealth = 90;
 let playerSilver = 20;
 let currentLocation = "village";
 // other locations include blacksmith, barber, hotel, river, and badlands.
@@ -25,13 +25,14 @@ let firstTimePlaying = true;
 let gameRunning = true;
 let monsterDefense = 5;
 let barberHealingValue = 30;
+let barberMedicine = 10;
 let weaponDamage = 0;
 
 let inventory = [];
 
 if(statusCheck) {
-  console.log("<- You start with a player health score of " + playerHealth + ". ->");
-  console.log("<-    And you start with " + playerSilver + " silver dollars.     ->\n");
+  console.log("<- You start with a player health score of " + playerHealth + " out of 100. ->");
+  console.log("<-        And you start with " + playerSilver + " silver dollars.          ->\n");
 }
 
 console.log("<- You have just disembarked the steamboat to walk up to the village of " + villageName + ". ->\n");
@@ -48,23 +49,36 @@ if((answer1 === "N") || (answer1 === "No") || (answer1 === "n") || (answer1 === 
 }
 else {
     // Get player name using readline-sync
-    console.log("Hi, I'm Clem the Prospector. Are you the new sheriff?\n");
+    console.log("\n<- You are approached by two villagers. ->\n");
+    console.log("Howdy, I'm Clem the Prospector. Are you the new sheriff?\n");
     console.log("Yes! That's the job I'm here for.\n");
     console.log("Heh-Heh! You'd better pray hard to whatever you consider holy!\n");
-    playerName = readline.question("Hi, I'm Edgar the Barber. What is your name, new sheriff? ");
+    playerName = readline.question("Howdy, I'm Edgar the Barber. What is your name, new sheriff? ");
     console.log("Welcome, Sheriff " + playerName + "!  I hope I don't have to do more than cut your hair!\n");
 }
 
-console.log("\n=================================")
+console.log("\n=====================================================================")
 console.log("<-            Places you may go after giving your name:             ->");
 console.log("<-     To remain in the middle of the village, type 'V' or 'v'.     ->");
 console.log("<-     To follow Edgar the Barber to his shop, type 'B' or 'b'.     ->");
-console.log("<-     To go to the Blacksmith shop, type 'K' or 'k'.               ->");
+console.log("<-     To go to Jethro's Blacksmith shop, type 'K' or 'k'.          ->");
 console.log("<-     To go to the Hotel, type 'H' or 'h':                         ->");
 console.log("<-     To head out to the Badlands right away, type 'X' or 'x'      ->\n");
 placeChoice = readline.question("Which of these places to you wish to go? ");
 
 switch(placeChoice) {
+    case "K":
+        currentLocation = "blacksmith";
+        break;
+    case "k":
+        currentLocation = "blacksmith";
+        break;
+    case "G":
+        currentLocation = "generalStore";
+        break;
+    case "g":
+        currentLocation = "generalStore";
+        break;
     case "V":
         currentLocation = "village";
         break;
@@ -76,12 +90,6 @@ switch(placeChoice) {
         break;
     case "b":
         currentLocation = "barber";
-        break;
-    case "K":
-        currentLocation = "blacksmith";
-        break;
-    case "k":
-        currentLocation = "blacksmith";
         break;
     case "H":
         currentLocation = "hotel";
@@ -134,17 +142,90 @@ if(currentLocation === "blacksmith") {
   playerSilver = playerSilver - 6;
   weaponDamage = weaponDamage + 6;
   console.log("So I have " + playerSilver + " silver dollars left and my weaponDamage is " + weaponDamage + ".");
+
+  console.log("<- Where do you want to go next? ->");
+  console.log("<-     To go to the middle of the village, type 'V' or 'v'.     ->");
+  console.log("<-     To go to the Barber shop, type 'B' or 'b'.               ->");
+  console.log("<-     To go to the Hotel, type 'H' or 'h'.                     ->");
+  console.log("<-     To head out to the Badlands now, type 'X' or 'x'  ->");
+  placeChoice = readline.question("Which place to you choose? ");
+
+  switch(placeChoice) {
+    case "V":
+        currentLocation = "village";
+        break;
+    case "v":
+        currentLocation = "village";
+        break;
+    case "B":
+        currentLocation = "barber";
+        break;
+    case "b":
+        currentLocation = "barber";
+        break;
+    case "H":
+        currentLocation = "hotel";
+        break;
+    case "h":
+        currentLocation = "hotel";
+        break;
+    case "X":
+        currentLocation = "badlands";
+        break;
+    case "x":
+        currentLocation = "badlands";
 }
 
 
-console.log("\nExcuse me Mr. Prospector, does the hotel over there have food as well as boarding?\n");
-console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get is whiskey and beer for dinner.");
+}
+
+if(currentLocation === "village") {
+  console.log("\nExcuse me Mr. Prospector and Mr. Barber, does the hotel over there have food as well as boarding?\n");
+  console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get thar is whiskey and beer for dinner.\n");
+  console.log("Any place else?\n");
+  console.log("You can rent out the attic in my Barbershop.\n");
+  console.log("Or go down by the river to the General Store.\n");
+
+  console.log("<- Where do you want to go next? ->");
+  console.log("<-     To stay in the middle of the village, type 'V' or 'v'.     ->");
+  console.log("<-     To go to the Barber shop, type 'B' or 'b'.               ->");
+  console.log("<-     To go to the Hotel, type 'H' or 'h'.                     ->");
+  console.log("<-     To go to the General Store, type 'G' or 'g'              ->");
+
+  placeChoice = readline.question("Which place to you choose? ");
+
+  switch(placeChoice) {
+    case "V":
+        currentLocation = "village";
+        break;
+    case "v":
+        currentLocation = "village";
+        break;
+    case "B":
+        currentLocation = "barber";
+        break;
+    case "b":
+        currentLocation = "barber";
+        break;
+    case "H":
+        currentLocation = "hotel";
+        break;
+    case "h":
+        currentLocation = "hotel";
+        break;
+    case "G":
+        currentLocation = "generalStore";
+        break;
+    case "g":
+        currentLocation = "generalStore";
+        break;
+  }
+
+}
 
 
-console.log("=================================");
-console.log("=================================\n");
+console.log("\n=================================\n");
 
-currentLocation = "hotel";
 
 if(currentLocation === "hotel") {
   console.log("Good evening Sheriff " + playerName + ". I'm Felina the hotel owner.\n");
