@@ -32,11 +32,6 @@ let innkeeperName = "Felina";
 
 let inventory = [];
 
-if(statusCheck) {
-  console.log("<- You start with a player health score of " + playerHealth + " out of 100. ->");
-  console.log("<-        And you start with " + playerSilver + " silver dollars.          ->\n");
-  statusCheck = false;
-}
 
 console.log("<- You have just disembarked the steamboat to walk up to the village of " + villageName + ". ->\n");
 
@@ -49,7 +44,7 @@ answer1 = readline.question("<- Answer, Y or N: ");
 if((answer1 === "N") || (answer1 === "No") || (answer1 === "n") || (answer1 === "no")) {
     playerName = readline.question("< - Choose your name: ");
     console.log("<- Greetings Sheriff " + playerName);
-}
+  }
 else {
     // Get player name using readline-sync
     console.log("\n<- You are approached by two villagers. ->\n");
@@ -60,57 +55,76 @@ else {
     console.log("Welcome, Sheriff " + playerName + "!  I hope I don't have to do more than cut your hair!\n");
 }
 
-console.log("\n=====================================================================")
-console.log("<-            Places you may go after giving your name:             ->");
-console.log("<-     To remain in the middle of the village, type 'V' or 'v'.     ->");
-console.log("<-     To follow Edgar the Barber to his shop, type 'B' or 'b'.     ->");
-console.log("<-     To go to Jethro's Blacksmith shop, type 'K' or 'k'.          ->");
-console.log("<-     To go to the Hotel, type 'H' or 'h':                         ->");
-console.log("<-     To head out to the Badlands right away, type 'L' or 'l'      ->");
-console.log("<-     To exit the game, type 'X or 'x'                             ->\n");
+console.log("\n============================================================");
+console.log("<-       Places you may go after giving your name:          ->");
+console.log("<-     To remain in the middle of the village, type 1.      ->");
+console.log("<-     To follow Edgar the Barber to the Hotel, type 2.     ->");
+console.log("<-     To go to Jethro's Blacksmith shop, type 3.           ->");
+console.log("<-     To go check your status, type 4.                     ->");
+console.log("<-     To head out to the Badlands right away, type 5.      ->");
+console.log("<-     To exit the game, type 0                             ->\n");
 placeChoice = readline.question("Which of these places to you wish to go? ");
 
+if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5')) {
+  placeChoice = Number(placeChoice);
+}
+else {
+    console.log("Need to choose a 0, 1, 2, 3, 4, or 5! Exiting Game.");
+    process.exit(1);
+}
+
 switch(placeChoice) {
-    case "K":
-        currentLocation = "blacksmith";
-        break;
-    case "k":
-        currentLocation = "blacksmith";
-        break;
-    case "G":
-        currentLocation = "generalStore";
-        break;
-    case "g":
-        currentLocation = "generalStore";
-        break;
-    case "V":
-        currentLocation = "village";
-        break;
-    case "v":
-        currentLocation = "village";
-        break;
-    case "B":
-        currentLocation = "barber";
-        break;
-    case "b":
-        currentLocation = "barber";
-        break;
-    case "H":
-        currentLocation = "hotel";
-        break;
-    case "h":
-        currentLocation = "hotel";
-        break;
-    case "L":
-        currentLocation = "badlands";
-        break;
-    case "l":
-        currentLocation = "badlands";
-        break;
-    case "X":
+        case 1:
+            currentLocation = "village";
+            break;
+        case 2:
+            currentLocation = "hotel";
+            break;
+        case 3:
+            currentLocation = "blacksmith";
+            break;
+        case 4:
+            currentLocation = "status";
+            break;
+        case 0:
         process.exit(0);
-    case "x":
+}
+
+if(currentLocation === "status") {
+  console.log("\n<- You start with a player health score of " + playerHealth + " out of 100. ->");
+  console.log("<-        And you start with " + playerSilver + " silver dollars.          ->\n");
+
+   console.log("\n===========================================================");
+   console.log("<-     To remain in the middle of the village, type 1.      ->");
+   console.log("<-     To follow Edgar the Barber to the Hotel, type 2.     ->");
+   console.log("<-     To go to Jethro's Blacksmith shop, type 3.           ->");
+   console.log("<-     To head out to the Badlands right away, type 5.      ->");
+   console.log("<-     To exit the game, type 0                             ->\n");
+   placeChoice = readline.question("Which of these places to you wish to go? ");
+
+if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '5')) {
+  placeChoice = Number(placeChoice);
+}
+else {
+    console.log("Need to choose a 0, 1, 2, 3, or 5! Exiting Game.");
+    process.exit(1);
+}
+
+
+switch(placeChoice) {
+        case 1:
+            currentLocation = "village";
+            break;
+        case 2:
+            currentLocation = "hotel";
+            break;
+        case 3:
+            currentLocation = "blacksmith";
+            break;
+        case 0:
         process.exit(0);
+}
+
 }
 
 console.log("\n=================================");
@@ -151,49 +165,35 @@ if(currentLocation === "blacksmith") {
   playerSilver = playerSilver - 6;
   weaponDamage = weaponDamage + 6;
 
-  inquiry2 = readline.question("<-         Do you wish to check your status, Y or N?       ->");
-  if(inquiry2 === "Y") {
-      console.log("<-     You have " + playerSilver + " silver dollars and weaponDamage of " + weaponDamage + ".     ->");
-      console.log("<-                Your health score is still " + playerHealth + "                        ->.\n");
-   }
+    console.log("\n===========================================================");
+  console.log("<-     To remain in the middle of the village, type 1.      ->");
+  console.log("<-     To go to the Hotel, type 2.                          ->");
+  console.log("<-     To check status, type 4.                             ->");
+  console.log("<-     To head out to the Badlands right away, type 5.      ->");
+  console.log("<-     To exit the game, type 0                             ->\n");
+  placeChoice = readline.question("Which of these places to you wish to go? ");
 
-  console.log("<-             Where do you want to go next?                    ->");
-  console.log("<-     To go to the middle of the village, type 'V' or 'v'.     ->");
-  console.log("<-     To go to the Barber shop, type 'B' or 'b'.               ->");
-  console.log("<-     To go to the Hotel, type 'H' or 'h'.                     ->");
-  console.log("<-     To head out to the Badlands now, type 'L' or 'l'         ->");
-  console.log("<-     To exit the game, type 'X or 'x'                         ->\n");
-  placeChoice = readline.question("Which place to you choose? ");
+if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '4') || (placeChoice === '5')) {
+  placeChoice = Number(placeChoice);
+}
+else {
+    console.log("Need to choose a 0, 1, 2, 4, or 5! Exiting Game.");
+    process.exit(1);
+}
 
-  switch(placeChoice) {
-    case "V":
-        currentLocation = "village";
-        break;
-    case "v":
-        currentLocation = "village";
-        break;
-    case "B":
-        currentLocation = "barber";
-        break;
-    case "b":
-        currentLocation = "barber";
-        break;
-    case "H":
-        currentLocation = "hotel";
-        break;
-    case "h":
-        currentLocation = "hotel";
-        break;
-    case "L":
-        currentLocation = "badlands";
-        break;
-    case "l":
-        currentLocation = "badlands";
-        break;
-    case "X":
-         process.exit(0);
-    case "x":
-         process.exit(0);
+
+switch(placeChoice) {
+        case 1:
+            currentLocation = "village";
+            break;
+        case 2:
+            currentLocation = "hotel";
+            break;
+        case 4:
+            currentLocation = "status";
+            break;
+        case 0:
+        process.exit(0);
 }
 
 
@@ -203,43 +203,40 @@ if(currentLocation === "village") {
   console.log("\nExcuse me Mr. Prospector and Mr. Barber, does the hotel over there have food as well as boarding?\n");
   console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get thar is whiskey and beer for dinner.\n");
   console.log("Any place else?\n");
-  console.log("You can rent out the attic in my Barbershop.\n");
-  console.log("Or go down by the river to the General Store.\n");
+  console.log("I wouldn't recommend heading out to the badlands yet.\n");
+  console.log("But you could go down by the river to the General Store.\n");
 
-  console.log("<- Where do you want to go next? ->");
-  console.log("<-     To stay in the middle of the village, type 'V' or 'v'.     ->");
-  console.log("<-     To go to the Barber shop, type 'B' or 'b'.               ->");
-  console.log("<-     To go to the Hotel, type 'H' or 'h'.                     ->");
-  console.log("<-     To go to the General Store, type 'G' or 'g'              ->");
+     console.log("\n========================================================");
+  console.log("<-     To follow the Barber to the Hotel, type 2           ->");
+  console.log("<-     To go to the Blacksmith shop, type 3                ->");
+  console.log("<-     To check status, type 4                             ->");
+  console.log("<-     To head out to the Badlands right away, type 5      ->");
+  console.log("<-     To exit the game, type 0                            ->\n");
+  placeChoice = readline.question("Which of these places to you wish to go? ");
 
-  placeChoice = readline.question("Which place to you choose? ");
+if((placeChoice === '0') || (placeChoice === '2') || (placeChoice == '3') || (placeChoice === '4') || (placeChoice === '5')) {
+  placeChoice = Number(placeChoice);
+}
+else {
+    console.log("Need to choose a 0, 2, 3, 4, or 5!! Exiting Game.");
+    process.exit(1);
+    
+}
 
-  switch(placeChoice) {
-    case "V":
-        currentLocation = "village";
-        break;
-    case "v":
-        currentLocation = "village";
-        break;
-    case "B":
-        currentLocation = "barber";
-        break;
-    case "b":
-        currentLocation = "barber";
-        break;
-    case "H":
-        currentLocation = "hotel";
-        break;
-    case "h":
-        currentLocation = "hotel";
-        break;
-    case "G":
-        currentLocation = "generalStore";
-        break;
-    case "g":
-        currentLocation = "generalStore";
-        break;
-  }
+
+switch(placeChoice) {
+        case 2:
+            currentLocation = "hotel";
+            break;
+        case 3:
+            currentLocation = "blacksmith";
+        case 4:
+            currentLocation = "status";
+            break;
+        case 0:
+        process.exit(0);
+}
+
 
 }
 
