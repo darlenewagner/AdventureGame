@@ -43,6 +43,7 @@ let barberHealingValue = 30;
 let barberMedicine = 10;
 let weaponDamage = 0;
 let visitedBlacksmith = false;
+let wildman = true;
 let blacksmithName = "Jethro";
 let innkeeperName = "Felina";
 
@@ -217,42 +218,47 @@ while(gameRunning)
 
  
   if(currentLocation === "badlands") {
-    console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
-    console.log("<-              The sun is about to set ...                        ->");
-    console.log("<-   Suddenly, a wildman pounces on you from behind a boulder!      ->");
-    console.log("<-                     The Battle Begins!!!                         ->");
-    if(visitedBlacksmith){  
-      console.log("<-            You fire your revolver and hit the wildman!            ->");
-      weaponDamage = weaponDamage - 1;
-      monsterDefense = monsterDefense - 1;
+    if(wildman) {
+     console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
+     console.log("<-              The sun is about to set ...                        ->");
+     console.log("<-   Suddenly, a wildman pounces on you from behind a boulder!      ->");
+     console.log("<-                     The Battle Begins!!!                         ->");
+     if(visitedBlacksmith){  
+       console.log("<-            You fire your revolver and hit the wildman!            ->");
+       weaponDamage = weaponDamage - 1;
+       monsterDefense = monsterDefense - 1;
 
-      console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+       console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
 
-      playerHealth = playerHealth - 20;
+       playerHealth = playerHealth - 20;
 
-      while(monsterDefense > 0) {
-          console.log("<-            You fire and hit the wildman again!            ->");
-          weaponDamage = weaponDamage - 1;
-          monsterDefense = monsterDefense - 1;
-          if(monsterDefense >= 3){
-              console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
-              playerHealth = playerHealth - 30;
-          }
-       }
-       console.log("<-     The wildman is dead, but you are seriously injured!     ->");
-       console.log("<-       You must return to the village before nightfall!      ->");
+       while(monsterDefense > 0) {
+           console.log("<-            You fire and hit the wildman again!            ->");
+           weaponDamage = weaponDamage - 1;
+           monsterDefense = monsterDefense - 1;
+           if(monsterDefense >= 3){
+               console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
+               playerHealth = playerHealth - 30;
+           }
+        } 
+        wildman = false;
+        console.log("<-     The wildman is dead, but you are seriously injured!     ->");
+        console.log("<-       You must return to the village before nightfall!      ->");
+     }
+     else { 
+           console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+           playerHealth = playerHealth - 20;
+           while(playerHealth > 0) {
+               console.log("<-      The wildman hits you with his club again!      ->");
+               playerHealth = playerHealth - 30;
+           }
+         console.log("<-     You are now dead and nightfall is approaching!     ->");
+         console.log("<-         Coyotes will devour your body!                 ->");
+         gameRunning = false;
+     }
     }
-    else { 
-          console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
-          playerHealth = playerHealth - 20;
-          while(playerHealth > 0) {
-              console.log("<-      The wildman hits you with his club again!      ->");
-              playerHealth = playerHealth - 30;
-          }
-        console.log("<-     You are now dead and nightfall is approaching!     ->");
-        console.log("<-         Coyotes will devour your body!                 ->");
-        gameRunning = false;
-
+    else {
+        console.log("<- The wildman is dead.  Return to the village ... ->");
     }
 
    }
