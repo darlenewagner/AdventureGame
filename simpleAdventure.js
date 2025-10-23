@@ -76,18 +76,20 @@ else {
 console.log("\n============================================================");
 console.log("<-       Places you may go after giving your name:          ->");
 console.log("<-     To remain in the middle of the village, type 1.      ->");
-console.log("<-     To follow Edgar the Barber to the Hotel, type 2.     ->");
-console.log("<-     To go to Jethro's Blacksmith shop, type 3.           ->");
-console.log("<-     To go check your status, type 4.                     ->");
-console.log("<-     To head out to the Badlands right away, type 5.      ->");
+console.log("<-     To go to the Barbershop, type 2.                     ->");
+console.log("<-     To go to the Blacksmith shop, type 3.                ->");
+console.log("<-     To go to the Hotel, type 4.                          ->");
+console.log("<-     To go to the General Store, type 5.                  ->");
+console.log("<-     To go check your status and inventory, type 6.       ->");
+console.log("<-     To head out to the Badlands right away, type 7.      ->");
 console.log("<-     To exit the game, type 0                             ->\n");
 placeChoice = readline.question("Which of these places to you wish to go? ");
 
-if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5')) {
+if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') || (placeChoice === '7')) {
   placeChoice = Number(placeChoice);
 }
 else {
-    console.log("Need to choose a 0, 1, 2, 3, 4, or 5! Exiting Game.");
+    console.log("Need to choose a 0, 1, 2, 3, 4, 5, 6, or 7! Exiting Game.");
     process.exit(1);
 }
 
@@ -105,10 +107,18 @@ switch(placeChoice) {
             gameRunning = true;
             break;
         case 4:
-            currentLocation = "status";
+            currentLocation = "hotel";
             gameRunning = true;
             break;
         case 5:
+            currentLocation = "generalStore";
+            gameRunning = true;
+            break;
+        case 6:
+            currentLocation = "status";
+            gameRunning = true;
+            break;
+        case 7:
             currentLocation = "badlands";
             gameRunning = true;
             break;
@@ -249,21 +259,23 @@ while(gameRunning)
 
   if(gameRunning) {
      console.log("\n===========================================================");
-     console.log("<-     To go to the middle of the village, type 1      ->");
-     console.log("<-     To go to the Hotel, type 2                          ->");
-     console.log("<-     To visit the blacksmith, type 3                     ->");
-     console.log("<-     To check status, type 4                             ->");
-     console.log("<-     To head out to the Badlands, type 5                 ->");
-     console.log("<-     To exit the game, type 0                            ->\n");
+     console.log("<-     To go to the middle of the village, type 1           ->");
+     console.log("<-     To go to the Barbershop, type 2.                     ->");
+     console.log("<-     To go to the Blacksmith shop, type 3.                ->");
+     console.log("<-     To go to the Hotel, type 4.                          ->");
+     console.log("<-     To go to the General Store, type 5.                  ->");
+     console.log("<-     To go check your status and inventory, type 6.       ->");
+     console.log("<-     To head out to the Badlands right away, type 7.      ->");
+     console.log("<-     To exit the game, type 0                             ->\n");
      placeChoice = readline.question("Which of these places to you wish to go? ");
 
-if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5')) 
+if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') || (placeChoice === '7')) 
     {
        placeChoice = Number(placeChoice);
     }
 else
     {
-      console.log("Need to choose a 0, 1, 2, 3, 4, or 5! Exiting Game.");
+      console.log("Need to choose a 0, 1, 2, 3, 4, 5, 6, or 7! Exiting Game.");
       process.exit(1);
     }
 
@@ -279,9 +291,17 @@ switch(placeChoice)
             currentLocation = "blacksmith";
             break;
         case 4:
-            currentLocation = "status";
+            currentLocation = "hotel";
+            gameRunning = true;
             break;
         case 5:
+            currentLocation = "generalStore";
+            gameRunning = true;
+            break;
+        case 6:
+            currentLocation = "status";
+            break;
+        case 7:
             currentLocation = "badlands";
             break;
         case 0:
