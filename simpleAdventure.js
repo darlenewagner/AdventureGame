@@ -72,26 +72,42 @@ else {
     console.log("Welcome, Sheriff " + playerName + "!  I hope I don't have to do more than cut your hair!\n");
 }
 
-//* INITIALIZING CHOICES *
+let correctChoice = false;
 
-console.log("\n============================================================");
-console.log("<-       Places you may go after giving your name:          ->");
-console.log("<-     To remain in the middle of the village, type 1.      ->");
-console.log("<-     To go to the Barbershop, type 2.                     ->");
-console.log("<-     To go to the Blacksmith shop, type 3.                ->");
-console.log("<-     To go to the Hotel, type 4.                          ->");
-console.log("<-     To go to the General Store, type 5.                  ->");
-console.log("<-     To go check your status and inventory, type 6.       ->");
-console.log("<-     To head out to the Badlands right away, type 7.      ->");
-console.log("<-     To exit the game, type 0                             ->\n");
-placeChoice = readline.question("Which of these places to you wish to go? ");
+//* INITIALIZING CHOICES *
+while(correctChoice == false) {
+try {
+  console.log("\n============================================================");
+  console.log("<-       Places you may go after giving your name:          ->");
+  console.log("<-     To remain in the middle of the village, type 1.      ->");
+  console.log("<-     To go to the Barbershop, type 2.                     ->");
+  console.log("<-     To go to the Blacksmith shop, type 3.                ->");
+  console.log("<-     To go to the Hotel, type 4.                          ->");
+  console.log("<-     To go to the General Store, type 5.                  ->");
+  console.log("<-     To go check your status and inventory, type 6.       ->");
+  console.log("<-     To head out to the Badlands right away, type 7.      ->");
+  console.log("<-     To exit the game, type 0                             ->\n");
+  placeChoice = readline.question("Which of these places to you wish to go? ");
 
 if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') || (placeChoice === '7')) {
   placeChoice = Number(placeChoice);
+  correctChoice = true;
+  }
+else if(isNaN(placeChoice)){
+    throw "Please choose a valid number between 0 and 7!";
+  }
+else if(placeChoice.trim() == ""){
+    throw "Cannot enter a blank space or return without a number!";
 }
 else {
-    console.log("Need to choose a 0, 1, 2, 3, 4, 5, 6, or 7! Exiting Game.");
-    process.exit(1);
+    throw "The number chosen must be 0, 1, 2, 3, 4, 5, 6, or 7";
+    //process.exit(1);
+   }
+ }
+catch(error)
+ {
+    console.log("\nError: ", error);
+ }
 }
 
 switch(placeChoice) {
@@ -150,14 +166,14 @@ while(gameRunning)
      console.log("Greetings, Blacksmith, are you selling any weapons?\n");
      console.log("Yes, I have just the thing for you...");
      console.log("It's a six-shot blackpowder revolver.");
-     console.log("Of course, it will cost you eight silver dollars!");
+     console.log("Of course, it will cost you six silver dollars!");
      console.log("\nThat's pricey for such an old revolver!\n");
      console.log("We're at the end of the boatman's trade route. Buy it or leave it!\n");
      console.log("OK! I'll buy it.");
      // update visitedBlacksmith to true to avoid coming back and losing too much silver
      visitedBlacksmith = true;
      // decrement playerSilver to pay for revolver  
-     playerSilver = playerSilver - 8;
+     playerSilver = playerSilver - 6;
      console.log("What about bullets? Right now, this gun only does a damage of " + weaponDamage + ".");
      let inquiry1 = "";
      inquiry1 = readline.question("(Ask the Blacksmith about ammunition!)--> ");
@@ -188,6 +204,7 @@ while(gameRunning)
 
 
   if(currentLocation === "village") {
+    console.log("=== MIDDLE OF VILLAGE ===");
     console.log("\nExcuse me Mr. Prospector and Mr. Barber, does the hotel over there have food as well as boarding?\n");
     console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get thar is whiskey and beer for dinner.\n");
     console.log("Any place else?\n");
@@ -197,6 +214,7 @@ while(gameRunning)
    }
 
   if(currentLocation === "hotel") {
+       console.log("=== HOTEL IN VILLAGE ===");
     console.log("Good evening Sheriff " + playerName + ". I'm Felina the hotel owner.\n");
     console.log("Pleased to make your aquaintance ma'am.\n");
     console.log("I want to help you because if you survive the first week, then you survive!");
@@ -218,6 +236,7 @@ while(gameRunning)
 
  
   if(currentLocation === "badlands") {
+       console.log("=== OUT IN THE BADLANDS ===");
     if(wildman) {
      console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
      console.log("<-              The sun is about to set ...                        ->");
