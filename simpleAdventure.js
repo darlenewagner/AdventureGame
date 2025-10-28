@@ -43,6 +43,11 @@ let barberHealingValue = 30;
 let barberMedicine = 10;
 let weaponDamage = 0;
 let visitedBlacksmith = false;
+let inVillage = true;
+let inBarber = false;
+let inHotel = false;
+let inStore = false;
+let inBadlands = false;
 let wildman = true;
 let blacksmithName = "Jethro";
 let innkeeperName = "Felina";
@@ -208,8 +213,8 @@ while(gameRunning)
     console.log("\nExcuse me Mr. Prospector and Mr. Barber, does the hotel over there have food as well as boarding?\n");
     console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get thar is whiskey and beer for dinner.\n");
     console.log("Any place else?\n");
-    console.log("I wouldn't recommend heading out to the badlands yet.\n");
-    console.log("But you could go down by the river to the General Store.\n");
+    console.log("I wouldn't recommend heading out to the badlands yet, but you can spend the night in the attic of my Barbershop.\n");
+    console.log("You could go down by the river to the General Store.\n");
 
    }
 
@@ -283,20 +288,37 @@ while(gameRunning)
    }
 
   if(gameRunning) {
-     console.log("\n===========================================================");
-     console.log("<-     To go to the middle of the village, type 1           ->");
-     console.log("<-     To go to the Barbershop, type 2.                     ->");
-     console.log("<-     To go to the Blacksmith shop, type 3.                ->");
-     console.log("<-     To go to the Hotel, type 4.                          ->");
-     console.log("<-     To go to the General Store, type 5.                  ->");
-     console.log("<-     To go check your status and inventory, type 6.       ->");
-     console.log("<-     To head out to the Badlands right away, type 7.      ->");
-     console.log("<-     To exit the game, type 0                             ->\n");
-     placeChoice = readline.question("Which of these places to you wish to go? ");
-
+    if(currentLocation === "village") {   
+       console.log("\n===========================================================");
+       //console.log("<-     To go to the middle of the village, type 1           ->");
+       console.log("<-     To go to the Barbershop, type 2.                     ->");
+       console.log("<-     To go to the Blacksmith shop, type 3.                ->");
+       console.log("<-     To go to the Hotel, type 4.                          ->");
+       console.log("<-     To go to the General Store, type 5.                  ->");
+       console.log("<-     To go check your status and inventory, type 6.       ->");
+       console.log("<-     To head out to the Badlands right away, type 7.      ->");
+       console.log("<-     To exit the game, type 0                             ->\n");
+     }
+     else {
+       console.log("\n===========================================================");
+       console.log("<-     To go to the middle of the village, type 1           ->");
+       console.log("<-     To go to the Barbershop, type 2.                     ->");
+       console.log("<-     To go to the Blacksmith shop, type 3.                ->");
+       console.log("<-     To go to the Hotel, type 4.                          ->");
+       console.log("<-     To go to the General Store, type 5.                  ->");
+       console.log("<-     To go check your status and inventory, type 6.       ->");
+       console.log("<-     To head out to the Badlands right away, type 7.      ->");
+       console.log("<-     To exit the game, type 0                             ->\n");
+      }
+      placeChoice = readline.question("Which of these places to you wish to go? ");
+    
 if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') || (placeChoice === '7')) 
     {
        placeChoice = Number(placeChoice);
+    }
+else if(((placeChoice === '0') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') || (placeChoice === '7')) && (currentLocation === "village")){
+             placeChoice = Number(placeChoice);
+             console.log("## Leaving the middle of the village ##");
     }
 else
     {
