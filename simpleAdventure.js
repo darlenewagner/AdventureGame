@@ -286,49 +286,67 @@ while(gameRunning)
     }
 
    }
+correctChoice = false;
 
-  if(gameRunning) {
-    if(currentLocation === "village") {   
-       console.log("\n===========================================================");
-       //console.log("<-     To go to the middle of the village, type 1           ->");
-       console.log("<-     To go to the Barbershop, type 2.                     ->");
-       console.log("<-     To go to the Blacksmith shop, type 3.                ->");
-       console.log("<-     To go to the Hotel, type 4.                          ->");
-       console.log("<-     To go to the General Store, type 5.                  ->");
-       console.log("<-     To go check your status and inventory, type 6.       ->");
-       console.log("<-     To head out to the Badlands right away, type 7.      ->");
-       console.log("<-     To exit the game, type 0                             ->\n");
-     }
-     else {
-       console.log("\n===========================================================");
-       console.log("<-     To go to the middle of the village, type 1           ->");
-       console.log("<-     To go to the Barbershop, type 2.                     ->");
-       console.log("<-     To go to the Blacksmith shop, type 3.                ->");
-       console.log("<-     To go to the Hotel, type 4.                          ->");
-       console.log("<-     To go to the General Store, type 5.                  ->");
-       console.log("<-     To go check your status and inventory, type 6.       ->");
-       console.log("<-     To head out to the Badlands right away, type 7.      ->");
-       console.log("<-     To exit the game, type 0                             ->\n");
+while(correctChoice == false)
+{
+ try {  
+     if(currentLocation === "village") {   
+        console.log("\n===========================================================");
+        //console.log("<-     To go to the middle of the village, type 1           ->");
+        console.log("<-     To go to the Barbershop, type 2.                     ->");
+        console.log("<-     To go to the Blacksmith shop, type 3.                ->");
+        console.log("<-     To go to the Hotel, type 4.                          ->");
+        console.log("<-     To go to the General Store, type 5.                  ->");
+        console.log("<-     To go check your status and inventory, type 6.       ->");
+        console.log("<-     To head out to the Badlands right away, type 7.      ->");
+        console.log("<-     To exit the game, type 0                             ->\n");
       }
-      placeChoice = readline.question("Which of these places to you wish to go? ");
+      else {
+        console.log("\n===========================================================");
+        console.log("<-     To go to the middle of the village, type 1           ->");
+        console.log("<-     To go to the Barbershop, type 2.                     ->");
+        console.log("<-     To go to the Blacksmith shop, type 3.                ->");
+        console.log("<-     To go to the Hotel, type 4.                          ->");
+        console.log("<-     To go to the General Store, type 5.                  ->");
+        console.log("<-     To go check your status and inventory, type 6.       ->");
+        console.log("<-     To head out to the Badlands right away, type 7.      ->");
+        console.log("<-     To exit the game, type 0                             ->\n");
+       }
+       placeChoice = readline.question("Which of these places to you wish to go? ");
     
-if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
- (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
+ if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
+  (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
   (placeChoice === '6') || (placeChoice === '7')) && (currentLocation !== "village")) 
-    {
-       placeChoice = Number(placeChoice);
-    }
-else if(((placeChoice === '0') || (placeChoice === '2') || (placeChoice === '3') ||
- (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') ||
+     {
+        placeChoice = Number(placeChoice);
+        correctChoice = true;
+        console.log("## Not in the village ##");
+     }
+ else if(((placeChoice === '0') || (placeChoice === '2') || (placeChoice === '3') ||
+  (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') ||
   (placeChoice === '7')) && (currentLocation === "village")){
              placeChoice = Number(placeChoice);
+             correctChoice = true;
              console.log("## Leaving the middle of the village ##");
+     }
+ else if(isNaN(placeChoice)){
+     throw "Please choose a valid number between 0 and 7!";
+   }
+ else if(placeChoice.trim() == ""){
+     throw "Cannot enter a blank space or return without a number!";
     }
-else
-    {
-      console.log("Need to choose a 0, 1, 2, 3, 4, 5, 6, or 7! Exiting Game.");
-      process.exit(1);
-    }
+ else {
+     throw "The number chosen must be 0, 1, 2, 3, 4, 5, 6, or 7";
+     }
+   }
+ catch(error)
+   {
+     console.log("\nError: ", error);
+   }
+
+ }
+
 
 switch(placeChoice) 
    {
@@ -360,4 +378,3 @@ switch(placeChoice)
    }
   }
 
-}
