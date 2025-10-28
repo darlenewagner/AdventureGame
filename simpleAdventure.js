@@ -312,11 +312,15 @@ while(gameRunning)
       }
       placeChoice = readline.question("Which of these places to you wish to go? ");
     
-if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') || (placeChoice === '7')) 
+if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
+ (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
+  (placeChoice === '6') || (placeChoice === '7')) && (currentLocation !== "village")) 
     {
        placeChoice = Number(placeChoice);
     }
-else if(((placeChoice === '0') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') || (placeChoice === '7')) && (currentLocation === "village")){
+else if(((placeChoice === '0') || (placeChoice === '2') || (placeChoice === '3') ||
+ (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') ||
+  (placeChoice === '7')) && (currentLocation === "village")){
              placeChoice = Number(placeChoice);
              console.log("## Leaving the middle of the village ##");
     }
