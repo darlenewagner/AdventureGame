@@ -117,27 +117,27 @@ catch(error)
 switch(placeChoice) {
         case 1:
             currentLocation = "village";
-            previousLocation = "village";
+            //previousLocation = "village";
             gameRunning = true;
             break;
         case 2:
             currentLocation = "barbershop";
-            previousLocation = "barbershop";
+            //previousLocation = "barbershop";
             gameRunning = true;
             break;
         case 3:
             currentLocation = "blacksmith";
-            previousLocation = "blacksmith";
+            //previousLocation = "blacksmith";
             gameRunning = true;
             break;
         case 4:
             currentLocation = "hotel";
-            previousLocation = "hotel";
+            //previousLocation = "hotel";
             gameRunning = true;
             break;
         case 5:
             currentLocation = "generalStore";
-            previousLcation = "generalStore";
+            //previousLcation = "generalStore";
             gameRunning = true;
             break;
         case 6:
@@ -146,7 +146,7 @@ switch(placeChoice) {
             break;
         case 7:
             currentLocation = "badlands";
-            previousLocation = "badlands";
+            //previousLocation = "badlands";
             gameRunning = true;
             break;
         case 0:
@@ -167,9 +167,9 @@ while(gameRunning)
         }
         console.log("<-   And you have a revolver with " + weaponDamage + " silver bullets.   ->\n");
      }
-      if(previousLocation === "village") {
-      currentLocation = previousLocation;
-      }
+         // if(previousLocation === "village") {
+         //  currentLocation = previousLocation;
+         // }
     }
 
 
@@ -348,7 +348,8 @@ while(correctChoice == false)
     
  if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
   (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
-  (placeChoice === '6') || (placeChoice === '7')) && (currentLocation !== "village")) 
+  (placeChoice === '6') || (placeChoice === '7')) && ((currentLocation !== "village") && 
+  (currentLocation !== "hotel") && (currentLocation !== "barbershop"))) 
      {
         placeChoice = Number(placeChoice);
         correctChoice = true;
@@ -361,12 +362,32 @@ while(correctChoice == false)
              correctChoice = true;
             // console.log("## Leaving the middle of the village ##");
      }
+ else if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '3') ||
+  (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6')) && (currentLocation === "barbershop")){
+             placeChoice = Number(placeChoice);
+             correctChoice = true;
+    }
+ else if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
+  (placeChoice === '3') || (placeChoice === '5') || (placeChoice === '6')) && (currentLocation === "hotel")){
+             placeChoice = Number(placeChoice);
+             correctChoice = true;
+             console.log("# Hotel #");
+    }
  else if(isNaN(placeChoice)){
      throw "Please choose a valid number between 0 and 7!";
    }
  else if(placeChoice.trim() == ""){
      throw "Cannot enter a blank space or return without a number!";
     }
+ else if(currentLocation === "village"){
+     throw "The number chosen must be 0, 2, 3, 4, 5, 6, or 7";
+    }
+ else if(currentLocation === "barbershop"){
+     throw "The number chosen must be 0, 1, 3, 4, 5, or 6";
+  }
+  else if(currentLocation === "hotel"){
+     throw "The number chosen must be 0, 1, 2, 3, 5, or 6";
+  }
  else {
          throw "The number chosen must be 0, 1, 2, 3, 4, 5, 6, or 7";
      }
@@ -383,24 +404,24 @@ switch(placeChoice)
    {
         case 1:
             currentLocation = "village";
-            previousLocation = "village";
+            //previousLocation = "village";
             break;
         case 2:
             currentLocation = "barbershop";
-            previousLocation = "barbershop";
+            //previousLocation = "barbershop";
             break;
         case 3:
             currentLocation = "blacksmith";
-            previousLocation = "blacksmith";
+            //previousLocation = "blacksmith";
             break;
         case 4:
             currentLocation = "hotel";
-            previousLocation = "hotel";
+            //previousLocation = "hotel";
             gameRunning = true;
             break;
         case 5:
             currentLocation = "generalStore";
-            previousLocation = "generalStore";
+            //previousLocation = "generalStore";
             gameRunning = true;
             break;
         case 6:
@@ -408,10 +429,9 @@ switch(placeChoice)
             break;
         case 7:
             currentLocation = "badlands";
-            previousLocation = "badlands";
+            //previousLocation = "badlands";
             break;
         case 0:
             gameRunning = false;
    }
   }
-
