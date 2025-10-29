@@ -53,25 +53,63 @@ let inventory = ["empty", "empty", "empty"];
 
 console.log("<- You have just disembarked the steamboat to walk up to the village of " + villageName + ". ->\n");
 
+
+//* Selection of player name or character *
+
+let nameOK = false;
+
 let greetLocals = true;
 let answer1 = "";
 let playerName = "";
 console.log("<- Do you wish to greet any of the villagers? ->");
 answer1 = readline.question("<- Answer, Y or N: ");
 
-if((answer1 === "N") || (answer1 === "No") || (answer1 === "n") || (answer1 === "no")) {
-    playerName = readline.question("< - Choose your name: ");
-    console.log("<- Greetings Sheriff " + playerName);
-  }
-else {
-    // Get player name using readline-sync
-    console.log("\n<- You are approached by two villagers. ->\n");
-    console.log("Howdy, I'm Clem the Prospector. Are you the new sheriff?\n");
-    console.log("Yes! That's the job I'm here for.\n");
-    console.log("Heh-Heh! You'd better pray hard to whatever you consider holy!\n");
-    playerName = readline.question("Howdy, I'm Edgar the Barber. What is your name, new sheriff? ");
-    console.log("Welcome, Sheriff " + playerName + "!  I hope I don't have to do more than cut your hair!\n");
-}
+  if((answer1 === "N") || (answer1 === "No") || (answer1 === "n") || (answer1 === "no")) {
+      
+     while(nameOK == false){
+        try {
+                playerName = readline.question("< - Choose your name: ");
+
+          if(playerName.trim() == ""){
+            throw "Cannot enter a blank space or carriage return as your name.";
+          }
+          else {
+            console.log("<- Greetings Sheriff " + playerName);
+            nameOK = true;
+          }
+        }
+        catch(error) {
+            console.log("Error: ", error);
+        }
+      }
+    }
+   else {
+       // Get player name using readline-sync
+       console.log("\n<- You are approached by two villagers. ->\n");
+       console.log("Howdy, I'm Clem the Prospector. Are you the new sheriff?\n");
+       console.log("Yes! That's the job I'm here for.\n");
+       console.log("Heh-Heh! You'd better pray hard to whatever you consider holy!\n");
+
+    while(nameOK == false){
+        try {
+          playerName = readline.question("Howdy, I'm Edgar the Barber. What is your name, new sheriff? ");
+
+           if(playerName.trim() == ""){
+            throw "Cannot enter a blank space or carriage return as your name.";
+           }
+           else {
+           console.log("Welcome, Sheriff " + playerName + "!  I hope I don't have to do more than cut your hair!\n");
+           nameOK = true;
+           }
+        }
+        catch(error) {
+            console.log("Error: ", error);
+        }
+      }
+    }
+ 
+
+//* Initial selection of menu options *
 
 let correctChoice = false;
 
