@@ -32,6 +32,7 @@ console.log("===================================================================
 let playerHealth = 90;
 let playerSilver = 20;
 let currentLocation = "village";
+let previousLocation = "";  // For returning to previous location from 'statusCheck'
 // other locations include blacksmith, barber, hotel, river, and badlands.
 let villageName = "Silver Bluffs";
 let placeChoice = "K";
@@ -43,11 +44,6 @@ let barberHealingValue = 30;
 let barberMedicine = 10;
 let weaponDamage = 0;
 let visitedBlacksmith = false;
-let inVillage = true;
-let inBarber = false;
-let inHotel = false;
-let inStore = false;
-let inBadlands = false;
 let wildman = true;
 let blacksmithName = "Jethro";
 let innkeeperName = "Felina";
@@ -94,7 +90,10 @@ try {
   console.log("<-     To exit the game, type 0                             ->\n");
   placeChoice = readline.question("Which of these places to you wish to go? ");
 
-if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') || (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') || (placeChoice === '7')) {
+if((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
+ (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
+  (placeChoice === '6') || (placeChoice === '7'))
+     {
   placeChoice = Number(placeChoice);
   correctChoice = true;
   }
@@ -118,22 +117,27 @@ catch(error)
 switch(placeChoice) {
         case 1:
             currentLocation = "village";
+            previousLocation = "village";
             gameRunning = true;
             break;
         case 2:
-            currentLocation = "hotel";
+            currentLocation = "barbershop";
+            previousLocation = "barbershop";
             gameRunning = true;
             break;
         case 3:
             currentLocation = "blacksmith";
+            previousLocation = "blacksmith";
             gameRunning = true;
             break;
         case 4:
             currentLocation = "hotel";
+            previousLocation = "hotel";
             gameRunning = true;
             break;
         case 5:
             currentLocation = "generalStore";
+            previousLcation = "generalStore";
             gameRunning = true;
             break;
         case 6:
@@ -142,6 +146,7 @@ switch(placeChoice) {
             break;
         case 7:
             currentLocation = "badlands";
+            previousLocation = "badlands";
             gameRunning = true;
             break;
         case 0:
@@ -162,7 +167,9 @@ while(gameRunning)
         }
         console.log("<-   And you have a revolver with " + weaponDamage + " silver bullets.   ->\n");
      }
-
+      if(previousLocation === "village") {
+      currentLocation = previousLocation;
+      }
     }
 
 
@@ -206,9 +213,7 @@ while(gameRunning)
         console.log("<- You do not have enough silver dollars to visit the blacksmith again. ->");
         console.log("<-                 Please choose another location.                      ->\n");
     }
-
-
-  if(currentLocation === "village") {
+  else if(currentLocation === "village") {
     console.log("=== MIDDLE OF VILLAGE ===");
     console.log("\nExcuse me Mr. Prospector and Mr. Barber, does the hotel over there have food as well as boarding?\n");
     console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get thar is whiskey and beer for dinner.\n");
@@ -217,9 +222,11 @@ while(gameRunning)
     console.log("You could go down by the river to the General Store.\n");
 
    }
-
-  if(currentLocation === "hotel") {
-       console.log("=== HOTEL IN VILLAGE ===");
+ else if(currentLocation === "barbershop"){
+    console.log("=== BARBERSHOP IN VILLAGE ===");
+  }
+else if(currentLocation === "hotel") {
+    console.log("=== HOTEL IN VILLAGE ===");
     console.log("Good evening Sheriff " + playerName + ". I'm Felina the hotel owner.\n");
     console.log("Pleased to make your aquaintance ma'am.\n");
     console.log("I want to help you because if you survive the first week, then you survive!");
@@ -238,9 +245,10 @@ while(gameRunning)
     console.log("Yes, and a lot more than " + monsterDefense + " to kill the werewolf.");
     console.log("And I can lose 20 health just by escaping one of these monsters while Edgar can give me " + barberHealingValue + " health points?\n");
    }
-
- 
-  if(currentLocation === "badlands") {
+  else if(currentLocation === "generalStore"){
+    console.log("=== GENERALSTORE IN VILLAGE ===");
+  }
+  else if(currentLocation === "badlands") {
        console.log("=== OUT IN THE BADLANDS ===");
     if(wildman) {
      console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
@@ -302,6 +310,29 @@ while(correctChoice == false)
         console.log("<-     To head out to the Badlands right away, type 7.      ->");
         console.log("<-     To exit the game, type 0                             ->\n");
       }
+      else if(currentLocation === "barbershop") {
+        console.log("\n===========================================================");
+        console.log("<-     To go to the middle of the village, type 1           ->");
+        // console.log("<-     To go to the Barbershop, type 2.                     ->");
+        console.log("<-     To go to the Blacksmith shop, type 3.                ->");
+        console.log("<-     To go to the Hotel, type 4.                          ->");
+        console.log("<-     To go to the General Store, type 5.                  ->");
+        console.log("<-     To go check your status and inventory, type 6.       ->");
+        // console.log("<-     To head out to the Badlands right away, type 7.      ->");
+        console.log("<-     To exit the game, type 0                             ->\n");
+      }
+      else if(currentLocation === "hotel") {
+        console.log("\n===========================================================");
+        console.log("<-     To go to the middle of the village, type 1           ->");
+        console.log("<-     To go to the Barbershop, type 2.                     ->");
+        console.log("<-     To go to the Blacksmith shop, type 3.                ->");
+        // console.log("<-     To go to the Hotel, type 4.                          ->");
+        console.log("<-     To go to the General Store, type 5.                  ->");
+        console.log("<-     To go check your status and inventory, type 6.       ->");
+        // console.log("<-     To head out to the Badlands right away, type 7.      ->");
+        console.log("<-     To exit the game, type 0                             ->\n");
+
+      }
       else {
         console.log("\n===========================================================");
         console.log("<-     To go to the middle of the village, type 1           ->");
@@ -321,14 +352,14 @@ while(correctChoice == false)
      {
         placeChoice = Number(placeChoice);
         correctChoice = true;
-        console.log("## Not in the village ##");
+        // console.log("## Not in the village ##");
      }
  else if(((placeChoice === '0') || (placeChoice === '2') || (placeChoice === '3') ||
   (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') ||
   (placeChoice === '7')) && (currentLocation === "village")){
              placeChoice = Number(placeChoice);
              correctChoice = true;
-             console.log("## Leaving the middle of the village ##");
+            // console.log("## Leaving the middle of the village ##");
      }
  else if(isNaN(placeChoice)){
      throw "Please choose a valid number between 0 and 7!";
@@ -337,7 +368,7 @@ while(correctChoice == false)
      throw "Cannot enter a blank space or return without a number!";
     }
  else {
-     throw "The number chosen must be 0, 1, 2, 3, 4, 5, 6, or 7";
+         throw "The number chosen must be 0, 1, 2, 3, 4, 5, 6, or 7";
      }
    }
  catch(error)
@@ -352,19 +383,24 @@ switch(placeChoice)
    {
         case 1:
             currentLocation = "village";
+            previousLocation = "village";
             break;
         case 2:
-            currentLocation = "hotel";
+            currentLocation = "barbershop";
+            previousLocation = "barbershop";
             break;
         case 3:
             currentLocation = "blacksmith";
+            previousLocation = "blacksmith";
             break;
         case 4:
             currentLocation = "hotel";
+            previousLocation = "hotel";
             gameRunning = true;
             break;
         case 5:
             currentLocation = "generalStore";
+            previousLocation = "generalStore";
             gameRunning = true;
             break;
         case 6:
@@ -372,6 +408,7 @@ switch(placeChoice)
             break;
         case 7:
             currentLocation = "badlands";
+            previousLocation = "badlands";
             break;
         case 0:
             gameRunning = false;
