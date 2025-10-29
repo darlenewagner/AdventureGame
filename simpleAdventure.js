@@ -53,25 +53,63 @@ let inventory = ["empty", "empty", "empty"];
 
 console.log("<- You have just disembarked the steamboat to walk up to the village of " + villageName + ". ->\n");
 
+
+//* Selection of player name or character *
+
+let nameOK = false;
+
 let greetLocals = true;
 let answer1 = "";
 let playerName = "";
 console.log("<- Do you wish to greet any of the villagers? ->");
 answer1 = readline.question("<- Answer, Y or N: ");
 
-if((answer1 === "N") || (answer1 === "No") || (answer1 === "n") || (answer1 === "no")) {
-    playerName = readline.question("< - Choose your name: ");
-    console.log("<- Greetings Sheriff " + playerName);
-  }
-else {
-    // Get player name using readline-sync
-    console.log("\n<- You are approached by two villagers. ->\n");
-    console.log("Howdy, I'm Clem the Prospector. Are you the new sheriff?\n");
-    console.log("Yes! That's the job I'm here for.\n");
-    console.log("Heh-Heh! You'd better pray hard to whatever you consider holy!\n");
-    playerName = readline.question("Howdy, I'm Edgar the Barber. What is your name, new sheriff? ");
-    console.log("Welcome, Sheriff " + playerName + "!  I hope I don't have to do more than cut your hair!\n");
-}
+  if((answer1 === "N") || (answer1 === "No") || (answer1 === "n") || (answer1 === "no")) {
+      
+     while(nameOK == false){
+        try {
+                playerName = readline.question("< - Choose your name: ");
+
+          if(playerName.trim() == ""){
+            throw "Cannot enter a blank space or carriage return as your name.";
+          }
+          else {
+            console.log("<- Greetings Sheriff " + playerName);
+            nameOK = true;
+          }
+        }
+        catch(error) {
+            console.log("Error: ", error);
+        }
+      }
+    }
+   else {
+       // Get player name using readline-sync
+       console.log("\n<- You are approached by two villagers. ->\n");
+       console.log("Howdy, I'm Clem the Prospector. Are you the new sheriff?\n");
+       console.log("Yes! That's the job I'm here for.\n");
+       console.log("Heh-Heh! You'd better pray hard to whatever you consider holy!\n");
+
+    while(nameOK == false){
+        try {
+          playerName = readline.question("Howdy, I'm Edgar the Barber. What is your name, new sheriff? ");
+
+           if(playerName.trim() == ""){
+            throw "Cannot enter a blank space or carriage return as your name.";
+           }
+           else {
+           console.log("Welcome, Sheriff " + playerName + "!  I hope I don't have to do more than cut your hair!\n");
+           nameOK = true;
+           }
+        }
+        catch(error) {
+            console.log("Error: ", error);
+        }
+      }
+    }
+ 
+
+//* Initial selection of menu options *
 
 let correctChoice = false;
 
@@ -117,27 +155,27 @@ catch(error)
 switch(placeChoice) {
         case 1:
             currentLocation = "village";
-            previousLocation = "village";
+            //previousLocation = "village";
             gameRunning = true;
             break;
         case 2:
             currentLocation = "barbershop";
-            previousLocation = "barbershop";
+            //previousLocation = "barbershop";
             gameRunning = true;
             break;
         case 3:
             currentLocation = "blacksmith";
-            previousLocation = "blacksmith";
+            //previousLocation = "blacksmith";
             gameRunning = true;
             break;
         case 4:
             currentLocation = "hotel";
-            previousLocation = "hotel";
+            //previousLocation = "hotel";
             gameRunning = true;
             break;
         case 5:
             currentLocation = "generalStore";
-            previousLcation = "generalStore";
+            //previousLcation = "generalStore";
             gameRunning = true;
             break;
         case 6:
@@ -146,7 +184,7 @@ switch(placeChoice) {
             break;
         case 7:
             currentLocation = "badlands";
-            previousLocation = "badlands";
+            //previousLocation = "badlands";
             gameRunning = true;
             break;
         case 0:
@@ -167,9 +205,9 @@ while(gameRunning)
         }
         console.log("<-   And you have a revolver with " + weaponDamage + " silver bullets.   ->\n");
      }
-      if(previousLocation === "village") {
-      currentLocation = previousLocation;
-      }
+         // if(previousLocation === "village") {
+         //  currentLocation = previousLocation;
+         // }
     }
 
 
@@ -348,7 +386,8 @@ while(correctChoice == false)
     
  if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
   (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
-  (placeChoice === '6') || (placeChoice === '7')) && (currentLocation !== "village")) 
+  (placeChoice === '6') || (placeChoice === '7')) && ((currentLocation !== "village") && 
+  (currentLocation !== "hotel") && (currentLocation !== "barbershop"))) 
      {
         placeChoice = Number(placeChoice);
         correctChoice = true;
@@ -361,12 +400,32 @@ while(correctChoice == false)
              correctChoice = true;
             // console.log("## Leaving the middle of the village ##");
      }
+ else if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '3') ||
+  (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6')) && (currentLocation === "barbershop")){
+             placeChoice = Number(placeChoice);
+             correctChoice = true;
+    }
+ else if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
+  (placeChoice === '3') || (placeChoice === '5') || (placeChoice === '6')) && (currentLocation === "hotel")){
+             placeChoice = Number(placeChoice);
+             correctChoice = true;
+             console.log("# Hotel #");
+    }
  else if(isNaN(placeChoice)){
      throw "Please choose a valid number between 0 and 7!";
    }
  else if(placeChoice.trim() == ""){
      throw "Cannot enter a blank space or return without a number!";
     }
+ else if(currentLocation === "village"){
+     throw "The number chosen must be 0, 2, 3, 4, 5, 6, or 7";
+    }
+ else if(currentLocation === "barbershop"){
+     throw "The number chosen must be 0, 1, 3, 4, 5, or 6";
+  }
+  else if(currentLocation === "hotel"){
+     throw "The number chosen must be 0, 1, 2, 3, 5, or 6";
+  }
  else {
          throw "The number chosen must be 0, 1, 2, 3, 4, 5, 6, or 7";
      }
@@ -383,24 +442,24 @@ switch(placeChoice)
    {
         case 1:
             currentLocation = "village";
-            previousLocation = "village";
+            //previousLocation = "village";
             break;
         case 2:
             currentLocation = "barbershop";
-            previousLocation = "barbershop";
+            //previousLocation = "barbershop";
             break;
         case 3:
             currentLocation = "blacksmith";
-            previousLocation = "blacksmith";
+            //previousLocation = "blacksmith";
             break;
         case 4:
             currentLocation = "hotel";
-            previousLocation = "hotel";
+            //previousLocation = "hotel";
             gameRunning = true;
             break;
         case 5:
             currentLocation = "generalStore";
-            previousLocation = "generalStore";
+            //previousLocation = "generalStore";
             gameRunning = true;
             break;
         case 6:
@@ -408,10 +467,9 @@ switch(placeChoice)
             break;
         case 7:
             currentLocation = "badlands";
-            previousLocation = "badlands";
+            //previousLocation = "badlands";
             break;
         case 0:
             gameRunning = false;
    }
   }
-
