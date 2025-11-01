@@ -155,27 +155,27 @@ catch(error)
 switch(placeChoice) {
         case 1:
             currentLocation = "village";
-            //previousLocation = "village";
+            previousLocation = "village";
             gameRunning = true;
             break;
         case 2:
             currentLocation = "barbershop";
-            //previousLocation = "barbershop";
+            previousLocation = "barbershop";
             gameRunning = true;
             break;
         case 3:
             currentLocation = "blacksmith";
-            //previousLocation = "blacksmith";
+            previousLocation = "blacksmith";
             gameRunning = true;
             break;
         case 4:
             currentLocation = "hotel";
-            //previousLocation = "hotel";
+            previousLocation = "hotel";
             gameRunning = true;
             break;
         case 5:
             currentLocation = "generalStore";
-            //previousLcation = "generalStore";
+            previousLcation = "generalStore";
             gameRunning = true;
             break;
         case 6:
@@ -184,7 +184,7 @@ switch(placeChoice) {
             break;
         case 7:
             currentLocation = "badlands";
-            //previousLocation = "badlands";
+            previousLocation = "badlands";
             gameRunning = true;
             break;
         case 0:
@@ -197,13 +197,15 @@ while(gameRunning)
   if(currentLocation === "status") {
      console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
      console.log("<-            You have " + playerSilver + " silver dollars.              ->");
+     console.log("<-   And your current location is " + previousLocation + ".");
      if(visitedBlacksmith) {
         for(let i = 0; i < 3; i++)
         {
             disp = i + 1;
             console.log("slot " + disp + ": " + inventory[i]);
         }
-        console.log("<-   And you have a revolver with " + weaponDamage + " silver bullets.   ->\n");
+        console.log("<-   You have a revolver with " + weaponDamage + " silver bullets.   ->\n");
+        
      }
          // if(previousLocation === "village") {
          //  currentLocation = previousLocation;
@@ -322,7 +324,7 @@ else if(currentLocation === "hotel") {
                console.log("<-      The wildman hits you with his club again!      ->");
                playerHealth = playerHealth - 30;
            }
-         console.log("<-     You are now dead and nightfall is approaching!     ->");
+         console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
          console.log("<-         Coyotes will devour your body!                 ->");
          gameRunning = false;
      }
@@ -334,7 +336,7 @@ else if(currentLocation === "hotel") {
    }
 correctChoice = false;
 
-while(correctChoice == false)
+while((correctChoice == false) && (gameRunning))
 {
  try {  
      if(currentLocation === "village") {   
@@ -442,24 +444,24 @@ switch(placeChoice)
    {
         case 1:
             currentLocation = "village";
-            //previousLocation = "village";
+            previousLocation = "village";
             break;
         case 2:
             currentLocation = "barbershop";
-            //previousLocation = "barbershop";
+            previousLocation = "barbershop";
             break;
         case 3:
             currentLocation = "blacksmith";
-            //previousLocation = "blacksmith";
+            previousLocation = "blacksmith";
             break;
         case 4:
             currentLocation = "hotel";
-            //previousLocation = "hotel";
+            previousLocation = "hotel";
             gameRunning = true;
             break;
         case 5:
             currentLocation = "generalStore";
-            //previousLocation = "generalStore";
+            previousLocation = "generalStore";
             gameRunning = true;
             break;
         case 6:
@@ -467,7 +469,7 @@ switch(placeChoice)
             break;
         case 7:
             currentLocation = "badlands";
-            //previousLocation = "badlands";
+            previousLocation = "badlands";
             break;
         case 0:
             gameRunning = false;
