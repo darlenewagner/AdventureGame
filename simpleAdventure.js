@@ -50,7 +50,7 @@ let wildman = true;
 let blacksmithName = "Jethro";
 let innkeeperName = "Felina";
 
-let inventory = ["empty", "empty", "empty"];
+let inventory = ["empty", "empty", "empty", "empty"];
 
 //* Begin declaration of function showStatus() * for showing health, money, location, and inventory *
 
@@ -158,18 +158,19 @@ try {
   (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6')) && (currentLocation === "barbershop")){
              placeChoice = Number(placeChoice);
              correctChoice = true;
+             console.log("# Previously at Barbershop #");
     }
  else if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
   (placeChoice === '3') || (placeChoice === '5') || (placeChoice === '6')) && (currentLocation === "hotel")){
              placeChoice = Number(placeChoice);
              correctChoice = true;
-             console.log("# Hotel #");
+             console.log("# Previously at Hotel #");
     }
  else if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
   (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '6')) && (currentLocation === "generalStore")){
              placeChoice = Number(placeChoice);
              correctChoice = true;
-             console.log("# General Store #");
+             console.log("# Previously at General Store #");
     }
 
  else if(isNaN(placeChoice)){
@@ -204,6 +205,49 @@ try {
 }
 
 //* End declaration of function chooseLocation() *
+
+//* Begin declaration of function movePlayer() *
+
+function movePlayer(placeChoice, currentLocation, previousLocation) 
+ {
+  switch(placeChoice) 
+   {
+        case 1:
+            currentLocation = "village";
+            previousLocation = "village";
+            break;
+        case 2:
+            currentLocation = "barbershop";
+            previousLocation = "barbershop";
+            break;
+        case 3:
+            currentLocation = "blacksmith";
+            previousLocation = "blacksmith";
+            break;
+        case 4:
+            currentLocation = "hotel";
+            previousLocation = "hotel";
+            gameRunning = true;
+            break;
+        case 5:
+            currentLocation = "generalStore";
+            previousLocation = "generalStore";
+            gameRunning = true;
+            break;
+        case 6:
+            currentLocation = "status";
+            break;
+        case 7:
+            currentLocation = "badlands";
+            previousLocation = "badlands";
+            break;
+        case 0:
+            gameRunning = false;
+   }
+   return [currentLocation, previousLocation];
+}
+
+//* End declaration of function movePlayer() *
 
 //* Initiate main for playing game *
 
@@ -487,39 +531,6 @@ while((correctChoice == false) && (gameRunning))
    [placeChoice, correctChoice] =  chooseLocation(currentLocation, atLanding, correctChoice);
 }
 
+   [currentLocation, previousLocation] = movePlayer(placeChoice, currentLocation, previousLocation); 
 
-switch(placeChoice) 
-   {
-        case 1:
-            currentLocation = "village";
-            previousLocation = "village";
-            break;
-        case 2:
-            currentLocation = "barbershop";
-            previousLocation = "barbershop";
-            break;
-        case 3:
-            currentLocation = "blacksmith";
-            previousLocation = "blacksmith";
-            break;
-        case 4:
-            currentLocation = "hotel";
-            previousLocation = "hotel";
-            gameRunning = true;
-            break;
-        case 5:
-            currentLocation = "generalStore";
-            previousLocation = "generalStore";
-            gameRunning = true;
-            break;
-        case 6:
-            currentLocation = "status";
-            break;
-        case 7:
-            currentLocation = "badlands";
-            previousLocation = "badlands";
-            break;
-        case 0:
-            gameRunning = false;
-   }
-  }
+}
