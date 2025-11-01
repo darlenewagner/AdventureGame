@@ -32,7 +32,7 @@ console.log("===================================================================
 let playerHealth = 90;
 let playerSilver = 20;
 let currentLocation = "village";
-let previousLocation = "";  // For returning to previous location from 'statusCheck'
+let previousLocation = "village";  // For returning to previous location from 'statusCheck'
 // other locations include blacksmith, barber, hotel, river, and badlands.
 let villageName = "Silver Bluffs";
 let placeChoice = "K";
@@ -50,6 +50,21 @@ let innkeeperName = "Felina";
 
 let inventory = ["empty", "empty", "empty"];
 
+function checkStatus(playerHealth, playerSilver, previousLocation, visitedBlacksmith, inventory, weaponDamage) {
+      
+     console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
+     console.log("<-            You have " + playerSilver + " silver dollars.              ->");
+     console.log("<-   And your current location is " + previousLocation + ".");
+     if(visitedBlacksmith) {
+        for(let i = 0; i < 3; i++)
+        {
+            disp = i + 1;
+            console.log("slot " + disp + ": " + inventory[i]);
+        }
+        console.log("<-   You have a revolver with " + weaponDamage + " silver bullets.   ->\n");
+        
+     }
+}
 
 console.log("<- You have just disembarked the steamboat to walk up to the village of " + villageName + ". ->\n");
 
@@ -86,7 +101,7 @@ answer1 = readline.question("<- Answer, Y or N: ");
    else {
        // Get player name using readline-sync
        console.log("\n<- You are approached by two villagers. ->\n");
-       console.log("Howdy, I'm Clem the Prospector. Are you the new sheriff?\n");
+       console.log("Howdy! Welcome to " + villageName + ". I'm Clem the Prospector. Are you the new sheriff?\n");
        console.log("Yes! That's the job I'm here for.\n");
        console.log("Heh-Heh! You'd better pray hard to whatever you consider holy!\n");
 
@@ -195,18 +210,8 @@ switch(placeChoice) {
 while(gameRunning) 
 {
   if(currentLocation === "status") {
-     console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
-     console.log("<-            You have " + playerSilver + " silver dollars.              ->");
-     console.log("<-   And your current location is " + previousLocation + ".");
-     if(visitedBlacksmith) {
-        for(let i = 0; i < 3; i++)
-        {
-            disp = i + 1;
-            console.log("slot " + disp + ": " + inventory[i]);
-        }
-        console.log("<-   You have a revolver with " + weaponDamage + " silver bullets.   ->\n");
-        
-     }
+   
+   checkStatus(playerHealth, playerSilver, previousLocation, visitedBlacksmith, inventory, weaponDamage);
          // if(previousLocation === "village") {
          //  currentLocation = previousLocation;
          // }
