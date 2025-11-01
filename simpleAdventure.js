@@ -38,6 +38,7 @@ let villageName = "Silver Bluffs";
 let placeChoice = "K";
 let statusCheck = true;
 let firstTimePlaying = true;
+let atLanding = true;
 let gameRunning = false;
 let monsterDefense = 5;
 let barberHealingValue = 30;
@@ -50,7 +51,7 @@ let innkeeperName = "Felina";
 
 let inventory = ["empty", "empty", "empty"];
 
-function checkStatus(playerHealth, playerSilver, previousLocation, visitedBlacksmith, inventory, weaponDamage) {
+function showStatus(playerHealth, playerSilver, previousLocation, visitedBlacksmith, inventory, weaponDamage) {
       
      console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
      console.log("<-            You have " + playerSilver + " silver dollars.              ->");
@@ -211,7 +212,8 @@ while(gameRunning)
 {
   if(currentLocation === "status") {
    
-   checkStatus(playerHealth, playerSilver, previousLocation, visitedBlacksmith, inventory, weaponDamage);
+    showStatus(playerHealth, playerSilver, previousLocation, visitedBlacksmith, inventory, weaponDamage);
+    
          // if(previousLocation === "village") {
          //  currentLocation = previousLocation;
          // }
@@ -344,9 +346,12 @@ correctChoice = false;
 while((correctChoice == false) && (gameRunning))
 {
  try {  
-     if(currentLocation === "village") {   
+     if((currentLocation === "village") || (atLanding)) {   
         console.log("\n===========================================================");
-        //console.log("<-     To go to the middle of the village, type 1           ->");
+        if(atLanding){ 
+           console.log("<-     To go to the middle of the village, type 1           ->");
+           atLanding = false;
+        }
         console.log("<-     To go to the Barbershop, type 2.                     ->");
         console.log("<-     To go to the Blacksmith shop, type 3.                ->");
         console.log("<-     To go to the Hotel, type 4.                          ->");
