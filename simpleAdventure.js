@@ -140,7 +140,7 @@ try {
     
  if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
   (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
-  (placeChoice === '6') || (placeChoice === '7')) && ((currentLocation === "landing") && (currentLocation !== "village") && 
+  (placeChoice === '6') || (placeChoice === '7')) && ((currentLocation !== "village") && 
   (currentLocation !== "hotel") && (currentLocation !== "barbershop") && (currentLocation !== "generalStore"))) 
      {
         placeChoice = Number(placeChoice);
@@ -174,13 +174,14 @@ try {
              correctChoice = true;
              //console.log("# Previously at General Store #");
     }
-  // else if( (atLanding === true) && (currentLocation === "village") && ( (placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
-  // (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
-  // (placeChoice === '6') || (placeChoice === '7') )) {
-  //           placeChoice = Number(placeChoice);
-  //           correctChoice = true;
-  //           atLanding = false;
-  //   }
+   else if((currentLocation === "landing") && ( (placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
+   (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
+   (placeChoice === '6') || (placeChoice === '7') )) {
+             placeChoice = Number(placeChoice);
+             correctChoice = true;
+             atLanding = false;
+             console.log("Previously at Landing");
+     }
 
  else if(isNaN(placeChoice)){
      throw "Please choose a valid number between 0 and 7!";
@@ -219,21 +220,24 @@ try {
 
 //* Begin declaration of function movePlayer() *
 
-function movePlayer(placeChoice, currentLocation, previousLocation) 
+function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning) 
  {
   switch(placeChoice) 
    {
         case 1:
             currentLocation = "village";
             previousLocation = "village";
+            gameRunning = true;
             break;
         case 2:
             currentLocation = "barbershop";
             previousLocation = "barbershop";
+            gameRunning = true;
             break;
         case 3:
             currentLocation = "blacksmith";
             previousLocation = "blacksmith";
+            gameRunning = true;
             break;
         case 4:
             currentLocation = "hotel";
@@ -247,15 +251,17 @@ function movePlayer(placeChoice, currentLocation, previousLocation)
             break;
         case 6:
             currentLocation = "status";
+            gameRunning = true;
             break;
         case 7:
             currentLocation = "badlands";
             previousLocation = "badlands";
+            gameRunning = true;
             break;
         case 0:
             gameRunning = false;
    }
-   return [currentLocation, previousLocation];
+   return [currentLocation, previousLocation, gameRunning];
 }
 
 //* End declaration of function movePlayer() *
@@ -329,47 +335,15 @@ correctChoice = false;
 while(correctChoice == false) {
 
          [placeChoice, correctChoice] =  chooseLocation(currentLocation, previousLocation, atLanding, correctChoice);
+         
+        // if(correctChoice === true){
+        //  gameRunning = true;
+        // }
   }
-         [currentLocation, previousLocation] = movePlayer(placeChoice, currentLocation, previousLocation);
+       gameRunning = true;
+      
+         [currentLocation, previousLocation, gameRunning] = movePlayer(placeChoice, currentLocation, previousLocation, gameRunning);
 
-   //switch(placeChoice) {
-   //      case 1:
-   //          currentLocation = "village";
-   //          previousLocation = "village";
-   //          gameRunning = true;
-   //          break;
-   //      case 2:
-   //          currentLocation = "barbershop";
-   //          previousLocation = "barbershop";
-   //          gameRunning = true;
-   //          break;
-   //      case 3:
-   //          currentLocation = "blacksmith";
-   //          previousLocation = "blacksmith";
-   //          gameRunning = true;
-   //          break;
-   //      case 4:
-   //          currentLocation = "hotel";
-   //          previousLocation = "hotel";
-   //          gameRunning = true;
-   //          break;
-   //      case 5:
-   //          currentLocation = "generalStore";
-   //          previousLcation = "generalStore";
-   //          gameRunning = true;
-   //          break;
-   //      case 6:
-   //          currentLocation = "status";
-   //          gameRunning = true;
-   //          break;
-   //      case 7:
-   //          currentLocation = "badlands";
-   //          previousLocation = "badlands";
-   //          gameRunning = true;
-   //          break;
-   //      case 0:
-   //          gameRunning = false;
-   // }
 
 //* BEGIN MAIN LOOP FOR GAME PLAY *
 while(gameRunning) 
@@ -512,6 +486,6 @@ while((correctChoice == false) && (gameRunning))
    [placeChoice, correctChoice] =  chooseLocation(currentLocation, previousLocation, atLanding, correctChoice);
  }
 
-   [currentLocation, previousLocation] = movePlayer(placeChoice, currentLocation, previousLocation); 
+   [currentLocation, previousLocation, gameRunning] = movePlayer(placeChoice, currentLocation, previousLocation, gameRunning); 
 
 }
