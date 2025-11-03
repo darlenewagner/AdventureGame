@@ -29,6 +29,7 @@ console.log("<- Become the new sheriff who defeats the werewolf in the badlands!
 console.log("======================================================================\n");
 
 // Create variables for player stats
+let player = true;
 let playerHealth = 90;
 let playerSilver = 20;
 let currentLocation = "landing";
@@ -147,7 +148,7 @@ try {
         correctChoice = true;
         atLanding = false;
         // previousLocation = "";
-         console.log("## Not in the village ##");
+        // console.log("## Not in the village ##");
      }
  else if(((placeChoice === '0') || (placeChoice === '2') || (placeChoice === '3') ||
   (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') ||
@@ -180,7 +181,7 @@ try {
              placeChoice = Number(placeChoice);
              correctChoice = true;
              atLanding = false;
-             console.log("Previously at Landing");
+             //console.log("Previously at Landing");
      }
 
  else if(isNaN(placeChoice)){
@@ -222,6 +223,11 @@ try {
 
 function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning) 
  {
+   if(gameRunning === false)
+   {
+     placeChoice = 0;
+   }
+
   switch(placeChoice) 
    {
         case 1:
@@ -435,11 +441,13 @@ else if(currentLocation === "hotel") {
   }
   else if(currentLocation === "badlands") {
        console.log("=== OUT IN THE BADLANDS ===");
-    if(wildman) {
-     console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
-     console.log("<-              The sun is about to set ...                        ->");
-     console.log("<-   Suddenly, a wildman pounces on you from behind a boulder!      ->");
-     console.log("<-                     The Battle Begins!!!                         ->");
+
+     if((wildman) && (player)) {
+      console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
+      console.log("<-              The sun is about to set ...                        ->");
+      console.log("<-   Suddenly, a wildman pounces on you from behind a boulder!      ->");
+      console.log("<-                     The Battle Begins!!!                         ->");
+
      if(visitedBlacksmith){  
        console.log("<-            You fire your revolver and hit the wildman!            ->");
        weaponDamage = weaponDamage - 1;
@@ -465,21 +473,29 @@ else if(currentLocation === "hotel") {
      else { 
            console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
            playerHealth = playerHealth - 20;
+
            while(playerHealth > 0) {
                console.log("<-      The wildman hits you with his club again!      ->");
                playerHealth = playerHealth - 30;
+               if(playerHealth < 0){
+                    gameRunning = false;
+                    break;
+                }
            }
+
          console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
          console.log("<-         Coyotes will devour your body!                 ->");
          gameRunning = false;
+         player = false;
      }
     }
-    else {
+    else if(wildman === false) {
         console.log("<- The wildman is dead.  Return to the village ... ->");
     }
 
    }
-correctChoice = false;
+
+   correctChoice = false;
 
 while((correctChoice == false) && (gameRunning))
  {
