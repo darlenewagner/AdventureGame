@@ -29,6 +29,7 @@ console.log("<- Become the new sheriff who defeats the werewolf in the badlands!
 console.log("======================================================================\n");
 
 // Create variables for player stats
+let player = true;
 let playerHealth = 90;
 let playerSilver = 20;
 let currentLocation = "landing";
@@ -140,14 +141,14 @@ try {
     
  if(((placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
   (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
-  (placeChoice === '6') || (placeChoice === '7')) && ((currentLocation === "landing") && (currentLocation !== "village") && 
+  (placeChoice === '6') || (placeChoice === '7')) && ((currentLocation !== "village") && 
   (currentLocation !== "hotel") && (currentLocation !== "barbershop") && (currentLocation !== "generalStore"))) 
      {
         placeChoice = Number(placeChoice);
         correctChoice = true;
         atLanding = false;
         // previousLocation = "";
-         console.log("## Not in the village ##");
+        // console.log("## Not in the village ##");
      }
  else if(((placeChoice === '0') || (placeChoice === '2') || (placeChoice === '3') ||
   (placeChoice === '4') || (placeChoice === '5') || (placeChoice === '6') ||
@@ -174,13 +175,14 @@ try {
              correctChoice = true;
              //console.log("# Previously at General Store #");
     }
-  // else if( (atLanding === true) && (currentLocation === "village") && ( (placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
-  // (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
-  // (placeChoice === '6') || (placeChoice === '7') )) {
-  //           placeChoice = Number(placeChoice);
-  //           correctChoice = true;
-  //           atLanding = false;
-  //   }
+   else if((currentLocation === "landing") && ( (placeChoice === '0') || (placeChoice === '1') || (placeChoice === '2') ||
+   (placeChoice === '3') || (placeChoice === '4') || (placeChoice === '5') ||
+   (placeChoice === '6') || (placeChoice === '7') )) {
+             placeChoice = Number(placeChoice);
+             correctChoice = true;
+             atLanding = false;
+             //console.log("Previously at Landing");
+     }
 
  else if(isNaN(placeChoice)){
      throw "Please choose a valid number between 0 and 7!";
@@ -219,21 +221,29 @@ try {
 
 //* Begin declaration of function movePlayer() *
 
-function movePlayer(placeChoice, currentLocation, previousLocation) 
+function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning) 
  {
+   if(gameRunning === false)
+   {
+     placeChoice = 0;
+   }
+
   switch(placeChoice) 
    {
         case 1:
             currentLocation = "village";
             previousLocation = "village";
+            gameRunning = true;
             break;
         case 2:
             currentLocation = "barbershop";
             previousLocation = "barbershop";
+            gameRunning = true;
             break;
         case 3:
             currentLocation = "blacksmith";
             previousLocation = "blacksmith";
+            gameRunning = true;
             break;
         case 4:
             currentLocation = "hotel";
@@ -247,15 +257,17 @@ function movePlayer(placeChoice, currentLocation, previousLocation)
             break;
         case 6:
             currentLocation = "status";
+            gameRunning = true;
             break;
         case 7:
             currentLocation = "badlands";
             previousLocation = "badlands";
+            gameRunning = true;
             break;
         case 0:
             gameRunning = false;
    }
-   return [currentLocation, previousLocation];
+   return [currentLocation, previousLocation, gameRunning];
 }
 
 //* End declaration of function movePlayer() *
@@ -329,47 +341,15 @@ correctChoice = false;
 while(correctChoice == false) {
 
          [placeChoice, correctChoice] =  chooseLocation(currentLocation, previousLocation, atLanding, correctChoice);
+         
+        // if(correctChoice === true){
+        //  gameRunning = true;
+        // }
   }
-         [currentLocation, previousLocation] = movePlayer(placeChoice, currentLocation, previousLocation);
+       gameRunning = true;
+      
+         [currentLocation, previousLocation, gameRunning] = movePlayer(placeChoice, currentLocation, previousLocation, gameRunning);
 
-   //switch(placeChoice) {
-   //      case 1:
-   //          currentLocation = "village";
-   //          previousLocation = "village";
-   //          gameRunning = true;
-   //          break;
-   //      case 2:
-   //          currentLocation = "barbershop";
-   //          previousLocation = "barbershop";
-   //          gameRunning = true;
-   //          break;
-   //      case 3:
-   //          currentLocation = "blacksmith";
-   //          previousLocation = "blacksmith";
-   //          gameRunning = true;
-   //          break;
-   //      case 4:
-   //          currentLocation = "hotel";
-   //          previousLocation = "hotel";
-   //          gameRunning = true;
-   //          break;
-   //      case 5:
-   //          currentLocation = "generalStore";
-   //          previousLcation = "generalStore";
-   //          gameRunning = true;
-   //          break;
-   //      case 6:
-   //          currentLocation = "status";
-   //          gameRunning = true;
-   //          break;
-   //      case 7:
-   //          currentLocation = "badlands";
-   //          previousLocation = "badlands";
-   //          gameRunning = true;
-   //          break;
-   //      case 0:
-   //          gameRunning = false;
-   // }
 
 //* BEGIN MAIN LOOP FOR GAME PLAY *
 while(gameRunning) 
@@ -461,11 +441,13 @@ else if(currentLocation === "hotel") {
   }
   else if(currentLocation === "badlands") {
        console.log("=== OUT IN THE BADLANDS ===");
-    if(wildman) {
-     console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
-     console.log("<-              The sun is about to set ...                        ->");
-     console.log("<-   Suddenly, a wildman pounces on you from behind a boulder!      ->");
-     console.log("<-                     The Battle Begins!!!                         ->");
+
+     if((wildman) && (player)) {
+      console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
+      console.log("<-              The sun is about to set ...                        ->");
+      console.log("<-   Suddenly, a wildman pounces on you from behind a boulder!      ->");
+      console.log("<-                     The Battle Begins!!!                         ->");
+
      if(visitedBlacksmith){  
        console.log("<-            You fire your revolver and hit the wildman!            ->");
        weaponDamage = weaponDamage - 1;
@@ -491,27 +473,35 @@ else if(currentLocation === "hotel") {
      else { 
            console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
            playerHealth = playerHealth - 20;
+
            while(playerHealth > 0) {
                console.log("<-      The wildman hits you with his club again!      ->");
                playerHealth = playerHealth - 30;
+               if(playerHealth < 0){
+                    gameRunning = false;
+                    break;
+                }
            }
+
          console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
          console.log("<-         Coyotes will devour your body!                 ->");
          gameRunning = false;
+         player = false;
      }
     }
-    else {
+    else if(wildman === false) {
         console.log("<- The wildman is dead.  Return to the village ... ->");
     }
 
    }
-correctChoice = false;
+
+   correctChoice = false;
 
 while((correctChoice == false) && (gameRunning))
  {
    [placeChoice, correctChoice] =  chooseLocation(currentLocation, previousLocation, atLanding, correctChoice);
  }
 
-   [currentLocation, previousLocation] = movePlayer(placeChoice, currentLocation, previousLocation); 
+   [currentLocation, previousLocation, gameRunning] = movePlayer(placeChoice, currentLocation, previousLocation, gameRunning); 
 
 }
