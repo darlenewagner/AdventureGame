@@ -73,10 +73,10 @@ function showStatus(playerHealth, playerSilver, previousLocation, visitedBlacksm
      console.log("<-            You have " + playerSilver + " silver dollars.              ->");
      console.log("<-   And your current location is " + previousLocation + ".");
      if(visitedBlacksmith) {
-        for(let i = 0; i < 3; i++)
+        for(let i = 0; i < 4; i++)
         {
             disp = i + 1;
-            console.log("slot " + disp + ": " + inventory[i]);
+            console.log("pouch " + disp + ": " + inventory[i]);
         }
         console.log("<-   You have a revolver with " + weaponDamage + " silver bullets.   ->\n");
         
@@ -297,7 +297,7 @@ let answer1 = "";
 let playerName = "";
 
 // try out sleep() function
-sleep(1500);
+sleep(1000);
 console.log("<- Do you wish to greet any of the villagers? ->");
 
 answer1 = readline.question("<- Answer, Y or N: ");
@@ -386,6 +386,8 @@ while(gameRunning)
      console.log("Yes, I have just the thing for you...");
      console.log("It's a six-shot blackpowder revolver.");
      console.log("Of course, it will cost you six silver dollars!");
+     // pause dialogue with sleep() function
+     sleep(2000);
      console.log("\nThat's pricey for such an old revolver!\n");
      console.log("We're at the end of the boatman's trade route. Buy it or leave it!\n");
      console.log("OK! I'll buy it.");
@@ -394,21 +396,26 @@ while(gameRunning)
      // decrement playerSilver to pay for revolver  
      playerSilver = playerSilver - 6;
      console.log("What about bullets? Right now, this gun only does a damage of " + weaponDamage + ".");
-     let inquiry1 = "";
-     inquiry1 = readline.question("(Ask the Blacksmith about ammunition!)--> ");
-  
-     console.log("Tee-Hee-Hee! Did you hear that fellas?");
-     console.log("Our new sheriff asked: " + inquiry1 + "\n");
+     // pause before laugh with sleep() function
+     sleep(1500);
+     //console.log("Tee-Hee-Hee! Did you hear that fellas?");
+     //console.log("Our new sheriff asked: " + inquiry1 + "\n");
      console.log("Haw! Haw! Haw! Haw!\n");
      console.log("Around here, you're going to need silver bullets!\n");
-  
+     // pause after laugh with sleep() function
+     sleep(1500);
      console.log("OK! Where do I get silver bullets?\n");
-     console.log("From what's left of your silver dollars. " + playerSilver + " is enough for " + playerSilver + " bullets.\n")
+     console.log("From what's left of your silver dollars. " + playerSilver + " is enough for " + playerSilver + " bullets.\n");
+     sleep(1500);
      console.log("How about six? I need to eat.\n");
      console.log("Haw! Haw! Haw!");
+     sleep(1500);
      console.log("If you're anything like the last two sheriffs, you won't live long enough to need to eat!\n");
+     sleep(1500);
      console.log("I'm feeling lucky so it's going to be six silver bullets!\n");
+     sleep(1500);
      console.log("All-righty! Six silver bullets it is.\n");
+     sleep(3000);
      // decrement playerSilver by 6 to create silver bullets
      playerSilver = playerSilver - 6;
      // increment amount of weaponDamage the revolver can do to the werewolf or other monsters.
@@ -421,13 +428,21 @@ while(gameRunning)
         console.log("<-                 Please choose another location.                      ->\n");
     }
   else if(currentLocation === "village") {
-    console.log("=== MIDDLE OF VILLAGE ===");
-    console.log("\nExcuse me Mr. Prospector and Mr. Barber, does the hotel over there have food as well as boarding?\n");
-    console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get thar is whiskey and beer for dinner.\n");
-    console.log("Any place else?\n");
-    console.log("I wouldn't recommend heading out to the badlands yet, but you can spend the night in the attic of my Barbershop.\n");
-    console.log("You could go down by the river to the General Store.\n");
-
+     console.log("=== MIDDLE OF VILLAGE ===");
+     console.log("\nExcuse me Mr. Prospector and Mr. Barber, does the hotel over there have food as well as boarding?\n");
+     sleep(1500);
+     console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get thar is whiskey and beer for dinner.\n");
+     sleep(2000);
+     console.log("Any place else?\n");
+     sleep(1500);
+     console.log("Don't light out for the badlands yet! I might suggest spending the night in the hotel or in the attic of my Barbershop.\n");
+     sleep(2000);
+     console.log("Where can I get guns?");
+     sleep(1500);
+     console.log("The Blacksmith Shop!\n");
+     sleep(1500);
+     console.log("... Or you could go down by the river to the General Store.\n");
+     sleep(3000);
    }
  else if(currentLocation === "barbershop"){
     console.log("=== BARBERSHOP IN VILLAGE ===");
@@ -435,22 +450,59 @@ while(gameRunning)
 else if(currentLocation === "hotel") {
     console.log("=== HOTEL IN VILLAGE ===");
     console.log("Good evening Sheriff " + playerName + ". I'm Felina the hotel owner.\n");
+    sleep(1500);
     console.log("Pleased to make your aquaintance ma'am.\n");
+    sleep(1500);
     console.log("I want to help you because if you survive the first week, then you survive!");
+    sleep(1500);
     console.log("The best thing to do if you see the werewolf is to run and not fight until you can make friends who can help you.");
-    console.log("Even then, you can still get hurt running from the werewolf or any of his demon-spawn.\n");
-    console.log("Demon-spawn!?\n");
-    console.log("Yes, Demon-spawn were once humans but they got turned into wildmen and dogmen by the werewolf.");
+    sleep(2000);
+    console.log("Even then, you can still get hurt running from the werewolf or any of his infected.\n");
+    sleep(1500);
+    console.log("Infected!?\n");
+    sleep(1500);
+    console.log("Yes. The infected were once humans but they got turned into wildmen and dogmen by the werewolf.");
+    sleep(3000);
     console.log("The effort to escape a dogman or wildman can cost you 20 health points.");
-    console.log("It would take " + monsterDefense + " bullets from your old revolver to kill a demon-spawn and more to kill the werewolf.");
+    sleep(1500);
+    console.log("It would take " + monsterDefense + " bullets from a revolver to kill an infected and more to kill the werewolf.");
+    sleep(1500);
+    console.log("If an infected is wounded to within 2 points of dying, you can finish it off with a knife or tomahawk." );
+    sleep(3000);
     console.log("And you will have to go to the barber within a half day to get any of your wounds cauterized.\n");
+    sleep(1500);
     console.log("What if I'm too far outside town?\n");
-    console.log("Then the wounds could turn you into demon-spawn if you have any human ancestry.");
-    console.log("Just when in doubt, go to Edgar the Barber. I helped him with herbal healing too.");
-    console.log("Each of his treatments can restore your health by 30 points.\n");
-    console.log("So let me get this straight, it takes " + monsterDefense + " bullets to kill a demon-spawn?\n");
+    sleep(1500);
+    console.log("Then the wounds could turn you into an infected. A healing poultice can give you a whole day to make it back to town.");
+    sleep(1500);
+    console.log("Just when in doubt, go to Edgar the Barber. I help him by making the herbal healing poultices.");
+    sleep(3000);
+    console.log("Each of his treatments can restore your health by 30 points.");
+    console.log("Or you can buy a pack of bandages and healing poultice from him if you're stuck in the badlands.\n")
+    sleep(3000);
+    console.log("So let me get this straight, it takes " + monsterDefense + " bullets to kill an infected?\n");
+    sleep(1500);
     console.log("Yes, and a lot more than " + monsterDefense + " to kill the werewolf.");
+    sleep(1500);
     console.log("And I can lose 20 health just by escaping one of these monsters while Edgar can give me " + barberHealingValue + " health points?\n");
+    sleep(3000);
+    console.log("Where do I eat or sleep if I run out of silver?\n");
+    sleep(1500);
+    console.log("Wildmen are fairly easy to kill. You get a bounty of 2 silver dollars from the General Store for each wildman.\n");
+    sleep(1500);
+    console.log("What about dogmen?");
+    sleep(1500);
+    console.log("It's eight silver dollars for each dogman.\n");
+    sleep(1500);
+    console.log("What's the bounty for the werewolf?\n");
+    sleep(1500);
+    console.log("You would become the new owner of the General Store and the Grist Mill and the Corn Crib!");
+    sleep(1500);
+    console.log("...But remember, everyone who has gone after the werewolf either got eaten or infected.");
+    sleep(1500);
+    console.log("No one has survived dogmen either because they go about in packs.\n");
+    sleep(4000);
+
    }
   else if(currentLocation === "generalStore"){
     console.log("=== GENERALSTORE IN VILLAGE ===");
@@ -458,56 +510,69 @@ else if(currentLocation === "hotel") {
   else if(currentLocation === "badlands") {
        console.log("=== OUT IN THE BADLANDS ===");
 
-     if((wildman) && (player)) {
+  if((wildman) && (player)) {
       console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
       console.log("<-              The sun is about to set ...                        ->");
-      console.log("<-   Suddenly, a wildman pounces on you from behind a boulder!      ->");
-      console.log("<-                     The Battle Begins!!!                         ->");
+      sleep(2000);
+      console.log("<-   Suddenly, a wildman runs at you from behind a boulder!      ->");
+      sleep(2000);
+      let playerFight = "N";
+      playerFight = readline.question("Do you want to fight the wildman? \n(Reply Y, Yes, or + to fight.)\n");
+       
+     if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || (playerFight === "yes") || (playerFight === "+"))
+      {
+         console.log("<-                     The Battle Begins!!!                         ->");
 
-     if(visitedBlacksmith){  
-       console.log("<-            You fire your revolver and hit the wildman!            ->");
-       weaponDamage = weaponDamage - 1;
-       monsterDefense = monsterDefense - 1;
+        if(visitedBlacksmith){  
+          console.log("<-            You fire your revolver and hit the wildman!            ->");
+          weaponDamage = weaponDamage - 1;
+          monsterDefense = monsterDefense - 1;
 
-       console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+          console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+   
+          playerHealth = playerHealth - 20;
 
-       playerHealth = playerHealth - 20;
+          while(monsterDefense > 0) {
+              console.log("<-            You fire and hit the wildman again!            ->");
+              weaponDamage = weaponDamage - 1;
+              monsterDefense = monsterDefense - 1;
+            if(monsterDefense >= 3){
+                  console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
+                  playerHealth = playerHealth - 30;
+             }
+          } 
+           wildman = false;
+           console.log("<-     The wildman is dead, but you are seriously injured!     ->");
+           console.log("<-       You must return to the village before nightfall!      ->");
+        }
 
-       while(monsterDefense > 0) {
-           console.log("<-            You fire and hit the wildman again!            ->");
-           weaponDamage = weaponDamage - 1;
-           monsterDefense = monsterDefense - 1;
-           if(monsterDefense >= 3){
-               console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
-               playerHealth = playerHealth - 30;
-           }
-        } 
-        wildman = false;
-        console.log("<-     The wildman is dead, but you are seriously injured!     ->");
-        console.log("<-       You must return to the village before nightfall!      ->");
-     }
-     else { 
-           console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
-           playerHealth = playerHealth - 20;
+      else { 
+              console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+              playerHealth = playerHealth - 20;
 
-           while(playerHealth > 0) {
-               console.log("<-      The wildman hits you with his club again!      ->");
-               playerHealth = playerHealth - 30;
-               if(playerHealth < 0){
-                    gameRunning = false;
-                    break;
-                }
-           }
+              while(playerHealth > 0) {
+                  console.log("<-      The wildman hits you with his club again!      ->");
+                  playerHealth = playerHealth - 30;
+                 if(playerHealth < 0){
+                      gameRunning = false;
+                      break;
+                  }
+             }
 
-         console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
-         console.log("<-         Coyotes will devour your body!                 ->");
-         gameRunning = false;
-         player = false;
-     }
+            console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
+            console.log("<-         Coyotes will devour your body!                 ->");
+            gameRunning = false;
+            player = false;
+         }
+      }
+      else
+      {
+        playerHealth = playerHealth - 20;
+      }
     }
     else if(wildman === false) {
-        console.log("<- The wildman is dead.  Return to the village ... ->");
-    }
+         console.log("<- The wildman is dead.  Return to the village ... ->");
+     }
 
    }
 
