@@ -611,7 +611,7 @@ else if(currentLocation === "hotel") {
   if((wildman) && (player)) {
       
      //
-
+       [wildman, player, playerHealth, weaponDamage, monsterDefense] = processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith);
       //
 
       }
