@@ -284,7 +284,105 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 
 //* End declaration of function movePlayer() *
 
-//* Initiate main for playing game *
+//* Begin declaration of function processWildmanCombat() *
+
+function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith) {
+      console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
+      console.log("<-              The sun is about to set ...                        ->");
+      sleep(2000);
+      console.log("<-   Suddenly, a wildman runs at you from behind a boulder!      ->");
+      sleep(2000);
+      let playerFight = "N";
+      playerFight = readline.question("Do you want to fight the wildman? \n(Reply Y, Yes, or + to fight.)\n");
+       
+     if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || (playerFight === "yes") || (playerFight === "+"))
+      {
+         console.log("<-                     The Battle Begins!!!                         ->");
+
+        if(visitedBlacksmith){  
+          console.log("<-            You fire your revolver and hit the wildman!            ->");
+          weaponDamage = weaponDamage - 1;
+          monsterDefense = monsterDefense - 1;
+
+          console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+   
+          playerHealth = playerHealth - 20;
+
+          while((monsterDefense > 0) && (playerHealth > 30)) {
+              console.log("<-            You fire and hit the wildman again!            ->");
+              weaponDamage = weaponDamage - 1;
+              monsterDefense = monsterDefense - 1;
+            if(monsterDefense >= 3){
+                  console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
+                  playerHealth = playerHealth - 30;
+             }
+          } 
+           if(monsterDefense == 0){
+              wildman = false;
+              console.log("<-     The wildman is dead, but you are seriously injured!     ->");
+              console.log("<-       You must return to the village before nightfall!      ->");
+            }
+           else if(playerHealth <= 30){
+            console.log("<-          You are too seriously injured to keep fighting.            ->");
+            sleep(1000);
+            if(playerHealth <= 0){
+                console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
+                console.log("<-         Coyotes will devour your body!                 ->");
+                gameRunning = false;
+                player = false;
+             }
+            else { 
+            console.log("<-    Your health is " + playerHealth + " but you still manage to escape.    ->");
+            sleep(1500);
+            console.log("<- Wildman health is " + monsterDefense + ".  Get healing in the village and come back to finish him later.")
+             }
+           }
+        }
+
+      else { 
+              console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+              playerHealth = playerHealth - 20;
+
+              while(playerHealth > 0) {
+                  console.log("<-      The wildman hits you with his club again!      ->");
+                  playerHealth = playerHealth - 30;
+                 if(playerHealth < 0){
+                      gameRunning = false;
+                      break;
+                  }
+             }
+
+            console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
+            console.log("<-         Coyotes will devour your body!                 ->");
+            gameRunning = false;
+            player = false;
+         }
+      }
+      else
+      {
+        console.log("<-      The wildman throws a rock and hits you ...       ->");
+        playerHealth = playerHealth - 20;
+        sleep(1000);
+        if(playerHealth <= 0) {
+            console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
+            console.log("<-         Coyotes will devour your body!                 ->");
+            gameRunning = false;
+            player = false;
+         }
+         else {
+        console.log("<-   ... but you still manage to escape. Your health is " + playerHealth + ". ->");
+         }
+        }
+    return [wildman, player, playerHealth, weaponDamage, monsterDefense];
+}
+
+//* End declaration of function processWildmanCombat() *
+
+//
+//
+//*  INITIATE MAIN FOR PLAYING GAME  *
+//
+//
 
 console.log("<- You have just disembarked the steamboat to walk up to the village of " + villageName + ". ->\n");
 
@@ -511,70 +609,18 @@ else if(currentLocation === "hotel") {
        console.log("=== OUT IN THE BADLANDS ===");
 
   if((wildman) && (player)) {
-      console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
-      console.log("<-              The sun is about to set ...                        ->");
-      sleep(2000);
-      console.log("<-   Suddenly, a wildman runs at you from behind a boulder!      ->");
-      sleep(2000);
-      let playerFight = "N";
-      playerFight = readline.question("Do you want to fight the wildman? \n(Reply Y, Yes, or + to fight.)\n");
-       
-     if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || (playerFight === "yes") || (playerFight === "+"))
-      {
-         console.log("<-                     The Battle Begins!!!                         ->");
+      
+     //
+       [wildman, player, playerHealth, weaponDamage, monsterDefense] = processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith);
+      //
 
-        if(visitedBlacksmith){  
-          console.log("<-            You fire your revolver and hit the wildman!            ->");
-          weaponDamage = weaponDamage - 1;
-          monsterDefense = monsterDefense - 1;
-
-          console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
-   
-          playerHealth = playerHealth - 20;
-
-          while(monsterDefense > 0) {
-              console.log("<-            You fire and hit the wildman again!            ->");
-              weaponDamage = weaponDamage - 1;
-              monsterDefense = monsterDefense - 1;
-            if(monsterDefense >= 3){
-                  console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
-                  playerHealth = playerHealth - 30;
-             }
-          } 
-           wildman = false;
-           console.log("<-     The wildman is dead, but you are seriously injured!     ->");
-           console.log("<-       You must return to the village before nightfall!      ->");
-        }
-
-      else { 
-              console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
-              playerHealth = playerHealth - 20;
-
-              while(playerHealth > 0) {
-                  console.log("<-      The wildman hits you with his club again!      ->");
-                  playerHealth = playerHealth - 30;
-                 if(playerHealth < 0){
-                      gameRunning = false;
-                      break;
-                  }
-             }
-
-            console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
-            console.log("<-         Coyotes will devour your body!                 ->");
-            gameRunning = false;
-            player = false;
-         }
-      }
-      else
-      {
-        playerHealth = playerHealth - 20;
       }
     }
     else if(wildman === false) {
          console.log("<- The wildman is dead.  Return to the village ... ->");
      }
 
-   }
+   
 
    correctChoice = false;
 
