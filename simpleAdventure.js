@@ -53,6 +53,18 @@ let innkeeperName = "Felina";
 
 let inventory = ["empty", "empty", "empty", "empty"];
 
+//* Housekeeping functions to help timing and flow of exection *
+
+// Define a sleep function
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
+
 //* Begin declaration of function showStatus() * for showing health, money, location, and inventory *
 
 function showStatus(playerHealth, playerSilver, previousLocation, visitedBlacksmith, inventory, weaponDamage) {
@@ -76,7 +88,7 @@ function showStatus(playerHealth, playerSilver, previousLocation, visitedBlacksm
 //* Begin declaration of function chooseLocation() * enabling user to choose where to go in game *
 
 function chooseLocation(currentLocation, previousLocation, atLanding, correctChoice) {
-  
+
 try {  
      if((currentLocation === "landing") || (currentLocation === "village")) {   
         console.log("\n===========================================================");
@@ -283,7 +295,11 @@ let nameOK = false;
 let greetLocals = true;
 let answer1 = "";
 let playerName = "";
+
+// try out sleep() function
+sleep(1500);
 console.log("<- Do you wish to greet any of the villagers? ->");
+
 answer1 = readline.question("<- Answer, Y or N: ");
 
   if((answer1 === "N") || (answer1 === "No") || (answer1 === "n") || (answer1 === "no")) {
