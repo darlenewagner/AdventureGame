@@ -48,6 +48,15 @@ let barberMedicine = 10;
 let weaponDamage = 0;
 let visitedBlacksmith = false;
 let wildman = true;
+let wildmanBounty = false;
+let wildman2 = false;
+let dogman1 = true;
+let dogman1Bounty = false;
+let dogman2 = true;
+let dogman2Bounty = false;
+let dogman3 = true;
+let dogman3Bounty = false;
+let dogmanBite = false;
 let blacksmithName = "Jethro";
 let innkeeperName = "Felina";
 
@@ -67,12 +76,12 @@ function sleep(milliseconds) {
 
 //* Begin declaration of function showStatus() * for showing health, money, location, and inventory *
 
-function showStatus(playerHealth, playerSilver, previousLocation, visitedBlacksmith, inventory, weaponDamage) {
+function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage) {
       
      console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
      console.log("<-            You have " + playerSilver + " silver dollars.              ->");
      console.log("<-   And your current location is " + previousLocation + ".");
-     if(visitedBlacksmith) {
+     if(inventory[0] != "empty") {
         for(let i = 0; i < 4; i++)
         {
             disp = i + 1;
@@ -470,7 +479,7 @@ while(gameRunning)
 {
   if(currentLocation === "status") {
    
-    showStatus(playerHealth, playerSilver, previousLocation, visitedBlacksmith, inventory, weaponDamage);
+    showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage);
     
          // if(previousLocation === "village") {
          //  currentLocation = previousLocation;
@@ -479,46 +488,56 @@ while(gameRunning)
 
 
   if((currentLocation === "blacksmith") && (visitedBlacksmith == false)) 
-    {
-     console.log("Greetings, Blacksmith, are you selling any weapons?\n");
-     console.log("Yes, I have just the thing for you...");
-     console.log("It's a six-shot blackpowder revolver.");
-     console.log("Of course, it will cost you six silver dollars!");
-     // pause dialogue with sleep() function
-     sleep(2000);
-     console.log("\nThat's pricey for such an old revolver!\n");
-     console.log("We're at the end of the boatman's trade route. Buy it or leave it!\n");
-     console.log("OK! I'll buy it.");
-     // update visitedBlacksmith to true to avoid coming back and losing too much silver
-     visitedBlacksmith = true;
-     // decrement playerSilver to pay for revolver  
-     playerSilver = playerSilver - 6;
-     console.log("What about bullets? Right now, this gun only does a damage of " + weaponDamage + ".");
-     // pause before laugh with sleep() function
-     sleep(1500);
-     //console.log("Tee-Hee-Hee! Did you hear that fellas?");
-     //console.log("Our new sheriff asked: " + inquiry1 + "\n");
-     console.log("Haw! Haw! Haw! Haw!\n");
-     console.log("Around here, you're going to need silver bullets!\n");
-     // pause after laugh with sleep() function
-     sleep(1500);
-     console.log("OK! Where do I get silver bullets?\n");
-     console.log("From what's left of your silver dollars. " + playerSilver + " is enough for " + playerSilver + " bullets.\n");
-     sleep(1500);
-     console.log("How about six? I need to eat.\n");
-     console.log("Haw! Haw! Haw!");
-     sleep(1500);
-     console.log("If you're anything like the last two sheriffs, you won't live long enough to need to eat!\n");
-     sleep(1500);
-     console.log("I'm feeling lucky so it's going to be six silver bullets!\n");
-     sleep(1500);
-     console.log("All-righty! Six silver bullets it is.\n");
-     sleep(3000);
-     // decrement playerSilver by 6 to create silver bullets
-     playerSilver = playerSilver - 6;
-     // increment amount of weaponDamage the revolver can do to the werewolf or other monsters.
-     weaponDamage = weaponDamage + 6;
-     inventory[0] = "revolver";
+    { 
+      if(inventory[0] === "empty")
+      {
+       console.log("Greetings, Blacksmith, are you selling any weapons?\n");
+       console.log("Yes, I have just the thing for you...");
+       console.log("It's a six-shot blackpowder revolver.");
+       console.log("Of course, it will cost you six silver dollars!");
+       // pause dialogue with sleep() function
+       sleep(2000);
+       console.log("\nThat's pricey for such an old revolver!\n");
+       console.log("We're at the end of the boatman's trade route. Buy it or leave it!\n");
+       console.log("OK! I'll buy it.");
+       // update visitedBlacksmith to true to avoid coming back and losing too much silver
+       visitedBlacksmith = true;
+       // decrement playerSilver to pay for revolver  
+       playerSilver = playerSilver - 6;
+       console.log("What about bullets? Right now, this gun only does a damage of " + weaponDamage + ".");
+       // pause before laugh with sleep() function
+       sleep(1500);
+       console.log("Haw! Haw! Haw! Haw!\n");
+       console.log("Around here, you're going to need silver bullets!\n");
+       // pause after laugh with sleep() function
+       sleep(1500);
+       console.log("OK! Where do I get silver bullets?\n");
+       console.log("From what's left of your silver dollars. " + playerSilver + " is enough for " + playerSilver + " bullets.\n");
+       sleep(1500);
+       console.log("How about six? I need to eat.\n");
+       console.log("Haw! Haw! Haw!");
+       sleep(1500);
+       console.log("If you're anything like the last two sheriffs, you won't live long enough to need to eat!\n");
+       sleep(1500);
+       console.log("I'm feeling lucky so it's going to be six silver bullets!\n");
+       sleep(1500);
+       console.log("All-righty! Six silver bullets it is.\n");
+       sleep(3000);
+       // decrement playerSilver by 6 to create silver bullets
+       playerSilver = playerSilver - 6;
+       // increment amount of weaponDamage the revolver can do to the werewolf or other monsters.
+       weaponDamage = weaponDamage + 6;
+       inventory[0] = "revolver";
+     }
+     else {
+       console.log("Howdy, Sheriff " + playerName + ". Ya need more bullets?\n");
+       let needed = 6 - weaponDamage;
+       console.log("Why yes, I could use " + needed + ".");
+       console.log("All righty Sheriff, that's " + needed + "silver dollars.");
+       weaponDamage = weaponDamage + needed;
+       playerSilver = playerSilver - needed;
+       visitedBlacksmith = true;
+     }
     }
   else if((currentLocation === "blacksmith") && (visitedBlacksmith == true))
     {
@@ -544,6 +563,29 @@ while(gameRunning)
    }
  else if(currentLocation === "barbershop"){
     console.log("=== BARBERSHOP IN VILLAGE ===");
+    if((playerHealth >= 40) && (playerHealth <= 70)){
+      console.log("Okay, Sheriff " + playerName + ". Let me take care of those wounds.");
+      console.log("You will need irrigation and cautery for a dollar. An extra dollar for anaesthetic.\n");
+      console.log("I don't need anaesthetic!\n");
+      console.log("Okay, hold still!!!  You're going to have to spend the night here too.");
+      playerHealth = playerHealth + 30;
+      playerSilver = playerSilver - 1;
+    }
+    else if ((playerHealth < 40) || (dogmanBite == true)) {
+      console.log("Oh my! oh my! Poor Sheriff " + playerName + ". Don't worry I've seen worse out here!");
+      console.log("You will need irrigation, cautery, and poultices for two dollars. An extra dollar for anaesthetic.\n");
+      console.log("I don't need anaesthetic!\n");
+      console.log("Okay, hold still!!!  You're going to have to spend the night here too.");
+      playerHealth = playerHealth + 40;
+      playerSilver = playerSilver - 2;
+    }
+    else  {
+      console.log("Take a pack of bandages with healing poultice into the badlands with you.\n");
+      console.log("How much?\n");
+      console.log("One silver dollar.");
+      playerSilver = playerSilver - 1;
+      inventory[2] = "woundKit";
+    }
   }
 else if(currentLocation === "hotel") {
     console.log("=== HOTEL IN VILLAGE ===");
@@ -598,12 +640,29 @@ else if(currentLocation === "hotel") {
     sleep(1500);
     console.log("...But remember, everyone who has gone after the werewolf either got eaten or infected.");
     sleep(1500);
-    console.log("No one has survived dogmen either because they go about in packs.\n");
+    console.log("Since the dogmen go about in packs, no one has survived them either.\n");
     sleep(4000);
 
    }
   else if(currentLocation === "generalStore"){
     console.log("=== GENERALSTORE IN VILLAGE ===");
+    if((wildman == false) && (wildmanBounty == false)) {
+        console.log("Hi there Sheriff " + playerName + ". Looks like you killed the wildman.\n");
+        sleep(1000);
+        console.log("Yes! The hotel owner says there's a 2-dollar bounty.\n");
+        sleep(1000);
+        console.log("That's right!  Here you go, two silver dollars.");
+        playerSilver = playerSilver + 2;
+        wildmanBounty == true;
+
+        if(playerSilver >= 9)
+          {
+            visitedBlacksmith = false;
+            console.log("You may go back to the blacksmith."); 
+          }
+      } else {
+              console.log("Good morning Sheriff " + playerName + ". What would you like to buy?");
+      }
   }
   else if(currentLocation === "badlands") {
        console.log("=== OUT IN THE BADLANDS ===");
@@ -615,11 +674,10 @@ else if(currentLocation === "hotel") {
       //
 
       }
-    }
     else if(wildman === false) {
          console.log("<- The wildman is dead.  Return to the village ... ->");
-     }
-
+      }
+   }
    
 
    correctChoice = false;
