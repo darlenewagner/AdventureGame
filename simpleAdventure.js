@@ -62,8 +62,9 @@ let innkeeperName = "Felina";
 
 let inventory = ["empty", "empty", "empty", "empty"];
 
-//* Housekeeping functions to help timing and flow of exection *
-
+//
+//* ########## HOUSEKEEPING FUNCTIONS FOR TIMING AND FLOW OF EXECUTION ##########
+//
 // Define a sleep function
 function sleep(milliseconds) {
   const date = Date.now();
@@ -74,26 +75,9 @@ function sleep(milliseconds) {
 }
 
 
-//* Begin declaration of function showStatus() * for showing health, money, location, and inventory *
-
-function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage) {
-      
-     console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
-     console.log("<-            You have " + playerSilver + " silver dollars.              ->");
-     console.log("<-   And your current location is " + previousLocation + ".");
-     if(inventory[0] != "empty") {
-        for(let i = 0; i < 4; i++)
-        {
-            disp = i + 1;
-            console.log("pouch " + disp + ": " + inventory[i]);
-        }
-        console.log("<-   You have a revolver with " + weaponDamage + " silver bullets.   ->\n");
-        
-     }
-}
-
-//* End declaration of function showStatus() *
-
+//
+// ########## LOCATION CHOICE FUNCTIONS: chooseLocation() and movePlayer() ##########
+//
 //* Begin declaration of function chooseLocation() * enabling user to choose where to go in game *
 
 function chooseLocation(currentLocation, previousLocation, atLanding, correctChoice) {
@@ -292,6 +276,29 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 }
 
 //* End declaration of function movePlayer() *
+
+//
+// ########## GAME PLAY FUNCTIONS: showStatus() and processWildmanCombat() ##########
+//
+//* Begin declaration of function showStatus() * for showing health, money, location, and inventory *
+
+function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage) {
+      
+     console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
+     console.log("<-            You have " + playerSilver + " silver dollars.              ->");
+     console.log("<-   And your current location is " + previousLocation + ".");
+     if(inventory[0] != "empty") {
+        for(let i = 0; i < 4; i++)
+        {
+            disp = i + 1;
+            console.log("pouch " + disp + ": " + inventory[i]);
+        }
+        console.log("<-   You have a revolver with " + weaponDamage + " silver bullets.   ->\n");
+        
+     }
+}
+
+//* End declaration of function showStatus() *
 
 //* Begin declaration of function processWildmanCombat() *
 
@@ -651,7 +658,7 @@ else if(currentLocation === "hotel") {
         sleep(1000);
         console.log("Yes! The hotel owner says there's a 2-dollar bounty.\n");
         sleep(1000);
-        console.log("That's right!  Here you go, two silver dollars.");
+        console.log("That's right!  Here you go, two silver dollars.\n");
         playerSilver = playerSilver + 2;
         wildmanBounty == true;
 
