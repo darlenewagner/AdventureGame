@@ -59,6 +59,7 @@ let dogman3Bounty = false;
 let dogmanBite = false;
 let blacksmithName = "Jethro";
 let innkeeperName = "Felina";
+let spokenWithInnkeeper = false;
 
 let inventory = ["empty", "empty", "empty", "empty"];
 
@@ -424,6 +425,8 @@ function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monst
             [playerHealth, inventory] = useHealing(playerHealth, inventory);
          }
         }
+    monsterDefense = 5;
+    
     return [wildman, player, playerHealth, weaponDamage, monsterDefense, inventory];
 }
 
@@ -596,7 +599,7 @@ while(gameRunning)
      sleep(1500);
      console.log("Don't light out for the badlands yet! I might suggest spending the night in the hotel or in the attic of my Barbershop.\n");
      sleep(2000);
-     console.log("Where can I get guns?");
+     console.log("Where can I get guns?\n");
      sleep(1500);
      console.log("The Blacksmith Shop!\n");
      sleep(1500);
@@ -632,58 +635,76 @@ while(gameRunning)
   }
 else if(currentLocation === "hotel") {
     console.log("=== HOTEL IN VILLAGE ===");
-    console.log("Good evening Sheriff " + playerName + ". I'm Felina the hotel owner.\n");
-    sleep(1500);
-    console.log("Pleased to make your aquaintance ma'am.\n");
-    sleep(1500);
-    console.log("I want to help you because if you survive the first week, then you survive!");
-    sleep(1500);
-    console.log("The best thing to do if you see the werewolf is to run and not fight until you can make friends who can help you.");
-    sleep(2000);
-    console.log("Even then, you can still get hurt running from the werewolf or any of his infected.\n");
-    sleep(1500);
-    console.log("Infected!?\n");
-    sleep(1500);
-    console.log("Yes. The infected were once humans but they got turned into wildmen and dogmen by the werewolf.");
-    sleep(3000);
-    console.log("The effort to escape a dogman or wildman can cost you 20 health points.");
-    sleep(1500);
-    console.log("It would take " + monsterDefense + " bullets from a revolver to kill an infected and more to kill the werewolf.");
-    sleep(1500);
-    console.log("If an infected is wounded to within 2 points of dying, you can finish it off with a knife or tomahawk." );
-    sleep(3000);
-    console.log("And you will have to go to the barber within a half day to get any of your wounds cauterized.\n");
-    sleep(1500);
-    console.log("What if I'm too far outside town?\n");
-    sleep(1500);
-    console.log("Then the wounds could turn you into an infected. A healing poultice can give you a whole day to make it back to town.");
-    sleep(1500);
-    console.log("Just when in doubt, go to Edgar the Barber. I help him by making the herbal healing poultices.");
-    sleep(3000);
-    console.log("Each of his treatments can restore your health by 30 points.");
-    console.log("Or you can buy a pack of bandages and healing poultice from him if you're stuck in the badlands.\n")
-    sleep(3000);
-    console.log("So let me get this straight, it takes " + monsterDefense + " bullets to kill an infected?\n");
-    sleep(1500);
-    console.log("Yes, and a lot more than " + monsterDefense + " to kill the werewolf.");
-    sleep(1500);
-    console.log("And I can lose 20 health just by escaping one of these monsters while Edgar can give me " + barberHealingValue + " health points?\n");
-    sleep(3000);
-    console.log("Where do I eat or sleep if I run out of silver?\n");
-    sleep(1500);
-    console.log("Wildmen are fairly easy to kill. You get a bounty of 2 silver dollars from the General Store for each wildman.\n");
-    sleep(1500);
-    console.log("What about dogmen?");
-    sleep(1500);
-    console.log("It's eight silver dollars for each dogman.\n");
-    sleep(1500);
-    console.log("What's the bounty for the werewolf?\n");
-    sleep(1500);
-    console.log("You would become the new owner of the General Store and the Grist Mill and the Corn Crib!");
-    sleep(1500);
-    console.log("...But remember, everyone who has gone after the werewolf either got eaten or infected.");
-    sleep(1500);
-    console.log("Since the dogmen go about in packs, no one has survived them either.\n");
+    if(spokenWithInnkeeper == false){
+      console.log("Good evening Sheriff " + playerName + ". I'm Felina the hotel owner.\n");
+      sleep(1500);
+      console.log("Pleased to make your aquaintance ma'am.\n");
+      sleep(1500);
+      console.log("I want to help you because if you survive the first week, then you survive!");
+      sleep(1500);
+      console.log("The best thing to do if you see the werewolf is to run and not fight until you can make friends who can help you.");
+      sleep(1500);
+      console.log("Even then, you can still get hurt running from the werewolf or any of his infected.\n");
+      sleep(1500);
+      console.log("Infected!?\n");
+      sleep(1500);
+      console.log("Yes. The infected were once humans but they got turned into wildmen and dogmen by the werewolf.");
+      sleep(1500);
+      console.log("The effort to escape a dogman or wildman can cost you 20 health points.");
+      sleep(1500);
+      console.log("It would take " + monsterDefense + " bullets from a revolver to kill an infected and more to kill the werewolf.");
+      sleep(1500);
+      console.log("If an infected is wounded to within 2 points of dying, you can finish it off with a knife or tomahawk." );
+      sleep(1500);
+      console.log("And you will have to go to the barber within a half day to get any of your wounds cauterized.\n");
+      sleep(1500);
+      console.log("What if I'm too far outside town?\n");
+      sleep(1500);
+      console.log("Then the Feral Virus in the wounds could turn you into an infected. A healing poultice can give you a whole day to make it back to town.");
+      sleep(1500);
+      console.log("Just when in doubt, go to Edgar the Barber. I help him by making the herbal healing poultices.");
+      sleep(3000);
+      console.log("Each of his treatments can restore your health by 30 points.");
+      console.log("Or you can buy a pack of bandages and healing poultice from him for when you're stuck in the badlands.\n")
+      sleep(3000);
+      console.log("So let me get this straight, it takes " + monsterDefense + " bullets to kill an infected?\n");
+      sleep(1500);
+      console.log("Yes, and a lot more than " + monsterDefense + " to kill the werewolf.");
+      sleep(1500);
+      console.log("And I can lose 20 health just by escaping one of these monsters while Edgar can give me " + barberHealingValue + " health points?\n");
+      sleep(3000);
+      console.log("Where do I eat or sleep if I run out of silver?\n");
+      sleep(1500);
+      console.log("Wildmen are fairly easy to kill. You get a bounty of 2 silver dollars from the General Store for each wildman.\n");
+      sleep(1500);
+      console.log("What about dogmen?");
+      sleep(1500);
+      console.log("It's eight silver dollars for each dogman.\n");
+      sleep(1500);
+      console.log("What's the bounty for the werewolf?\n");
+      sleep(1500);
+      console.log("You would become the new owner of the General Store and the Grist Mill and the Corn Crib!");
+      sleep(1500);
+      console.log("...But remember, everyone who has gone after the werewolf either got eaten or infected.");
+      sleep(1500);
+      console.log("Since the dogmen go about in packs, no one has survived them either.\n");
+      spokenWithInnkeeper = true;
+    }
+    else{
+      console.log("Good evening " + innkeeperName + ". \nI would like a room for the next couple of nights so I can recuperate.\n");
+      sleep(2000);
+      console.log("For 1 silver dollar, you may stay 3 nights and get breakfast in bed every morning!");
+      sleep(2000);
+      console.log("\nThat's not a bad deal!");
+      sleep(2000);
+      playerSilver = playerSilver - 1;  // The only instance where the Sheriff can go into debt
+      if(playerHealth <= 90) { 
+        playerHealth = playerHealth + 10;
+      }
+
+      [playerHealth, inventory] = useHealing(playerHealth, inventory);
+    }
+
     sleep(4000);
 
    }
