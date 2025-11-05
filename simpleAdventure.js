@@ -62,8 +62,9 @@ let innkeeperName = "Felina";
 
 let inventory = ["empty", "empty", "empty", "empty"];
 
-//* Housekeeping functions to help timing and flow of exection *
-
+//
+//* ########## HOUSEKEEPING FUNCTIONS FOR TIMING AND FLOW OF EXECUTION ##########
+//
 // Define a sleep function
 function sleep(milliseconds) {
   const date = Date.now();
@@ -74,26 +75,9 @@ function sleep(milliseconds) {
 }
 
 
-//* Begin declaration of function showStatus() * for showing health, money, location, and inventory *
-
-function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage) {
-      
-     console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
-     console.log("<-            You have " + playerSilver + " silver dollars.              ->");
-     console.log("<-   And your current location is " + previousLocation + ".");
-     if(inventory[0] != "empty") {
-        for(let i = 0; i < 4; i++)
-        {
-            disp = i + 1;
-            console.log("pouch " + disp + ": " + inventory[i]);
-        }
-        console.log("<-   You have a revolver with " + weaponDamage + " silver bullets.   ->\n");
-        
-     }
-}
-
-//* End declaration of function showStatus() *
-
+//
+// ########## LOCATION CHOICE FUNCTIONS: chooseLocation() and movePlayer() ##########
+//
 //* Begin declaration of function chooseLocation() * enabling user to choose where to go in game *
 
 function chooseLocation(currentLocation, previousLocation, atLanding, correctChoice) {
@@ -204,7 +188,6 @@ try {
              atLanding = false;
              //console.log("Previously at Landing");
      }
-
  else if(isNaN(placeChoice)){
      throw "Please choose a valid number between 0 and 7!";
    }
@@ -293,9 +276,61 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 
 //* End declaration of function movePlayer() *
 
+//
+// ######## GAME PLAY FUNCTIONS: showStatus(), useHealing(), and processWildmanCombat() ########
+//
+//* Begin declaration of function showStatus() * for showing health, money, location, and inventory *
+
+function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage) {
+      
+     console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
+     console.log("<-            You have " + playerSilver + " silver dollars.              ->");
+     console.log("<-   And your current location is " + previousLocation + ".");
+     if((inventory[0] != "empty") || (inventory[1] != "empty") || (inventory[2] != "empty") || (inventory[3] != "empty")) {
+        for(let i = 0; i < 4; i++)
+        {
+            disp = i + 1;
+            console.log("pouch " + disp + ": " + inventory[i]);
+        }
+        console.log("<-   You have a revolver with " + weaponDamage + " silver bullets.   ->\n");
+        
+     }
+}
+
+//* End declaration of function showStatus() *
+
+//* Begin declaration of function useHealing() *
+
+function useHealing(playerHealth, inventory) {
+  let foundWoundKit = false;
+  let indexOfKit = 0;
+   for(let i = 0; i < 4; i++){
+     if(inventory[i] === "woundKit"){
+       foundWoundKit = true;
+       indexOfKit = i;
+     }
+   }
+  
+   if((playerHealth < 70) && (foundWoundKit == true)){
+      console.log("Your health is " + playerHealth + " and you have a wound kit.");
+      sleep(2000);
+      useWoundKit = readline.question("Do you want to use your wound kit to gain 10 health points? \n(Reply Y, Yes, or + to use the wound kit.)\n");
+       
+      if((useWoundKit === "Y") || (useWoundKit === "Yes") || (useWoundKit === "y") || (useWoundKit === "yes") || (useWoundKit === "+"))
+        {
+           inventory[indexOfKit] = "empty";
+           playerHealth = playerHealth + 10;
+        }      
+   }
+
+   return [playerHealth, inventory];
+}
+
+//* End declaration of function useHealing() *
+
 //* Begin declaration of function processWildmanCombat() *
 
-function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith) {
+function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith, inventory) {
       console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
       console.log("<-              The sun is about to set ...                        ->");
       sleep(2000);
@@ -307,18 +342,19 @@ function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monst
      if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || (playerFight === "yes") || (playerFight === "+"))
       {
          console.log("<-                     The Battle Begins!!!                         ->");
-
+         sleep(1000);
         if(visitedBlacksmith){  
           console.log("<-            You fire your revolver and hit the wildman!            ->");
           weaponDamage = weaponDamage - 1;
           monsterDefense = monsterDefense - 1;
-
+          sleep(1000);
           console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
-   
+          sleep(1000);
           playerHealth = playerHealth - 20;
 
           while((monsterDefense > 0) && (playerHealth > 30)) {
               console.log("<-            You fire and hit the wildman again!            ->");
+              sleep(1500);
               weaponDamage = weaponDamage - 1;
               monsterDefense = monsterDefense - 1;
             if(monsterDefense >= 3){
@@ -328,8 +364,12 @@ function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monst
           } 
            if(monsterDefense == 0){
               wildman = false;
+              sleep(1500);
               console.log("<-     The wildman is dead, but you are seriously injured!     ->");
               console.log("<-       You must return to the village before nightfall!      ->");
+              sleep(1500);
+              [playerHealth, inventory] = useHealing(playerHealth, inventory);
+              sleep(2000);
             }
            else if(playerHealth <= 30){
             console.log("<-          You are too seriously injured to keep fighting.            ->");
@@ -379,10 +419,12 @@ function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monst
             player = false;
          }
          else {
-        console.log("<-   ... but you still manage to escape. Your health is " + playerHealth + ". ->");
+            console.log("<-   ... but you still manage to escape. Your health is " + playerHealth + ". ->");
+            sleep(1500);
+            [playerHealth, inventory] = useHealing(playerHealth, inventory);
          }
         }
-    return [wildman, player, playerHealth, weaponDamage, monsterDefense];
+    return [wildman, player, playerHealth, weaponDamage, monsterDefense, inventory];
 }
 
 //* End declaration of function processWildmanCombat() *
@@ -541,8 +583,8 @@ while(gameRunning)
     }
   else if((currentLocation === "blacksmith") && (visitedBlacksmith == true))
     {
-        console.log("<- You do not have enough silver dollars to visit the blacksmith again. ->");
-        console.log("<-                 Please choose another location.                      ->\n");
+        console.log("<- You do not have enough silver dollars to visit the blacksmith at this time. ->");
+        console.log("<-                     Please choose another location.                         ->\n");
     }
   else if(currentLocation === "village") {
      console.log("=== MIDDLE OF VILLAGE ===");
@@ -572,7 +614,8 @@ while(gameRunning)
       playerSilver = playerSilver - 1;
     }
     else if ((playerHealth < 40) || (dogmanBite == true)) {
-      console.log("Oh my! oh my! Poor Sheriff " + playerName + ". Don't worry I've seen worse out here!");
+      console.log("Oh my! Oh my! Poor Sheriff " + playerName + ". Don't worry I've seen worse out here!");
+      sleep(1500);
       console.log("You will need irrigation, cautery, and poultices for two dollars. An extra dollar for anaesthetic.\n");
       console.log("I don't need anaesthetic!\n");
       console.log("Okay, hold still!!!  You're going to have to spend the night here too.");
@@ -651,7 +694,7 @@ else if(currentLocation === "hotel") {
         sleep(1000);
         console.log("Yes! The hotel owner says there's a 2-dollar bounty.\n");
         sleep(1000);
-        console.log("That's right!  Here you go, two silver dollars.");
+        console.log("That's right!  Here you go, two silver dollars.\n");
         playerSilver = playerSilver + 2;
         wildmanBounty == true;
 
@@ -670,7 +713,7 @@ else if(currentLocation === "hotel") {
   if((wildman) && (player)) {
       
      //
-       [wildman, player, playerHealth, weaponDamage, monsterDefense] = processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith);
+       [wildman, player, playerHealth, weaponDamage, monsterDefense, inventory] = processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith, inventory);
       //
 
       }
