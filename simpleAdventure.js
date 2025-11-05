@@ -332,6 +332,7 @@ function useHealing(playerHealth, inventory) {
 //* Begin declaration of function processWildmanCombat() *
 
 function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith, inventory) {
+      let wildManDefense = monsterDefense;
       console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
       console.log("<-              The sun is about to set ...                        ->");
       sleep(2000);
@@ -344,7 +345,7 @@ function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monst
       {
          console.log("<-                     The Battle Begins!!!                         ->");
          sleep(1000);
-        if(visitedBlacksmith){  
+        if((visitedBlacksmith) && (weaponDamage > 0)){  
           console.log("<-            You fire your revolver and hit the wildman!            ->");
           weaponDamage = weaponDamage - 1;
           monsterDefense = monsterDefense - 1;
@@ -353,7 +354,7 @@ function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monst
           sleep(1000);
           playerHealth = playerHealth - 20;
 
-          while((monsterDefense > 0) && (playerHealth > 30)) {
+          while((monsterDefense > 0) && (playerHealth > 30) && (weaponDamage > 0)) {
               console.log("<-            You fire and hit the wildman again!            ->");
               sleep(1500);
               weaponDamage = weaponDamage - 1;
@@ -381,6 +382,11 @@ function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monst
                 gameRunning = false;
                 player = false;
              }
+            else if(weaponDamage < 1){
+                console.log("<-           You have run out of bullets!               ->");
+                sleep(1000);
+                console.log("<-  You must retreat and head back to the village!      ->");
+               }
             else { 
             console.log("<-    Your health is " + playerHealth + " but you still manage to escape.    ->");
             sleep(1500);
@@ -425,8 +431,8 @@ function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monst
             [playerHealth, inventory] = useHealing(playerHealth, inventory);
          }
         }
-    monsterDefense = 5;
-    
+  //    monsterDefense = 5; // monsterDefense does not regenerate for wildmen
+
     return [wildman, player, playerHealth, weaponDamage, monsterDefense, inventory];
 }
 
