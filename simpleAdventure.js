@@ -23,7 +23,7 @@ const readline = require('readline-sync');
 
 //console.log('Hello World Here!');
 console.log("======================================================================");
-console.log("<-                       The Werewolf Quest                         ->");
+console.log("<-                      The Feral West Quest                        ->");
 console.log("======================================================================");
 console.log("<- Become the new sheriff who defeats the werewolf in the badlands! ->");
 console.log("======================================================================\n");
@@ -65,7 +65,7 @@ let spokenWithInnkeeper = false;
 let inventory = ["empty", "empty", "empty", "empty"];
 
 //
-//* ########## HOUSEKEEPING FUNCTIONS FOR TIMING AND FLOW OF EXECUTION ##########
+//* ########## HOUSEKEEPING FUNCTIONS: sleep() and helpMenu() ##########
 //
 // Define a sleep function
 function sleep(milliseconds) {
@@ -76,8 +76,42 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
+// first call to sleep()
+sleep(1500);
 
-sleep(2000);
+
+// define function helpMenu() for players who get stuck
+
+function helpMenu() {
+
+  console.log("\n===================================================================");
+  console.log("==================== Hello from helpMenu() ========================");
+  console.log("\nFeral West Quest is a user-choice-driven game written in JavaScript.");
+  sleep(6000);
+  console.log("To move to the next step, the user chooses a number between 1 and 7.");
+  console.log("Not all numbers between 1 and 7 are available as choices for all steps.");
+  sleep(6000);
+  console.log("\n======== To exit the game, the user chooses the number 0. ========");
+  sleep(6000);
+  console.log("\n Strategy and alliance-building are key to defeating all monsters");
+  console.log("in the Feral West Quest. ========================================"); 
+  sleep(6000);
+  console.log("===========================  For example, it is recommended that the");
+  console.log("player choose option 3, for Blacksmith, option 2 for Barbershop, and");
+  console.log("option 4 for Hotel, before heading to the badlands to fight monsters.");
+  sleep(8000);
+  console.log("===================================================================");
+  console.log("After defeating the first monster, a wildman, it is recommended to ");
+  console.log("go to the General Store (option 5), the Blacksmith (option 3), and ");
+  console.log("the Barbershop (option 2) in that order to reload bullets and health.");
+  sleep(8000);
+  console.log("\nIn short, the Blacksmith is for obtaining the revolver and more bullets.");
+  console.log("The Barbershop is for major healing, the Hotel is for information and ");
+  console.log("minor healing, while the General Store and Village allow earning dollars.");
+  console.log("\n========================= Happy Hunting ============================\n");
+
+}
+// end definition of helpMenu()
 
 //
 // ########## LOCATION CHOICE FUNCTIONS: chooseLocation() and movePlayer() ##########
@@ -88,21 +122,21 @@ function chooseLocation(currentLocation, previousLocation, atLanding, correctCho
 
 try {  
      if((currentLocation === "landing") || (currentLocation === "village")) {   
-        console.log("\n===========================================================");
+        console.log("\n===================================================================");
         if(currentLocation === "landing"){ 
-            console.log("<-     To go to the middle of the village, type 1           ->");
+            console.log("<-       To go to the middle of the village, type 1             ->");
             atLanding = false;
           }
-        console.log("<-     To go to the Barbershop, type 2.                     ->");
-        console.log("<-     To go to the Blacksmith shop, type 3.                ->");
-        console.log("<-     To go to the Hotel, type 4.                          ->");
-        console.log("<-     To go to the General Store, type 5.                  ->");
-        console.log("<-     To go check your status and inventory, type 6.       ->");
-        console.log("<-     To head out to the Badlands right away, type 7.      ->");
-        console.log("<-     To exit the game, type 0                             ->\n");
+        console.log("<-       To go to the Barbershop, type 2.                       ->");
+        console.log("<-       To go to the Blacksmith shop, type 3.                  ->");
+        console.log("<-       To go to the Hotel, type 4.                            ->");
+        console.log("<-       To go to the General Store, type 5.                    ->");
+        console.log("<-       To go check your status and inventory, type 6.         ->");
+        console.log("<-       To head out to the Badlands right away, type 7.        ->");
+        console.log("<-       To exit the game, type 0                               ->\n");
       }
       else if(currentLocation === "barbershop") {
-        console.log("\n===========================================================");
+        console.log("\n===============================================================");
         console.log("<-     To go to the middle of the village, type 1           ->");
         // console.log("<-     To go to the Barbershop, type 2.                     ->");
         console.log("<-     To go to the Blacksmith shop, type 3.                ->");
@@ -220,6 +254,11 @@ try {
  catch(error)
    {
      console.log("\nError: ", error);
+     needHelp = readline.question("\nIf you want to see the help menu, type Y, Yes or +, otherwise press enter:");
+     if((needHelp === "Y") || (needHelp === "Yes") || (needHelp === "y") || (needHelp === "yes") || (needHelp === "+"))
+      {
+        helpMenu();  
+      }
    }
 
   return [placeChoice, correctChoice];
@@ -531,6 +570,12 @@ answer1 = readline.question("<- Answer, Y or N: ");
         }
         catch(error) {
             console.log("Error: ", error);
+                 needHelp = readline.question("\nIf you want to see the help menu, type Y, Yes or +, otherwise press enter:");
+                 if((needHelp === "Y") || (needHelp === "Yes") || (needHelp === "y") || (needHelp === "yes") || (needHelp === "+"))
+                  {
+                    helpMenu();  
+                  }
+
         }
       }
     }
@@ -641,7 +686,14 @@ while(gameRunning)
      console.log("The Blacksmith Shop!\n");
      sleep(1500);
      console.log("... Or you could go down by the river to the General Store.\n");
-     sleep(3000);
+     sleep(4000);
+
+        needHelp = readline.question("\nFor recommendations on where to go next, type Y, Yes or +, otherwise press enter:");
+          if((needHelp === "Y") || (needHelp === "Yes") || (needHelp === "y") || (needHelp === "yes") || (needHelp === "+"))
+              {
+                  helpMenu();  
+              }
+
    }
  else if(currentLocation === "barbershop"){
     console.log("=== BARBERSHOP IN VILLAGE ===");
