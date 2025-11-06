@@ -67,7 +67,10 @@ let inventory = ["empty", "empty", "empty", "empty"];
 //
 //* ########## HOUSEKEEPING FUNCTIONS: sleep() and helpMenu() ##########
 //
-// Define a sleep function
+/**  Define a sleep function
+ * @param (integer) for time in milliseconds
+ * @returns no explicit value just syncronously pauses program execution
+*/
 function sleep(milliseconds) {
   const date = Date.now();
   let currentDate = null;
@@ -79,9 +82,10 @@ function sleep(milliseconds) {
 // first call to sleep()
 sleep(1500);
 
-
-// define function helpMenu() for players who get stuck
-
+/**  define function helpMenu() for players who get stuck
+ * @param (none)
+ * @returns no explicit value, outputs text to console
+*/
 function helpMenu() {
 
   console.log("\n===================================================================");
@@ -116,7 +120,11 @@ function helpMenu() {
 //
 // ########## LOCATION CHOICE FUNCTIONS: chooseLocation() and movePlayer() ##########
 //
-//* Begin declaration of function chooseLocation() * enabling user to choose where to go in game *
+/**  Begin declaration of function chooseLocation() 
+ * to enable menus to choose where to go in game and validate user choices
+ * @param (string, string, boolean, boolean) first boolean enables initialization and second boolean drives validation loop
+ * @returns (integer, boolean) to determine new location choice and if choice was valid
+*/ 
 
 function chooseLocation(currentLocation, previousLocation, atLanding, correctChoice) {
 
@@ -266,7 +274,11 @@ try {
 
 //* End declaration of function chooseLocation() *
 
-//* Begin declaration of function movePlayer() *
+/** Begin declaration of function movePlayer()  
+ * to relocate to different place in village or out to the Badlands
+ * @param (number, string, string, boolean)
+ * @returns (string, string, boolean) to determin new location or whether to continue game
+*/
 
 function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning) 
  {
@@ -322,7 +334,11 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 //
 // ######## GAME PLAY FUNCTIONS: showStatus(), useHealing(), and processWildmanCombat() ########
 //
-//* Begin declaration of function showStatus() * for showing health, money, location, and inventory *
+/**  Begin declaration of function showStatus()  
+ * For showing health, money, location, and inventory from any location
+ * @param (integer:0-100, integer:0-20, string, array, integer:0-6)
+ * @returns no explicit value, only prints to console 
+*/
 
 function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage) {
       
@@ -342,7 +358,12 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
 
 //* End declaration of function showStatus() *
 
-//* Begin declaration of function useHealing() *
+/**  Begin declaration of function useHealing()  
+ * For boosting playerHealth by 10 points if woundKit is in array inventory
+ * @param (integer:0-100, array)
+ * @returns no explicit value, only prints to console 
+*/
+
 
 function useHealing(playerHealth, inventory) {
   let foundWoundKit = false;
@@ -371,7 +392,16 @@ function useHealing(playerHealth, inventory) {
 
 //* End declaration of function useHealing() *
 
-//* Begin declaration of function processWildmanCombat() *
+/**  Begin declaration of function processWildmanCombat()  
+ * For "brining the wildman to life" so that he can hopefully be dispatched by 
+ * the player.  Four outcomes are possible: fight wildman and end him, fight wildman
+ * and he ends you (game over), retreat from wildman and both player and wildman survive,
+ * or retreat from wildman and he ends you anyway (game over).  Essential to end game 
+ * when playerHealth == 0 and also to end fight (retreat) when weaponDamage == 0.
+ * @param (boolean, boolean, integer:0-100, integer:0-6, integer:0-5, boolean, array)
+ * first two booleans are important for monitoring for when wildman and player are alive 
+ * @returns (boolean, boolean, integer:0-100, integer:0-6, integer:0-5, array)
+*/
 
 function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith, inventory) {
       let wildManDefense = monsterDefense;
@@ -455,13 +485,12 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
            //         [playerHealth, inventory] = useHealing(playerHealth, inventory);
            //       }
 
-  //}
-
-  //          else { 
-  //          console.log("<-    Your health is " + playerHealth + " but you still manage to escape.    ->");
-  //          sleep(1500);
-  //          console.log("<- Wildman health is " + monsterDefense + ".  Get healing in the village and come back to finish him later.")
-  //           }
+           //}
+           //          else { 
+           //          console.log("<-    Your health is " + playerHealth + " but you still manage to escape.    ->");
+           //          sleep(1500);
+           //          console.log("<- Wildman health is " + monsterDefense + ".  Get healing in the village and come back to finish him later.")
+          //        }
           
         
 
@@ -510,9 +539,11 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
 
 //
 //
-//*  INITIATE MAIN FOR PLAYING GAME  *
-//
-//
+//*                     INITIATE MAIN FOR PLAYING GAME  *
+/**                            Considerations: 
+ * 1. When playerHealth is 0 or less, game immediately ends. This is not a zombie game.
+ * 2. When weaponDamage (bullets) is 0, process Combat() ends. This is not a Hollywood Western.
+*/
 
 console.log("<- You have just disembarked the steamboat to walk up to the village of " + villageName + ". ->\n");
 
