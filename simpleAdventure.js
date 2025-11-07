@@ -64,7 +64,7 @@ let blacksmithName = "Jethro";
 let innkeeperName = "Felina";
 let spokenWithInnkeeper = false;
 
-let inventory = ["empty", "empty", "empty", "empty"];
+let inventory = [];
 
 //
 //* ########## HOUSEKEEPING FUNCTIONS: sleep() and helpMenu() ##########
@@ -334,8 +334,13 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 //* End declaration of function movePlayer() *
 
 //
-// ######## GAME PLAY FUNCTIONS: showStatus(), useHealing(), and processWildmanCombat() ########
+// ######## GAME PLAY FUNCTIONS: specialInventory(), showStatus(), useHealing(), and processWildmanCombat() ########
 //
+
+function specialInventory(playerName, inventory, weaponDamage){
+  console.log("If player chooses certain names, the character comes pre-equiped with 1 special weapon.");
+}
+
 /**  Begin declaration of function showStatus()  
  * For showing health, money, location, and inventory from any location
  * @param (integer:0-100, integer:0-20, string, array, integer:0-6)
@@ -347,14 +352,17 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
      console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
      console.log("<-            You have " + playerSilver + " silver dollars.              ->");
      console.log("<-   And your current location is " + previousLocation + ".");
-     if((inventory[0] != "empty") || (inventory[1] != "empty") || (inventory[2] != "empty") || (inventory[3] != "empty")) {
-        for(let i = 0; i < 4; i++)
+     if((inventory.includes("revolver")) || (inventory.includes("woundKit"))) {
+        i = 0;
+        while(i < inventory.length)
         {
             disp = i + 1;
             console.log("pouch " + disp + ": " + inventory[i]);
+            i++;
         }
-        console.log("<-   You have a revolver with " + weaponDamage + " silver bullets.   ->\n");
-        
+        if(inventory.includes("revolver")) {
+          console.log("<-   Your revolver has " + weaponDamage + " silver bullets.   ->\n");
+        }
      }
 }
 
@@ -370,11 +378,13 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
 function useHealing(playerHealth, inventory) {
   let foundWoundKit = false;
   let indexOfKit = 0;
-   for(let i = 0; i < 4; i++){
+  i = 0;
+   while(i < inventory.length){
      if(inventory[i] === "woundKit"){
        foundWoundKit = true;
        indexOfKit = i;
      }
+     i++;
    }
   
    if((playerHealth < 70) && (foundWoundKit == true)){
@@ -384,7 +394,7 @@ function useHealing(playerHealth, inventory) {
        
       if((useWoundKit === "Y") || (useWoundKit === "Yes") || (useWoundKit === "y") || (useWoundKit === "yes") || (useWoundKit === "+"))
         {
-           inventory[indexOfKit] = "empty";
+           inventory.splice(indexOfKit, 1);
            playerHealth = playerHealth + 10;
         }      
    }
@@ -395,7 +405,7 @@ function useHealing(playerHealth, inventory) {
 //* End declaration of function useHealing() *
 
 /**  Begin declaration of function processWildmanCombat()  
- * For "brining the wildman to life" so that he can hopefully be dispatched by 
+ * For "bringing the wildman to life" so that he can hopefully be dispatched by 
  * the player.  Four outcomes are possible: fight wildman and end him, fight wildman
  * and he ends you (game over), retreat from wildman and both player and wildman survive,
  * or retreat from wildman and he ends you anyway (game over).  Essential to end game 
@@ -649,7 +659,7 @@ while(gameRunning)
 
   if((currentLocation === "blacksmith") && (visitedBlacksmith == false)) 
     { 
-      if(inventory[1] === "empty")
+      if(inventory.includes("revolver") === false)
       {
        console.log("Greetings, Blacksmith, are you selling any weapons?\n");
        console.log("Yes, I have just the thing for you...");
@@ -687,7 +697,7 @@ while(gameRunning)
        playerSilver = playerSilver - 6;
        // increment amount of weaponDamage the revolver can do to the werewolf or other monsters.
        weaponDamage = weaponDamage + 6;
-       inventory[1] = "revolver";
+       inventory.push("revolver");
      }
      else {
        console.log("Howdy, Sheriff " + playerName + ". Ya need more bullets?\n");
@@ -753,7 +763,7 @@ while(gameRunning)
       console.log("How much?\n");
       console.log("One silver dollar.");
       playerSilver = playerSilver - 1;
-      inventory[2] = "woundKit";
+      inventory.push("woundKit");
     }
   }
 else if(currentLocation === "hotel") {
