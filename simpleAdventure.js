@@ -334,8 +334,13 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 //* End declaration of function movePlayer() *
 
 //
-// ######## GAME PLAY FUNCTIONS: showStatus(), useHealing(), and processWildmanCombat() ########
+// ######## GAME PLAY FUNCTIONS: specialInventory(), showStatus(), useHealing(), and processWildmanCombat() ########
 //
+
+function specialInventory(playerName, inventory, weaponDamage){
+  console.log("If player chooses certain names, the character comes pre-equiped with 1 special weapon.");
+}
+
 /**  Begin declaration of function showStatus()  
  * For showing health, money, location, and inventory from any location
  * @param (integer:0-100, integer:0-20, string, array, integer:0-6)
@@ -400,7 +405,7 @@ function useHealing(playerHealth, inventory) {
 //* End declaration of function useHealing() *
 
 /**  Begin declaration of function processWildmanCombat()  
- * For "brining the wildman to life" so that he can hopefully be dispatched by 
+ * For "bringing the wildman to life" so that he can hopefully be dispatched by 
  * the player.  Four outcomes are possible: fight wildman and end him, fight wildman
  * and he ends you (game over), retreat from wildman and both player and wildman survive,
  * or retreat from wildman and he ends you anyway (game over).  Essential to end game 
