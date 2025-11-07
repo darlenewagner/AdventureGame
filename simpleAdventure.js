@@ -49,8 +49,10 @@ let barberMedicine = 10;
 let weaponDamage = 0;
 let visitedBlacksmith = false;
 let wildman = true;
+let wildman1defense = 5;
 let wildmanBounty = false;
 let wildman2 = false;
+let wildman2defense = 0;
 let dogman1 = true;
 let dogman1Bounty = false;
 let dogman2 = true;
@@ -404,7 +406,7 @@ function useHealing(playerHealth, inventory) {
 */
 
 function processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith, inventory) {
-      let wildManDefense = monsterDefense;
+      //let wildManDefense = monsterDefense;
       console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
       console.log("<-              The sun is about to set ...                        ->");
       sleep(2000);
@@ -831,8 +833,8 @@ else if(currentLocation === "hotel") {
    }
   else if(currentLocation === "generalStore"){
     console.log("=== GENERALSTORE IN VILLAGE ===");
-    if((wildman == false) && (wildmanBounty == false)) {
-        console.log("Hi there Sheriff " + playerName + ". Looks like you killed the wildman.\n");
+    if(((wildman == false) || (wildman2 == false)) && (wildmanBounty == false)) {
+        console.log("Hi there Sheriff " + playerName + ". Looks like you killed a wildman.\n");
         sleep(1000);
         console.log("Yes! The hotel owner says there's a 2-dollar bounty.\n");
         sleep(1000);
@@ -853,14 +855,26 @@ else if(currentLocation === "hotel") {
        console.log("=== OUT IN THE BADLANDS ===");
 
   if((wildman) && (player)) {
+            
+     
+      [wildman, player, playerHealth, weaponDamage, wildman1defense, inventory] = processWildmanCombat(wildman, player, playerHealth, weaponDamage, wildman1defense, visitedBlacksmith, inventory);
       
-     //
-       [wildman, player, playerHealth, weaponDamage, monsterDefense, inventory] = processWildmanCombat(wildman, player, playerHealth, weaponDamage, monsterDefense, visitedBlacksmith, inventory);
-      //
+      // make wildman2 available for next combat
+       if(wildman == false) {
+           wildman2 = true;
+           wildman2defense = monsterDefense;
+        }
 
       }
-    else if(wildman === false) {
-         console.log("<- The wildman is dead.  Return to the village ... ->");
+    else if((wildman === false) && (wildman2 === true) && (player === true)){
+      
+      wildmanBounty = false;  // can pay another wildmanBounty now that another wildman is active
+
+      [wildman2, player, playerHealth, weaponDamage, wildman2defense, inventory] = processWildmanCombat(wildman2, player, playerHealth, weaponDamage, wildman2defense, visitedBlacksmith, inventory);
+      
+    }
+    else if((wildman === false) && (wildman2 === false)) {
+         console.log("<- All wildmen are dead.  Return to the village ... ->");
       }
    }
    
