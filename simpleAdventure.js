@@ -338,7 +338,8 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 //
 
 function specialInventory(playerName, inventory, weaponDamage){
-  console.log("If player chooses certain names, the character comes pre-equiped with 1 special weapon.");
+  console.log("If player chooses certain names, the character comes pre-equiped with 1 special weapon and a horse.");
+  // Later, these same characters appear as candidates for deputy, equipped with 2 weapons or a weapon and horse wagon
 }
 
 /**  Begin declaration of function showStatus()  
@@ -352,6 +353,10 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
      console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
      console.log("<-            You have " + playerSilver + " silver dollars.              ->");
      console.log("<-   And your current location is " + previousLocation + ".");
+     
+     // check inventory if revolver, woundKit, or shotgun have been added
+     // Special weapons, such as tomahawks, with which special characters begin the game,
+     // Are only shown if revolver, woundKit, and/or shotgun are added.
      if((inventory.includes("revolver")) || (inventory.includes("woundKit"))) {
         i = 0;
         while(i < inventory.length)
@@ -363,6 +368,13 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
         if(inventory.includes("revolver")) {
           console.log("<-   Your revolver has " + weaponDamage + " silver bullets.   ->\n");
         }
+     }
+     else if (1 < inventory.length) {
+       console.log("pouch 1: " + inventory[0]);
+       console.log("And a trusty horse named " + inventory[1]);
+     }
+     else {
+      console.log("You lack weapons and supplies appropriate for venturing into the Badlands!");
      }
 }
 
