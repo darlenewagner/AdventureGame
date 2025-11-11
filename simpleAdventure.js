@@ -358,7 +358,7 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
      // check inventory if revolver, woundKit, or shotgun have been added
      // Special weapons, such as tomahawks, with which special characters begin the game,
      // Are only shown if revolver, woundKit, and/or shotgun are added.
-     if((inventory.includes("revolver")) || (inventory.includes("woundKit"))) {
+     if((inventory.includes("revolver")) || (inventory.includes("woundKit")) || (inventory.includes("shotgun"))) {
         i = 0;
         while(i < inventory.length)
         {
@@ -749,7 +749,7 @@ while(gameRunning)
      console.log("... Or you could go down by the river to the General Store.\n");
      sleep(4000);
 
-        needHelp = readline.question("\nFor recommendations on where to go next, type Y, Yes or +, otherwise press enter:");
+        needHelp = readline.question("\nFor more recommendations on where to go next, type Y, Yes or +, otherwise press enter:");
           if((needHelp === "Y") || (needHelp === "Yes") || (needHelp === "y") || (needHelp === "yes") || (needHelp === "+"))
               {
                   helpMenu();  
@@ -877,7 +877,59 @@ else if(currentLocation === "hotel") {
           }
       } else {
               console.log("Good morning Sheriff " + playerName + ". What would you like to buy?");
-      }
+              sleep(2000);
+              console.log("\nWhat kind of things do you have to help me fight the wildmen or dogmen?\n");
+              sleep(2000);
+              console.log("How about a double-barrel shotgun with silver shot for two shells?");
+              sleep(2000);
+              console.log("Or a tomahawk for finishing off a monster after you've shot him?");
+              sleep(2000);
+              console.log("Later, when you hunt dogmen, you will need a horse in case you have to run away from them.");
+              sleep(3500);
+              console.log("\nCan I see some prices?\n");
+              sleep(2000);
+              console.log("Yes! Of course!");
+              try {
+                console.log("<-  A Tomahawk costs 1 dollar. To buy a Tomahawk, type 1:           ->");
+                console.log("<-  A shotgun + 2 shells costs 6 dollars. To buy a shotgun type 6.  ->");
+                console.log("<-  A horse costs 8 dollars. To buy a horse, type 8.                ->");
+                console.log("<-  To not purchase anything, type 0:                               ->\n");
+             
+                purchaseChoice = readline.question("Which item do you choose? (Enter a 1, 6, 8, or 0): ");
+                //purchaseChoice = Number(purchaseChoice);
+
+                 if(isNaN(purchaseChoice)){
+                    throw "Please choose a number 1, 6, 8, or 0, corresponding to silver dollars you will spend.";
+                  }
+                 else if(purchaseChoice.trim() == ""){
+                    throw "Cannot enter a blank space or return without a number!";
+                  }
+                  else if(purchaseChoice === '1'){
+                    inventory.push("tomahawk");
+                    playerSilver = playerSilver - 1;
+                  }
+                  else if(purchaseChoice === '6'){
+                    inventory.push("shotgun");
+                    playerSilver = playerSilver - 6;
+                  }
+                  else if(purchaseChoice === '8'){
+                    inventory.push("horseNamedCoffee");
+                    playerSilver = playerSilver - 8;
+                  }
+                  else{
+                    console.log("<-         No purchase made       ->\n")
+                  }
+                }
+                 catch(error)
+                     {
+                        console.log("\nError: ", error);
+                        needHelp = readline.question("\nIf you want to see the help menu, type Y, Yes or +, otherwise press enter:");
+                        if((needHelp === "Y") || (needHelp === "Yes") || (needHelp === "y") || (needHelp === "yes") || (needHelp === "+"))
+                         {
+                            helpMenu();  
+                         }
+                    }
+              }
   }
   else if(currentLocation === "badlands") {
        console.log("=== OUT IN THE BADLANDS ===");
