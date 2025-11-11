@@ -53,6 +53,7 @@ let wildman1defense = 5;
 let wildmanBounty = false;
 let wildman2 = false;
 let wildman2defense = 0;
+let wildman2Bounty = true;
 let dogman1 = true;
 let dogman1Bounty = false;
 let dogman2 = true;
@@ -369,12 +370,17 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
           console.log("<-   Your revolver has " + weaponDamage + " silver bullets.   ->\n");
         }
      }
-     else if (1 < inventory.length) {
+     else if (2 < inventory.length) {
        console.log("pouch 1: " + inventory[0]);
-       console.log("And a trusty horse named " + inventory[1]);
+       console.log("pouch 2: " + inventory[1]);
+       console.log("And a trusty horse named " + inventory[2]);
+     }
+     else if (inventory.length == 1) {
+      console.log("pouch 1: " + inventory[0]);
+      console.log("Otherwise, you lack sufficient weapons appropriate for venturing into the Badlands!");
      }
      else {
-      console.log("You lack weapons and supplies appropriate for venturing into the Badlands!");
+      console.log("You completely lack weapons or supplies for going into the Badlands!");
      }
 }
 
@@ -855,7 +861,7 @@ else if(currentLocation === "hotel") {
    }
   else if(currentLocation === "generalStore"){
     console.log("=== GENERALSTORE IN VILLAGE ===");
-    if(((wildman == false) || (wildman2 == false)) && (wildmanBounty == false)) {
+    if(((wildman == false) || (wildman2 == false)) && (wildmanBounty == false) && (wildman2Bounty == false)) {
         console.log("Hi there Sheriff " + playerName + ". Looks like you killed a wildman.\n");
         sleep(1000);
         console.log("Yes! The hotel owner says there's a 2-dollar bounty.\n");
@@ -884,6 +890,7 @@ else if(currentLocation === "hotel") {
       // make wildman2 available for next combat
        if(wildman == false) {
            wildman2 = true;
+           wildman2Bounty = false;
            wildman2defense = monsterDefense;
         }
 
