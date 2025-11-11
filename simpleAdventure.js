@@ -459,17 +459,33 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
 
       while((monsterDefense > 0) && (playerHealth > 30) && (weaponDamage > 0)) 
         {
-               console.log("<-            You fire and hit the wildman again!            ->");
-               sleep(1500);
-               weaponDamage = weaponDamage - 1;
-               monsterDefense = monsterDefense - 1;
-                 // if((monsterDefense > 0) && (playerHealth > 30) && (weaponDamage > 0)){
-                 // break;
-                 // }
-             if(monsterDefense >= 3){
-                   console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
-                   playerHealth = playerHealth - 30;
-                }
+
+             if(monsterDefense >= 4) {
+                  console.log("<-                You fire and hit the wildman again!                 ->");
+                  sleep(1500);
+                  weaponDamage = weaponDamage - 1;
+                  monsterDefense = monsterDefense - 1;
+                  console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
+                  sleep(1500);
+                  playerHealth = playerHealth - 30;
+              }
+              else if((monsterDefense < 4) && (inventory.includes("tomahawk"))){
+                  console.log("<-     You strike the wildman with your tomahawk to save bullets!           ->");
+                  monsterDefense = monsterDefense - 1;
+                  sleep(1500);
+              }
+              else if(inventory.includes("revolver")){
+                  console.log("<-                You fire and hit the wildman again!                 ->");
+                  sleep(1500);
+                  weaponDamage = weaponDamage - 1;
+                  monsterDefense = monsterDefense - 1;
+
+              }
+             //if(monsterDefense >= 3){
+              //     console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
+              //     sleep(1500);
+              //     playerHealth = playerHealth - 30;
+              //  }
         } 
        if(monsterDefense == 0)
           {
@@ -758,22 +774,30 @@ while(gameRunning)
    }
  else if(currentLocation === "barbershop"){
     console.log("=== BARBERSHOP IN VILLAGE ===");
-    if((playerHealth >= 40) && (playerHealth <= 70)){
+    if((playerHealth > 30) && (playerHealth <= 70)){
       console.log("Okay, Sheriff " + playerName + ". Let me take care of those wounds.");
       console.log("You will need irrigation and cautery for a dollar. An extra dollar for anaesthetic.\n");
       console.log("I don't need anaesthetic!\n");
       console.log("Okay, hold still!!!  You're going to have to spend the night here too.");
-      playerHealth = playerHealth + 30;
+      if(playerHealth <= 60) { 
+         playerHealth = playerHealth + 40;
+      }
+      else
+      {
+        playerHealth = playerHealth + 30;
+      }
+
       playerSilver = playerSilver - 1;
     }
-    else if ((playerHealth < 40) || (dogmanBite == true)) {
+    else if ((playerHealth <= 30) || (dogmanBite == true)) {
       console.log("Oh my! Oh my! Poor Sheriff " + playerName + ". Don't worry I've seen worse out here!");
       sleep(1500);
       console.log("You will need irrigation, cautery, and poultices for two dollars. An extra dollar for anaesthetic.\n");
       console.log("I don't need anaesthetic!\n");
-      console.log("But then I got to put maggots on your wounds to get that Feral Virus out of you.")
+      sleep(2000);
+      console.log("But then I got to put maggots on your wounds to get that Feral Virus out of you.");
       console.log("So hold still!!!  You're going to have to spend the night here too.");
-      playerHealth = playerHealth + 40;
+      playerHealth = playerHealth + 50;
       playerSilver = playerSilver - 2;
     }
     else  {
@@ -870,7 +894,7 @@ else if(currentLocation === "hotel") {
         playerSilver = playerSilver + 2;
         wildmanBounty == true;
 
-        if(playerSilver >= 9)
+        if(playerSilver >= 7)
           {
             visitedBlacksmith = false;
             console.log("You may go back to the blacksmith."); 
