@@ -931,8 +931,8 @@ else if(currentLocation === "hotel") {
      
            if(wildman == false) {
               playerSilver = playerSilver + 2;
-            wildmanBounty == true;
-            wildman2Bounty == true;
+            wildmanBounty = true;
+            wildman2Bounty = true;
            }
            else if(wildman2 == false){
               playerSilver = playerSilver + 2;
@@ -1044,7 +1044,7 @@ else if(currentLocation === "hotel") {
       // make wildman2 available for next combat
        if(wildman == false) {
            wildmanBounty = false;
-           wildman2Bounty = true;
+           //wildman2Bounty = true;
            wildman2defense = monsterDefense;
         }
 //        else if(wildman2 == false){
