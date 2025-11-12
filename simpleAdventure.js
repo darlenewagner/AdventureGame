@@ -47,6 +47,7 @@ let monsterDefense = 5;
 let barberHealingValue = 30;
 let barberMedicine = 10;
 let weaponDamage = 0;
+let shotgunDamage = 0;
 let visitedBlacksmith = false;
 let wildman = true;
 let wildman1defense = 5;
@@ -349,7 +350,7 @@ function specialInventory(playerName, inventory, weaponDamage){
  * @returns no explicit value, only prints to console 
 */
 
-function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage) {
+function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage, shotgunDamage) {
       
      console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
      console.log("<-            You have " + playerSilver + " silver dollars.              ->");
@@ -368,6 +369,10 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
         }
         if(inventory.includes("revolver")) {
           console.log("<-   Your revolver has " + weaponDamage + " silver bullets.   ->\n");
+        }
+        if(inventory.includes("shotgun")) {
+          let shots = shotgunDamage / 2;
+          console.log("<-          Your shotgun has " + shots + " shots.             ->\n");
         }
      }
      else if (2 < inventory.length) {
@@ -447,7 +452,56 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
   {
          console.log("<-                     The Battle Begins!!!                         ->");
          sleep(1000);
- if((visitedBlacksmith) && (weaponDamage > 0))
+ if(inventory.includes("shotgun") && inventory.includes("tomahawk") && (shotgunDamage > 0)) {
+          console.log("<-            You fire your shotgun and hit the wildman!            ->");
+          shotgunDamage = shotgunDamage - 2;
+          monsterDefense = monsterDefense - 2;
+          sleep(1000);
+          console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+          sleep(1000);
+          playerHealth = playerHealth - 20;
+
+          while((monsterDefense > 0) && (playerHealth > 30)){
+
+             if((monsterDefense < 4) && (inventory.includes("tomahawk"))){
+                  console.log("<-     You strike the wildman with your tomahawk to save bullets!           ->");
+                  monsterDefense = monsterDefense - 1;
+                  sleep(1500);
+              }
+              else if(inventory.includes("revolver")){
+                  console.log("<-         You fire your revolver and hit the wildman again!                ->");
+                  sleep(1500);
+                  weaponDamage = weaponDamage - 1;
+                  monsterDefense = monsterDefense - 1;
+
+              }
+          }
+        
+        if(monsterDefense == 0)
+          {
+                 wildman = false;
+                 sleep(1500);
+                 console.log("<-     The wildman is dead, but you are seriously injured!     ->");
+                 console.log("<-       You must return to the village before nightfall!      ->");
+                 sleep(1500);
+                 [playerHealth, inventory] = useHealing(playerHealth, inventory);
+                 sleep(2000);
+          }
+       else if(playerHealth <= 30)
+          {
+                console.log("<-          You are too seriously injured to keep fighting.            ->");
+                sleep(1000);
+                console.log("<-  You must retreat and head back to the village!      ->");
+               if(playerHealth <= 0){
+                     console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
+                     console.log("<-         Coyotes will devour your body!                 ->");
+                     gameRunning = false;
+                     player = false;
+                    }
+          }
+
+      }
+ else if((inventory.includes("revolver")) && (weaponDamage > 0))
      {  
           console.log("<-            You fire your revolver and hit the wildman!            ->");
           weaponDamage = weaponDamage - 1;
@@ -457,6 +511,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
           sleep(1000);
           playerHealth = playerHealth - 20;
 
+          
       while((monsterDefense > 0) && (playerHealth > 30) && (weaponDamage > 0)) 
         {
 
@@ -481,11 +536,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                   monsterDefense = monsterDefense - 1;
 
               }
-             //if(monsterDefense >= 3){
-              //     console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
-              //     sleep(1500);
-              //     playerHealth = playerHealth - 30;
-              //  }
+             
         } 
        if(monsterDefense == 0)
           {
@@ -524,22 +575,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                    player = false;
                    }
             }
-      }
-           // else {
-           //         console.log("<-   ... but you still manage to escape. Your health is " + playerHealth + ". ->");
-           //         sleep(1500);
-           //         [playerHealth, inventory] = useHealing(playerHealth, inventory);
-           //       }
-
-           //}
-           //          else { 
-           //          console.log("<-    Your health is " + playerHealth + " but you still manage to escape.    ->");
-           //          sleep(1500);
-           //          console.log("<- Wildman health is " + monsterDefense + ".  Get healing in the village and come back to finish him later.")
-          //        }
-          
-        
-
+       }
   else { 
               console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
               playerHealth = playerHealth - 20;
@@ -683,7 +719,7 @@ while(gameRunning)
 {
   if(currentLocation === "status") {
    
-    showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage);
+    showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage, shotgunDamage);
     
          // if(previousLocation === "village") {
          //  currentLocation = previousLocation;
@@ -885,19 +921,35 @@ else if(currentLocation === "hotel") {
    }
   else if(currentLocation === "generalStore"){
     console.log("=== GENERALSTORE IN VILLAGE ===");
-    if(((wildman == false) || (wildman2 == false)) && (wildmanBounty == false) && (wildman2Bounty == false)) {
-        console.log("Hi there Sheriff " + playerName + ". Looks like you killed a wildman.\n");
+    if((((wildman == false) && (wildman2 == false)) || ((wildman == false) && (wildman2 == true))) && ((wildmanBounty == false) || (wildman2Bounty == false))) {
+        console.log("Hi there Sheriff " + playerName + ". Looks like you killed a wildman or two.\n");
         sleep(1000);
         console.log("Yes! The hotel owner says there's a 2-dollar bounty.\n");
         sleep(1000);
         console.log("That's right!  Here you go, two silver dollars.\n");
-        playerSilver = playerSilver + 2;
-        wildmanBounty == true;
+      
+     
+           if(wildman == false) {
+              playerSilver = playerSilver + 2;
+            wildmanBounty == true;
+           }
+           else if(wildman2 == false){
+              playerSilver = playerSilver + 2;
+             wildman2Bounty = true;
+           }
+
+           if(shotgunDamage < 4){
+             let shotNeeded = 4 - shotgunDamage;
+             console.log("I can take back " + shotNeeded/2 + " silver dollars to reload your shotgun.\n");
+             console.log("OK. Thanks.");
+             playerSilver = playerSilver - shotNeeded/2;
+             shotgunDamage = shotgunDamage + shotNeeded;
+           }
 
         if(playerSilver >= 7)
           {
             visitedBlacksmith = false;
-            console.log("You may go back to the blacksmith."); 
+            console.log("You have enough silver dollars to go to the blacksmith."); 
           }
       } else {
               console.log("Good morning Sheriff " + playerName + ". What would you like to buy?");
@@ -934,6 +986,7 @@ else if(currentLocation === "hotel") {
                   }
                   else if(purchaseChoice === '6'){
                     inventory.push("shotgun");
+                    shotgunDamage = 4;
                     playerSilver = playerSilver - 6;
                   }
                   else if(purchaseChoice === '8'){
@@ -941,7 +994,8 @@ else if(currentLocation === "hotel") {
                     playerSilver = playerSilver - 8;
                   }
                   else{
-                    console.log("<-         No purchase made       ->\n")
+                    console.log("<-             No purchase made           ->\n");
+                    console.log("<- Choose a 1, 6, or 8 to make a purchase ->\n");
                   }
                 }
                  catch(error)
