@@ -350,7 +350,7 @@ function specialInventory(playerName, inventory, weaponDamage){
  * @returns no explicit value, only prints to console 
 */
 
-function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage) {
+function showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage, shotgunDamage) {
       
      console.log("\n<-  You have a player health score of " + playerHealth + " out of 100.  ->");
      console.log("<-            You have " + playerSilver + " silver dollars.              ->");
@@ -369,6 +369,10 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
         }
         if(inventory.includes("revolver")) {
           console.log("<-   Your revolver has " + weaponDamage + " silver bullets.   ->\n");
+        }
+        if(inventory.includes("shotgun")) {
+          let shots = shotgunDamage / 2;
+          console.log("<-          Your shotgun has " + shots + " shots.             ->\n");
         }
      }
      else if (2 < inventory.length) {
@@ -715,7 +719,7 @@ while(gameRunning)
 {
   if(currentLocation === "status") {
    
-    showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage);
+    showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage, shotgunDamage);
     
          // if(previousLocation === "village") {
          //  currentLocation = previousLocation;
@@ -917,7 +921,7 @@ else if(currentLocation === "hotel") {
    }
   else if(currentLocation === "generalStore"){
     console.log("=== GENERALSTORE IN VILLAGE ===");
-    if(((wildman == false) || (wildman2 == false)) && ((wildmanBounty == false) || (wildman2Bounty == false))) {
+    if((((wildman == false) && (wildman2 == false)) || ((wildman == false) && (wildman2 == true))) && ((wildmanBounty == false) || (wildman2Bounty == false))) {
         console.log("Hi there Sheriff " + playerName + ". Looks like you killed a wildman or two.\n");
         sleep(1000);
         console.log("Yes! The hotel owner says there's a 2-dollar bounty.\n");
@@ -938,6 +942,8 @@ else if(currentLocation === "hotel") {
              let shotNeeded = 4 - shotgunDamage;
              console.log("I can take back " + shotNeeded/2 + " silver dollars to reload your shotgun.\n");
              console.log("OK. Thanks.");
+             playerSilver = playerSilver - shotNeeded/2;
+             shotgunDamage = shotgunDamage + shotNeeded;
            }
 
         if(playerSilver >= 7)
@@ -988,7 +994,8 @@ else if(currentLocation === "hotel") {
                     playerSilver = playerSilver - 8;
                   }
                   else{
-                    console.log("<-         No purchase made       ->\n")
+                    console.log("<-             No purchase made           ->\n");
+                    console.log("<- Choose a 1, 6, or 8 to make a purchase ->\n");
                   }
                 }
                  catch(error)
