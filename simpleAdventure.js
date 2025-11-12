@@ -51,8 +51,8 @@ let shotgunDamage = 0;
 let visitedBlacksmith = false;
 let wildman = true;
 let wildman1defense = 5;
-let wildmanBounty = false;
-let wildman2 = false;
+let wildmanBounty = true;
+let wildman2 = true;
 let wildman2defense = 0;
 let wildman2Bounty = true;
 let dogman1 = true;
@@ -921,7 +921,7 @@ else if(currentLocation === "hotel") {
    }
   else if(currentLocation === "generalStore"){
     console.log("=== GENERALSTORE IN VILLAGE ===");
-    if((((wildman == false) && (wildman2 == false)) || ((wildman == false) && (wildman2 == true))) && ((wildmanBounty == false) || (wildman2Bounty == false))) {
+    if((((wildman == false) && (wildman2 == false)) || ((wildman == false) && (wildman2 == true))) && (((wildmanBounty == false) && (wildman2Bounty == true)) || ((wildmanBounty == true) && (wildman2Bounty == false)))) {
         console.log("Hi there Sheriff " + playerName + ". Looks like you killed a wildman or two.\n");
         sleep(1000);
         console.log("Yes! The hotel owner says there's a 2-dollar bounty.\n");
@@ -932,11 +932,13 @@ else if(currentLocation === "hotel") {
            if(wildman == false) {
               playerSilver = playerSilver + 2;
             wildmanBounty == true;
+            wildman2Bounty == true;
            }
            else if(wildman2 == false){
               playerSilver = playerSilver + 2;
              wildman2Bounty = true;
            }
+
 
            if(shotgunDamage < 4){
              let shotNeeded = 4 - shotgunDamage;
@@ -968,6 +970,7 @@ else if(currentLocation === "hotel") {
               try {
                 console.log("<-  A Tomahawk costs 1 dollar. To buy a Tomahawk, type 1:           ->");
                 console.log("<-  A shotgun + 2 shells costs 6 dollars. To buy a shotgun type 6.  ->");
+                console.log("<-  To buy both a Tomahawk and shotgun, type 7:                     ->")
                 console.log("<-  A horse costs 8 dollars. To buy a horse, type 8.                ->");
                 console.log("<-  To not purchase anything, type 0:                               ->\n");
              
@@ -981,17 +984,38 @@ else if(currentLocation === "hotel") {
                     throw "Cannot enter a blank space or return without a number!";
                   }
                   else if(purchaseChoice === '1'){
-                    inventory.push("tomahawk");
-                    playerSilver = playerSilver - 1;
+                    if(inventory.includes("tomahawk") || inventory.includes("sabre")){
+                       console.log("You already have a melee weapon! Return to the General Store to choose something else.");
+                     }
+                     else {
+                       inventory.push("tomahawk");
+                       playerSilver = playerSilver - 1;
+                     }
                   }
                   else if(purchaseChoice === '6'){
+                    if(inventory.includes("shotgun")){
+                      console.log("You already have a shotgun! Return to the General Store to choose something else.");
+                    }
+                    else {
+                      inventory.push("shotgun");
+                      shotgunDamage = 4;
+                      playerSilver = playerSilver - 6;
+                    }
+                  }
+                  else if(purchaseChoice === '7'){
                     inventory.push("shotgun");
                     shotgunDamage = 4;
-                    playerSilver = playerSilver - 6;
+                    inventory.push("tomahawk");
+                    playerSilver = playerSilver - 7;
                   }
                   else if(purchaseChoice === '8'){
-                    inventory.push("horseNamedCoffee");
-                    playerSilver = playerSilver - 8;
+                    if(inventory.includes("horseNamedCoffee") || inventory.includes("horseNamedSugar") || inventory.includes("horseNamedHardtack") || inventory.includes("horseNamedCornbread")){
+                      console.log("You already have a horse! Return to the General Store to choose something else.");
+                    }
+                    else {
+                      inventory.push("horseNamedCoffee");
+                      playerSilver = playerSilver - 8;
+                    }
                   }
                   else{
                     console.log("<-             No purchase made           ->\n");
@@ -1019,18 +1043,25 @@ else if(currentLocation === "hotel") {
       
       // make wildman2 available for next combat
        if(wildman == false) {
-           wildman2 = true;
-           wildman2Bounty = false;
+           wildmanBounty = false;
+           wildman2Bounty = true;
            wildman2defense = monsterDefense;
         }
+//        else if(wildman2 == false){
+//           wildman2Bounty = false;
+//        }
 
       }
     else if((wildman === false) && (wildman2 === true) && (player === true)){
       
-      wildmanBounty = false;  // can pay another wildmanBounty now that another wildman is active
+      
 
       [wildman2, player, playerHealth, weaponDamage, wildman2defense, inventory] = processWildmanCombat(wildman2, player, playerHealth, weaponDamage, wildman2defense, visitedBlacksmith, inventory);
       
+      if(wildman2 == false){
+           wildman2Bounty = false;  // can pay another wildmanBounty now that another wildman is deceased
+      }
+
     }
     else if((wildman === false) && (wildman2 === false)) {
          console.log("<- All wildmen are dead.  Return to the village ... ->");
