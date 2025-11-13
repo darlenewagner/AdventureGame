@@ -786,28 +786,43 @@ while(gameRunning)
     }
   else if(currentLocation === "village") {
      console.log("=== MIDDLE OF VILLAGE ===");
-     console.log("\nExcuse me Mr. Prospector and Mr. Barber, does the hotel over there have food as well as boarding?\n");
-     sleep(1500);
-     console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get thar is whiskey and beer for dinner.\n");
-     sleep(2000);
-     console.log("Any place else?\n");
-     sleep(1500);
-     console.log("Don't light out for the badlands yet! I might suggest spending the night in the hotel or in the attic of my Barbershop.\n");
-     sleep(2000);
-     console.log("Where can I get guns?\n");
-     sleep(1500);
-     console.log("The Blacksmith Shop!\n");
-     sleep(1500);
-     console.log("... Or you could go down by the river to the General Store.\n");
-     sleep(4000);
 
-        needHelp = readline.question("\nFor more recommendations on where to go next, type Y, Yes or +, otherwise press enter:");
-          if((needHelp === "Y") || (needHelp === "Yes") || (needHelp === "y") || (needHelp === "yes") || (needHelp === "+"))
-              {
-                  helpMenu();  
-              }
+     if(wildman){ 
+        console.log("\nExcuse me Mr. Prospector and Mr. Barber, does the hotel over there have food as well as boarding?\n");
+        sleep(1500);
+        console.log("Tee-Hee-Hee! The hotel turned into a saloon. All you're gonna get thar is whiskey and beer for dinner.\n");
+        sleep(2000);
+        console.log("Any place else?\n");
+        sleep(1500);
+        console.log("Don't light out for the badlands yet! I might suggest spending the night in the hotel or in the attic of my Barbershop.\n");
+        sleep(1500);
+        console.log("Where can I get guns?\n");
+        sleep(1500);
+        console.log("The Blacksmith Shop!\n");
+        sleep(1500);
+        console.log("... Or you could go down by the river to the General Store.\n");
+        sleep(3000);
 
-   }
+          needHelp = readline.question("\nFor more recommendations on where to go next, type Y, Yes or +, otherwise press enter:");
+            if((needHelp === "Y") || (needHelp === "Yes") || (needHelp === "y") || (needHelp === "yes") || (needHelp === "+"))
+                {
+                   helpMenu();  
+                }
+        }
+      else {
+              console.log("Good morning, Sheriff " + playerName + "!  I'm Daryl the Carpenter!");
+              console.log("Would you like to help me an Clem with fixing the stockade and fences?\n");
+              sleep(2000);
+              console.log("You can earn a silver dollar if you stick with it until sundown.\n");
+              sleep(2500);
+              console.log("Why yes, Of course I'll help you will the digging and woodcutting for the village.")
+              sleep(2000);
+              console.log("\n<-         After a long, sweaty day of work         ->\n");
+              sleep(2000);
+              console.log("Here you go Sheriff! One silver dollar, but you might end up shooting it into the werewolf.\n");
+              playerSilver = playerSilver + 1;
+           }
+    }
  else if(currentLocation === "barbershop"){
     console.log("=== BARBERSHOP IN VILLAGE ===");
     if((playerHealth > 30) && (playerHealth <= 70)){
@@ -863,9 +878,11 @@ else if(currentLocation === "hotel") {
       sleep(1500);
       console.log("The effort to escape a dogman or wildman can cost you 20 health points.");
       sleep(1500);
+      console.log("Even then, you need a horse to get away from the dogmen because they will chase you as a pack.");
+      sleep(1500);
       console.log("It would take " + monsterDefense + " bullets from a revolver to kill an infected and more to kill the werewolf.");
       sleep(1500);
-      console.log("If an infected is wounded to within 2 points of dying, you can finish it off with a knife or tomahawk." );
+      console.log("If an infected is wounded to within 3 points of dying, you can finish it off with a sword or tomahawk." );
       sleep(1500);
       console.log("And you will have to go to the barber within a half day to get any of your wounds cauterized.\n");
       sleep(1500);
@@ -875,7 +892,7 @@ else if(currentLocation === "hotel") {
       sleep(1500);
       console.log("Just when in doubt, go to Edgar the Barber. I help him by making the herbal healing poultices.");
       sleep(3000);
-      console.log("Each of his treatments can restore your health by 30 points.");
+      console.log("Each of his treatments can restore your health by at least 30 points.");
       console.log("Or you can buy a pack of bandages and healing poultice from him for when you're stuck in the badlands.\n")
       sleep(3000);
       console.log("So let me get this straight, it takes " + monsterDefense + " bullets to kill an infected?\n");
@@ -899,6 +916,8 @@ else if(currentLocation === "hotel") {
       console.log("...But remember, everyone who has gone after the werewolf either got eaten or infected.");
       sleep(1500);
       console.log("Since the dogmen go about in packs, no one has survived them either.\n");
+      sleep(1500);
+      console.log("There are other monsters out there than just the werewolf and his infected. \nThere are unspeakable things in the badlands that have come up out of the bitter lake.\n")
       spokenWithInnkeeper = true;
     }
     else{
