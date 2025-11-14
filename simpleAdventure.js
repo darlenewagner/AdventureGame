@@ -55,6 +55,8 @@ let wildmanBounty = true;
 let wildman2 = true;
 let wildman2defense = 0;
 let wildman2Bounty = true;
+let lizardman = true;
+let lizardmanDefense = 7;
 let dogman1 = true;
 let dogman1Bounty = false;
 let dogman2 = true;
@@ -619,6 +621,204 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
 
 //* End declaration of function processWildmanCombat() *
 
+
+//* Begin declaration of function processLizardmanCombat() *
+
+/**  function processLizardmanCombat(lizardman, player, playerHealth, weaponDamage, lizardmanDefense, visitedBlacksmith, inventory) {
+
+      //console.log("<- You walk away from the village into the badlands for 1 hour ... ->");
+      //console.log("<-              The sun is about to set ...                        ->");
+      //sleep(2000);
+      console.log("<- Suddenly, a spiny-scaled, two-legged, lizard-headed creature comes up out of a hole in the ground ->");
+      sleep(2000);
+      let playerFight = "N";
+      playerFight = readline.question("Do you want to fight the lizard-headed creature? \n(Reply Y, Yes, or + to fight.)\n");
+       
+if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || (playerFight === "yes") || (playerFight === "+"))
+  {
+         console.log("<-                     The Battle Begins!!!                         ->");
+         sleep(1000);
+ if(inventory.includes("shotgun") && inventory.includes("tomahawk") && (shotgunDamage > 0)) {
+          console.log("<-              You fire your shotgun and hit the lizard-headed creature!           ->");
+          shotgunDamage = shotgunDamage - 2;
+          lizardmanDefense = lizardmanDefense - 2;
+          sleep(1000);
+          console.log("<- The lizard-headed creature gets back up, scratches you, and cuts open your arm! ->");
+          sleep(1000);
+          playerHealth = playerHealth - 20;
+
+          while((lizardmanDefense > 0) && (playerHealth > 30)){
+
+             if((monsterDefense < 4) && (inventory.includes("tomahawk"))){
+                  console.log("<-  You strike the lizard-headed creature with your tomahawk to save bullets!   ->");
+                  lizardmanDefense = lizardmanDefense - 1;
+                  console.log("<-  You're too close to the lizardman and he bites you!   ->");
+                  playerHealth = playerHealth - 40;
+                  sleep(1500);
+              }
+             else if(inventory.includes("shotgun") && (shotgunDamage >= 2)){
+                  console.log("<-              You fire your shotgun and hit the lizard-headed creature!           ->");
+                  shotgunDamage = shotgunDamage - 2;
+                  lizardmanDefense = lizardmanDefense - 2;
+                  sleep(1000);
+                  console.log("<- The lizard-headed creature gets back up, scratches you, and cuts open your arm! ->");
+                  sleep(1000);
+                  playerHealth = playerHealth - 20;
+                 }
+              else if(inventory.includes("revolver")){
+                  console.log("<-         You fire your revolver and hit the wildman again!                ->");
+                  sleep(1500);
+                  weaponDamage = weaponDamage - 1;
+                  lizardmanDefense = lizardmanDefense - 1;
+                  console.log("<- The lizard-headed creature gets back up, scratches you, and cuts open your arm! ->");
+                  sleep(1000);
+                  playerHealth = playerHealth - 20;
+              }
+          }
+        
+        if(lizardmanDefense == 0)
+          {
+                 lizardman = false;
+                 sleep(1500);
+                 console.log("<-    The lizardman is dead, but you are seriously injured!    ->");
+                 console.log("<-       You must return to the village before nightfall!      ->");
+                 sleep(1500);
+                 [playerHealth, inventory] = useHealing(playerHealth, inventory);
+                 sleep(2000);
+          }
+       else if(playerHealth <= 30)
+          {
+                console.log("<-          You are too seriously injured to keep fighting.            ->");
+                sleep(1000);
+                console.log("<-  You must retreat and head back to the village!      ->");
+               if(playerHealth <= 0){
+                     console.log("<-     You have been poisoned, " + playerName + ", by the lizardmans scratches and bites!     ->");
+                     console.log("<-          The lizardman will drag your body down into the hole and eat you!                 ->");
+                     gameRunning = false;
+                     player = false;
+                    }
+          }
+
+      }
+ else if((inventory.includes("revolver")) && (weaponDamage > 0))
+     {  
+          console.log("<-            You fire your revolver and hit the wildman!            ->");
+          weaponDamage = weaponDamage - 1;
+          monsterDefense = monsterDefense - 1;
+          sleep(1000);
+          console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+          sleep(1000);
+          playerHealth = playerHealth - 20;
+
+          
+      while((monsterDefense > 0) && (playerHealth > 30) && (weaponDamage > 0)) 
+        {
+
+             if(monsterDefense >= 4) {
+                  console.log("<-                You fire and hit the wildman again!                 ->");
+                  sleep(1500);
+                  weaponDamage = weaponDamage - 1;
+                  monsterDefense = monsterDefense - 1;
+                  console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
+                  sleep(1500);
+                  playerHealth = playerHealth - 30;
+              }
+              else if((monsterDefense < 4) && (inventory.includes("tomahawk"))){
+                  console.log("<-     You strike the wildman with your tomahawk to save bullets!           ->");
+                  monsterDefense = monsterDefense - 1;
+                  sleep(1500);
+              }
+              else if(inventory.includes("revolver")){
+                  console.log("<-                You fire and hit the wildman again!                 ->");
+                  sleep(1500);
+                  weaponDamage = weaponDamage - 1;
+                  monsterDefense = monsterDefense - 1;
+
+              }
+             
+        } 
+       if(monsterDefense == 0)
+          {
+                 wildman = false;
+                 sleep(1500);
+                 console.log("<-     The wildman is dead, but you are seriously injured!     ->");
+                 console.log("<-       You must return to the village before nightfall!      ->");
+                 sleep(1500);
+                 [playerHealth, inventory] = useHealing(playerHealth, inventory);
+                 sleep(2000);
+          }
+       else if(playerHealth <= 30)
+          {
+                console.log("<-          You are too seriously injured to keep fighting.            ->");
+                sleep(1000);
+                console.log("<-  You must retreat and head back to the village!      ->");
+              if(playerHealth <= 0){
+                    console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
+                    console.log("<-         Coyotes will devour your body!                 ->");
+                    gameRunning = false;
+                    player = false;
+                    }
+          }
+        else if(weaponDamage < 1)
+          {
+                console.log("<-           You have run out of bullets!               ->");
+                sleep(1000);
+                console.log("<-  You must retreat and head back to the village!      ->");
+                        console.log("<-      The wildman throws a rock and hits you ...       ->");
+                playerHealth = playerHealth - 20;
+                sleep(1000);
+                if(playerHealth <= 0) {
+                    console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
+                    console.log("<-         Coyotes will devour your body!                 ->");
+                    gameRunning = false;
+                   player = false;
+                   }
+            }
+       }
+  else { 
+              console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
+              playerHealth = playerHealth - 20;
+
+              while(playerHealth > 0) {
+                  console.log("<-      The wildman hits you with his club again!      ->");
+                  playerHealth = playerHealth - 30;
+                 if(playerHealth < 0){
+                      gameRunning = false;
+                      break;
+                  }
+             }
+
+            console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
+            console.log("<-         Coyotes will devour your body!                 ->");
+            gameRunning = false;
+            player = false;
+        }
+     }  
+   else
+      {
+        console.log("<-      The wildman throws a rock and hits you ...       ->");
+        playerHealth = playerHealth - 20;
+        sleep(1000);
+        if(playerHealth <= 0) {
+            console.log("<-     You are now dead, " + playerName + ", and nightfall is approaching!     ->");
+            console.log("<-         Coyotes will devour your body!                 ->");
+            gameRunning = false;
+            player = false;
+         }
+         else {
+            console.log("<-   ... but you still manage to escape. Your health is " + playerHealth + ". ->");
+            sleep(1500);
+            [playerHealth, inventory] = useHealing(playerHealth, inventory);
+         }
+        }
+
+*/
+// return [lizardman, player, playerHealth, weaponDamage, lizardmanDefense, inventory];
+// }
+
+//* End declaration of function processLizardmanCombat() *
+
+
 //
 //
 //*                     INITIATE MAIN FOR PLAYING GAME  *
@@ -946,8 +1146,7 @@ else if(currentLocation === "hotel") {
         console.log("Yes! The hotel owner says there's a 2-dollar bounty.\n");
         sleep(1000);
         console.log("That's right!  Here you go, two silver dollars.\n");
-      
-     
+
            if(wildman == false) {
               playerSilver = playerSilver + 2;
             wildmanBounty = true;
@@ -993,7 +1192,7 @@ else if(currentLocation === "hotel") {
                 console.log("<-  A horse costs 8 dollars. To buy a horse, type 8.                ->");
                 console.log("<-  To not purchase anything, type 0:                               ->\n");
              
-                purchaseChoice = readline.question("Which item do you choose? (Enter a 1, 6, 8, or 0): ");
+                purchaseChoice = readline.question("Which item do you choose? (Enter a 1, 6, 7, 8, or 0): ");
                 //purchaseChoice = Number(purchaseChoice);
 
                  if(isNaN(purchaseChoice)){
@@ -1073,8 +1272,6 @@ else if(currentLocation === "hotel") {
       }
     else if((wildman === false) && (wildman2 === true) && (player === true)){
       
-      
-
       [wildman2, player, playerHealth, weaponDamage, wildman2defense, inventory] = processWildmanCombat(wildman2, player, playerHealth, weaponDamage, wildman2defense, visitedBlacksmith, inventory);
       
       if(wildman2 == false){
@@ -1083,7 +1280,10 @@ else if(currentLocation === "hotel") {
 
     }
     else if((wildman === false) && (wildman2 === false)) {
-         console.log("<- All wildmen are dead.  Return to the village ... ->");
+         console.log("<- All wildmen are dead, but it's a lovely morning and you go further out into the Badlands. ->");
+
+     //   [lizardman, player, playerHealth, weaponDamage, lizardmanDefense, inventory] = processLizardmanCombat(lizardman, player, playerHealth, weaponDamage, lizardmanDefense, visitedBlacksmith, inventory);
+
       }
    }
    
