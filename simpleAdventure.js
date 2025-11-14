@@ -638,7 +638,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
     {
          console.log("<-                     The Battle Begins!!!                         ->");
          sleep(1000);
-     if(inventory.includes("shotgun") && inventory.includes("tomahawk") && (shotgunDamage > 0)) {
+     if(inventory.includes("shotgun") && ((inventory.includes("tomahawk")) || (inventory.includes("revolver"))) && (shotgunDamage > 0)) {
           console.log("<-              You fire your shotgun and hit the lizard-headed creature!           ->");
           shotgunDamage = shotgunDamage - 2;
           lizardmanDefense = lizardmanDefense - 2;
@@ -672,9 +672,11 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                   sleep(1500);
                   weaponDamage = weaponDamage - 1;
                   lizardmanDefense = lizardmanDefense - 1;
-                  console.log("<- The lizard-headed creature gets back up, scratches you, and cuts open your arm! ->");
-                  sleep(1000);
-                  playerHealth = playerHealth - 20;
+                  if(lizardmanDefense > 2){
+                    console.log("<- The lizard-headed creature gets back up, scratches you, and cuts open your arm! ->");
+                    sleep(1000);
+                    playerHealth = playerHealth - 10;
+                  }
               }
               else{
                     console.log("<-  You're too close to the lizardman and he bites you!   ->");
@@ -706,7 +708,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
           }
 
       }
- else if((inventory.includes("revolver")) && (weaponDamage > 0))
+ else if(((inventory.includes("revolver")) || (inventory.includes("tomahawk"))) && (weaponDamage > 0))
      {  
           console.log("<-            You fire your revolver and hit the lizardman!            ->");
           weaponDamage = weaponDamage - 1;
@@ -720,31 +722,36 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
       while((lizardmanDefense > 0) && (playerHealth > 30) && (weaponDamage > 0)) 
         {
 
-             if(monsterDefense >= 4) {
+             if(lizardmanDefense >= 4) {
                   console.log("<-                You fire and hit the lizardman again!                 ->");
                   sleep(1500);
                   weaponDamage = weaponDamage - 1;
                   lizardmanDefense = lizardmanDefense - 1;
                   console.log("<- The lizardman gets back up, scratches you, and cuts open your arm! ->");
                   sleep(1500);
-                  playerHealth = playerHealth - 20;
+                  playerHealth = playerHealth - 10;
               }
-              else if((monsterDefense < 4) && (inventory.includes("tomahawk"))){
+              else if((lizardmanDefense < 4) && (inventory.includes("tomahawk"))){
                   console.log("<-     You strike the lizardman with your tomahawk to save bullets!           ->");
                   lizardmanDefense = lizardmanDefense - 1;
-                  console.log("<-  You're too close to the lizardman and he bites you!   ->");
-                  playerHealth = playerHealth - 40;
-                  sleep(1500);
+                  if(lizardmanDefense > 2){
+                     console.log("<-  You're too close to the lizardman and he bites you!   ->");
+                     playerHealth = playerHealth - 30;
+                     sleep(1500);
+                  }
               }   //watch
-              else if(inventory.includes("revolver")){
+              else {
                   console.log("<-                You fire and hit the lizardman again!                 ->");
-                  sleep(1500);
+                  sleep(1000);
                   weaponDamage = weaponDamage - 1;
                   lizardmanDefense = lizardmanDefense - 1;
+                  console.log("<-  You're too close to the lizardman and he bites you!   ->");
+                  playerHealth = playerHealth - 30;
+                  sleep(1500);
 
               }
-             
-        } 
+          }
+
        if(lizardmanDefense == 0)
           {
                  lizardman = false;
@@ -785,7 +792,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
        }
   else { 
               console.log("<-      The lizardman scratches you in the chest!      ->");
-              playerHealth = playerHealth - 30;
+              playerHealth = playerHealth - 20;
 
               while(playerHealth > 0) {
                   console.log("<-      The lizardman bites you and poisons your blood!      ->");
