@@ -1278,45 +1278,67 @@ else if(currentLocation === "hotel") {
                     if(inventory.includes("tomahawk") || inventory.includes("sabre")){
                        console.log("You already have a melee weapon! Return to the General Store to choose something else.");
                      }
-                     else {
+                     else if(playerSilver >= 1) {
                        inventory.push("tomahawk");
                        playerSilver = playerSilver - 1;
+                     }
+                     else{
+                      console.log("You currently have 0 silver dollars and cannot purchase anything!");
                      }
                   }
                   else if(purchaseChoice === '2'){
                     if(!inventory.includes("shotgun")){
                        console.log("You do not have a shotgun yet. Please select option 6.");
-                     }
+                     } 
+                     else if(playerSilver >= 2) {
                        let shotNeeded2 = 4 - shotgunDamage;
                        console.log("That will be " + shotNeeded2/2 + " silver dollars to reload your shotgun.\n");
                        console.log("OK. Thanks.");
                        playerSilver = playerSilver - shotNeeded2/2;
                        shotgunDamage = shotgunDamage + shotNeeded2;
-                      visitedBlacksmith = false;
+                       visitedBlacksmith = false;
+                     }
+                     else{
+                          console.log("You currently do not have enough silver dollars to purchase shotgun shells!");
+                         }
                   }
                   else if(purchaseChoice === '6'){
                     if(inventory.includes("shotgun")){
                       console.log("You already have a shotgun! Return to the General Store to choose something else.");
                     }
-                    else {
+                    else if(playerSilver >= 6) {
                       inventory.push("shotgun");
                       shotgunDamage = 4;
                       playerSilver = playerSilver - 6;
                     }
+                    else{
+                          console.log("You currently do not have enough silver dollars to purchase a shotgun!");                      
+                    }
                   }
                   else if(purchaseChoice === '7'){
+                    if(inventory.includes("shotgun") && (inventory.includes("tomahawk"))){
+                       console.log("You already have a both a shotgun and a tomahawk! Return to the General Store to choose one or the other.");                     
+                    }
+                    else if(playerSilver >= 7) {
                     inventory.push("shotgun");
                     shotgunDamage = 4;
                     inventory.push("tomahawk");
                     playerSilver = playerSilver - 7;
+                    }
+                    else{
+                           console.log("You currently do not have enough silver dollars to purchase both a shotgun and tomahawk!");                      
+                    }
                   }
                   else if(purchaseChoice === '8'){
                     if(inventory.includes("horseNamedCoffee") || inventory.includes("horseNamedSugar") || inventory.includes("horseNamedHardtack") || inventory.includes("horseNamedCornbread")){
                       console.log("You already have a horse! Return to the General Store to choose something else.");
                     }
-                    else {
+                    else if(playerSilver >= 8){
                       inventory.push("horseNamedCoffee");
                       playerSilver = playerSilver - 8;
+                    }
+                    else{
+                          console.log("You currently do not have enough silver dollars to purchase a horse!");                      
                     }
                   }
                   else{
