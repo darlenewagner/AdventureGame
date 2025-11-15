@@ -72,7 +72,7 @@ let spokenWithInnkeeper = false;
 let inventory = [];
 
 // Objects that can be added to inventory: medicine, firearm, bullet, and melee weapon.
-let medicine = {
+const medicine = {
   name: "woundKit",
   type: "medicine",
   value: 1,
@@ -80,7 +80,7 @@ let medicine = {
   description: "Stops bleeding, slows Feral Virus infection, and stops secondary infection",
 } 
 
-let firearm = {
+const revolver = {
   name: "revolver",
   type: "weapon",
   value: 6,
@@ -89,7 +89,16 @@ let firearm = {
   description: "A firearm that does 1 unit of damage to a monster for 6 times total (before reloading)",
 }
 
-let meleeWeapon = {
+const shotgun = {
+  name: "shotgun",
+  type: "weapon",
+  value: 6,
+  capacity: 2,
+  effect: 2,
+  description: "A firearm that does 2 units of damage to a monster for 2 times (before reloading)",
+}
+
+const tomahawk = {
   name: "tomahawk",
   type: "weapon",
   value: 1,
