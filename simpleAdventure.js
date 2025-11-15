@@ -57,6 +57,7 @@ let wildman2defense = 0;
 let wildman2Bounty = true;
 let lizardman = true;
 let lizardmanDefense = 7;
+let lizardmanBounty = true;
 let dogman1 = true;
 let dogman1Bounty = false;
 let dogman2 = true;
@@ -69,6 +70,32 @@ let innkeeperName = "Felina";
 let spokenWithInnkeeper = false;
 
 let inventory = [];
+
+// Objects that can be added to inventory: medicine, firearm, bullet, and melee weapon.
+let medicine = {
+  name: "woundKit",
+  type: "medicine",
+  value: 1,
+  effect: 10,
+  description: "Stops bleeding, slows Feral Virus infection, and stops secondary infection",
+} 
+
+let firearm = {
+  name: "revolver",
+  type: "weapon",
+  value: 6,
+  capacity: 6,
+  effect: 1,
+  description: "A firearm that does 1 unit of damage to a monster for 6 times total (before reloading)",
+}
+
+let meleeWeapon = {
+  name: "tomahawk",
+  type: "weapon",
+  value: 1,
+  effect: 1,
+  description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times.",
+}
 
 //
 //* ########## HOUSEKEEPING FUNCTIONS: sleep() and helpMenu() ##########
@@ -746,7 +773,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                   weaponDamage = weaponDamage - 1;
                   lizardmanDefense = lizardmanDefense - 1;
                   console.log("<-  You're too close to the lizardman and he bites you!   ->");
-                  playerHealth = playerHealth - 30;
+                  playerHealth = playerHealth - 40;
                   sleep(1500);
 
               }
@@ -995,7 +1022,7 @@ while(gameRunning)
        visitedBlacksmith = true;
      }
     }
-  else if((currentLocation === "blacksmith") && (visitedBlacksmith == true))
+  else if((currentLocation === "blacksmith") && (playerSilver < 8))
     {
         console.log("<- You do not have enough silver dollars to visit the blacksmith at this time. ->");
         console.log("<-                     Please choose another location.                         ->\n");
@@ -1187,7 +1214,34 @@ else if(currentLocation === "hotel") {
             visitedBlacksmith = false;
             console.log("You have enough silver dollars to go to the blacksmith."); 
           }
-      } else {
+      }
+      else if((lizardman == false) && (lizardmanBounty == false)){
+         console.log("Hi there Sheriff " + playerName + ". Looks like you killed that weird lizard creature.\n");
+         sleep(1000);
+         console.log("Yes! Is that a 6-dollar bounty.\n");
+         sleep(1000);
+         console.log("That's right!  Here you go, six silver dollars.\n");
+         
+           if(lizardman == false) {
+              playerSilver = playerSilver + 6;
+              lizardmanBounty = true;
+           }
+          
+           if(shotgunDamage < 4){
+             let shotNeeded = 4 - shotgunDamage;
+             console.log("I can take back " + shotNeeded/2 + " silver dollars to reload your shotgun.\n");
+             console.log("OK. Thanks.");
+             playerSilver = playerSilver - shotNeeded/2;
+             shotgunDamage = shotgunDamage + shotNeeded;
+           }
+
+        if(playerSilver >= 8)
+          {
+            visitedBlacksmith = false;
+            console.log("You have enough silver dollars to go to the blacksmith."); 
+          }  
+      } 
+      else {
               console.log("Good morning Sheriff " + playerName + ". What would you like to buy?");
               sleep(2000);
               console.log("\nWhat kind of things do you have to help me fight the wildmen or dogmen?\n");
@@ -1196,7 +1250,7 @@ else if(currentLocation === "hotel") {
               sleep(2000);
               console.log("Or a tomahawk for finishing off a monster after you've shot him?");
               sleep(2000);
-              console.log("Later, when you hunt dogmen, you will need a horse in case you have to run away from them.");
+              console.log("Later, when you hunt dogmen, you will need a horse in case you have to run away.");
               sleep(3500);
               console.log("\nCan I see some prices?\n");
               sleep(2000);
@@ -1212,7 +1266,7 @@ else if(currentLocation === "hotel") {
                 //purchaseChoice = Number(purchaseChoice);
 
                  if(isNaN(purchaseChoice)){
-                    throw "Please choose a number 1, 6, 8, or 0, corresponding to silver dollars you will spend.";
+                    throw "Please choose a number 1, 6, 7, 8, or 0, corresponding to silver dollars you will spend.";
                   }
                  else if(purchaseChoice.trim() == ""){
                     throw "Cannot enter a blank space or return without a number!";
@@ -1272,13 +1326,8 @@ else if(currentLocation === "hotel") {
 
   if((wildman) && (player)) {
             
-      [lizardman, player, playerHealth, weaponDamage, lizardmanDefense, inventory] = processLizardmanCombat(lizardman, player, playerHealth, weaponDamage, lizardmanDefense, visitedBlacksmith, inventory);
- 
-      if(player == false)
-      {
-        break;
-      }
-
+      // [lizardman, player, playerHealth, weaponDamage, lizardmanDefense, inventory] = processLizardmanCombat(lizardman, player, playerHealth, weaponDamage, lizardmanDefense, visitedBlacksmith, inventory);
+      
       [wildman, player, playerHealth, weaponDamage, wildman1defense, inventory] = processWildmanCombat(wildman, player, playerHealth, weaponDamage, wildman1defense, visitedBlacksmith, inventory);
       
       // make wildman2 available for next combat
@@ -1306,6 +1355,10 @@ else if(currentLocation === "hotel") {
 
         [lizardman, player, playerHealth, weaponDamage, lizardmanDefense, inventory] = processLizardmanCombat(lizardman, player, playerHealth, weaponDamage, lizardmanDefense, visitedBlacksmith, inventory);
 
+        if(lizardman == false){
+           lizardmanBounty = false;
+        }
+        
       }
    }
    
