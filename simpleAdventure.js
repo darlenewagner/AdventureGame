@@ -1012,20 +1012,20 @@ while(gameRunning)
        weaponDamage = weaponDamage + 6;
        inventory.push("revolver");
      }
+       else if((currentLocation === "blacksmith") && (playerSilver < 8))
+       {
+          console.log("<- You do not have enough silver dollars to visit the blacksmith at this time. ->");
+          console.log("<-                     Please choose another location.                         ->\n");
+       }
      else {
-       console.log("Howdy, Sheriff " + playerName + ". Ya need more bullets?\n");
-       let needed = 6 - weaponDamage;
-       console.log("Why yes, I could use " + needed + ".");
-       console.log("All righty Sheriff, that's " + needed + " silver dollars.");
-       weaponDamage = weaponDamage + needed;
-       playerSilver = playerSilver - needed;
-       visitedBlacksmith = true;
-     }
-    }
-  else if((currentLocation === "blacksmith") && (playerSilver < 8))
-    {
-        console.log("<- You do not have enough silver dollars to visit the blacksmith at this time. ->");
-        console.log("<-                     Please choose another location.                         ->\n");
+         console.log("Howdy, Sheriff " + playerName + ". Ya need more bullets?\n");
+         let needed = 6 - weaponDamage;
+         console.log("Why yes, I could use " + needed + ".");
+         console.log("All righty Sheriff, that's " + needed + " silver dollars.");
+         weaponDamage = weaponDamage + needed;
+         playerSilver = playerSilver - needed;
+         visitedBlacksmith = true;
+       }
     }
   else if(currentLocation === "village") {
      console.log("=== MIDDLE OF VILLAGE ===");
@@ -1064,6 +1064,7 @@ while(gameRunning)
               sleep(2000);
               console.log("Here you go Sheriff! One silver dollar, but you might end up shooting it into the werewolf.\n");
               playerSilver = playerSilver + 1;
+              visitedBlacksmith = false;
            }
     }
  else if(currentLocation === "barbershop"){
@@ -1221,7 +1222,8 @@ else if(currentLocation === "hotel") {
          console.log("Yes! Is that a 6-dollar bounty.\n");
          sleep(1000);
          console.log("That's right!  Here you go, six silver dollars.\n");
-         
+         visitedBlacksmith = false;
+
            if(lizardman == false) {
               playerSilver = playerSilver + 6;
               lizardmanBounty = true;
@@ -1256,17 +1258,18 @@ else if(currentLocation === "hotel") {
               sleep(2000);
               console.log("Yes! Of course!");
               try {
-                console.log("<-  A Tomahawk costs 1 dollar. To buy a Tomahawk, type 1:           ->");
-                console.log("<-  A shotgun + 2 shells costs 6 dollars. To buy a shotgun type 6.  ->");
-                console.log("<-  To buy both a Tomahawk and shotgun, type 7:                     ->")
-                console.log("<-  A horse costs 8 dollars. To buy a horse, type 8.                ->");
-                console.log("<-  To not purchase anything, type 0:                               ->\n");
+                console.log("<-   A Tomahawk costs 1 dollar. To buy a Tomahawk, type 1:              ->");
+                console.log("<-   To purchase 1 or 2 shells after you already have a shotgun, type 2 ->")
+                console.log("<-   A shotgun + 2 shells costs 6 dollars. To buy a shotgun type 6.     ->");
+                console.log("<-   To buy both a Tomahawk and shotgun, type 7:                        ->")
+                console.log("<-   A horse costs 8 dollars. To buy a horse, type 8.                   ->");
+                console.log("<-   To not purchase anything, type 0:                                  ->\n");
              
                 purchaseChoice = readline.question("Which item do you choose? (Enter a 1, 6, 7, 8, or 0): ");
                 //purchaseChoice = Number(purchaseChoice);
 
                  if(isNaN(purchaseChoice)){
-                    throw "Please choose a number 1, 6, 7, 8, or 0, corresponding to silver dollars you will spend.";
+                    throw "Please choose a number 1, 2, 6, 7, 8, or 0, corresponding to silver dollars you will spend.";
                   }
                  else if(purchaseChoice.trim() == ""){
                     throw "Cannot enter a blank space or return without a number!";
@@ -1279,6 +1282,17 @@ else if(currentLocation === "hotel") {
                        inventory.push("tomahawk");
                        playerSilver = playerSilver - 1;
                      }
+                  }
+                  else if(purchaseChoice === '2'){
+                    if(!inventory.includes("shotgun")){
+                       console.log("You do not have a shotgun yet. Please select option 6.");
+                     }
+                       let shotNeeded2 = 4 - shotgunDamage;
+                       console.log("That will be " + shotNeeded2/2 + " silver dollars to reload your shotgun.\n");
+                       console.log("OK. Thanks.");
+                       playerSilver = playerSilver - shotNeeded2/2;
+                       shotgunDamage = shotgunDamage + shotNeeded2;
+                      visitedBlacksmith = false;
                   }
                   else if(purchaseChoice === '6'){
                     if(inventory.includes("shotgun")){
@@ -1307,7 +1321,7 @@ else if(currentLocation === "hotel") {
                   }
                   else{
                     console.log("<-             No purchase made           ->\n");
-                    console.log("<- Choose a 1, 6, or 8 to make a purchase ->\n");
+                    console.log("<- Choose a 1, 2, 6, or 8 to make a purchase ->\n");
                   }
                 }
                  catch(error)
