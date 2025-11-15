@@ -71,6 +71,32 @@ let spokenWithInnkeeper = false;
 
 let inventory = [];
 
+// Objects that can be added to inventory: medicine, firearm, bullet, and melee weapon.
+let medicine = {
+  name: "woundKit",
+  type: "medicine",
+  value: 1,
+  effect: 10,
+  description: "Stops bleeding, slows Feral Virus infection, and stops secondary infection",
+} 
+
+let firearm = {
+  name: "revolver",
+  type: "weapon",
+  value: 6,
+  capacity: 6,
+  effect: 1,
+  description: "A firearm that does 1 unit of damage to a monster for 6 times total (before reloading)",
+}
+
+let meleeWeapon = {
+  name: "tomahawk",
+  type: "weapon",
+  value: 1,
+  effect: 1,
+  description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times.",
+}
+
 //
 //* ########## HOUSEKEEPING FUNCTIONS: sleep() and helpMenu() ##########
 //
@@ -996,7 +1022,7 @@ while(gameRunning)
        visitedBlacksmith = true;
      }
     }
-  else if((currentLocation === "blacksmith") && (visitedBlacksmith == true))
+  else if((currentLocation === "blacksmith") && (playerSilver < 8))
     {
         console.log("<- You do not have enough silver dollars to visit the blacksmith at this time. ->");
         console.log("<-                     Please choose another location.                         ->\n");
@@ -1240,7 +1266,7 @@ else if(currentLocation === "hotel") {
                 //purchaseChoice = Number(purchaseChoice);
 
                  if(isNaN(purchaseChoice)){
-                    throw "Please choose a number 1, 6, 8, or 0, corresponding to silver dollars you will spend.";
+                    throw "Please choose a number 1, 6, 7, 8, or 0, corresponding to silver dollars you will spend.";
                   }
                  else if(purchaseChoice.trim() == ""){
                     throw "Cannot enter a blank space or return without a number!";
