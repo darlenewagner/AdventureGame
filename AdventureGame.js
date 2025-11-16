@@ -374,8 +374,15 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 //* End declaration of function movePlayer() *
 
 //
-// ######## GAME PLAY FUNCTIONS: specialInventory(), showStatus(), useHealing(), and processWildmanCombat() ########
+// ######## GAME PLAY FUNCTIONS: hasItemType(), specialInventory(), showStatus(), useHealing(), ########
+// ######## processWildmanCombat() and processLizardmanCombat()
 //
+
+function hasItemType(type) {
+    return inventory.some(item => item.type === type);
+}
+
+
 
 function specialInventory(playerName, inventory, weaponDamage){
   console.log("If player chooses certain names, the character comes pre-equiped with 1 special weapon and a horse.");
@@ -1405,6 +1412,9 @@ else if(currentLocation === "hotel") {
         }
         
       }
+    else if(lizardman == false){
+        console.log("<-          All wildmen and the lizardman are dead.  Return to the village.                 ->");
+    }
    }
    
 
