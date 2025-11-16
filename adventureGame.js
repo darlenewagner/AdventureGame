@@ -1405,6 +1405,10 @@ else if(currentLocation === "hotel") {
         }
         
       }
+    else if(lizardman === false){
+          console.log("<- All wildmen and the lizardman are dead.  You are peacefully patrolling the Badlands south of the river today. ->");
+     
+    }
    }
    
 
