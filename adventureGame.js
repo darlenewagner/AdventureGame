@@ -96,6 +96,7 @@ let shotgun = {
   capacity: 2,
   effect: 2,
   description: "A firearm that does 2 units of damage to a monster for 2 times (before reloading)",
+  
 }
 
 const tomahawk = {
@@ -104,6 +105,7 @@ const tomahawk = {
   value: 1,
   effect: 1,
   description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times.",
+ 
 }
 
 //
@@ -374,8 +376,13 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 //* End declaration of function movePlayer() *
 
 //
-// ######## GAME PLAY FUNCTIONS: specialInventory(), showStatus(), useHealing(), and processWildmanCombat() ########
+// ######## GAME PLAY FUNCTIONS: hasItemType(), specialInventory(), showStatus(), useHealing(), 
+// processWildmanCombat() and processLizardmanCombat() ########
 //
+
+function hasItemType(type) {
+    return inventory.some(item => item.type === type);
+}
 
 function specialInventory(playerName, inventory, weaponDamage){
   console.log("If player chooses certain names, the character comes pre-equiped with 1 special weapon and a horse.");
@@ -875,7 +882,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
 //*                     INITIATE MAIN FOR PLAYING GAME  *
 /**                            Considerations: 
  * 1. When playerHealth is 0 or less, game immediately ends. This is not a zombie game.
- * 2. When weaponDamage (bullets) is 0, process Combat() ends. This is not a Hollywood Western.
+ * 2. When weapon.capacity (bullets) is 0, process Combat() ends. This is not a Hollywood Western.
 */
 
 console.log("<- You have just disembarked the steamboat to walk up to the village of " + villageName + ". ->\n");
@@ -970,6 +977,11 @@ while(gameRunning)
 {
   if(currentLocation === "status") {
    
+    let see = hasItemType('medicine');
+    console.log("\n==========" + see + "==========\n");
+
+   // let weapon = inventory.find(item => item.type === "weapon");
+
     showStatus(playerHealth, playerSilver, previousLocation, inventory, weaponDamage, shotgunDamage);
     
          // if(previousLocation === "village") {
@@ -1395,12 +1407,12 @@ else if(currentLocation === "hotel") {
       }
 
     }
-    else if((wildman === false) && (wildman2 === false)) {
+    else if((wildman === false) && (wildman2 === false) && (lizardman === true)) {
          console.log("<- All wildmen are dead, but it's a lovely morning and you go further out into the Badlands. ->");
 
         [lizardman, player, playerHealth, weaponDamage, lizardmanDefense, inventory] = processLizardmanCombat(lizardman, player, playerHealth, weaponDamage, lizardmanDefense, visitedBlacksmith, inventory);
 
-        if(lizardman == false){
+        if(lizardman === false){
            lizardmanBounty = false;
         }
         
