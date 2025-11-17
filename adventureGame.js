@@ -82,7 +82,7 @@ const medicine = {
 
 let revolver = {
   name: "revolver",
-  type: "weapon",
+  type: "firearm",
   value: 6,
   capacity: 6,
   effect: 1,
@@ -91,7 +91,7 @@ let revolver = {
 
 let shotgun = {
   name: "shotgun",
-  type: "weapon",
+  type: "firearm",
   value: 6,
   capacity: 2,
   effect: 2,
@@ -101,11 +101,19 @@ let shotgun = {
 
 const tomahawk = {
   name: "tomahawk",
-  type: "weapon",
+  type: "melee",
   value: 1,
   effect: 1,
   description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times.",
  
+}
+
+const sabre = {
+  name: "sabre",
+  type: "melee",
+  value: 3,
+  effect: 1,
+  description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times. Can be sold for silver."
 }
 
 //
@@ -380,6 +388,7 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 // processWildmanCombat() and processLizardmanCombat() ########
 //
 
+//* A helper function that returns a boolean. Checks if type equals 'firearm', 'melee', or 'medicine'.
 function hasItemType(type) {
     return inventory.some(item => item.type === type);
 }
@@ -404,7 +413,8 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
      // check inventory if revolver, woundKit, or shotgun have been added
      // Special weapons, such as tomahawks, with which special characters begin the game,
      // Are only shown if revolver, woundKit, and/or shotgun are added.
-     if((inventory.includes(revolver)) || (inventory.includes(medicine)) || (inventory.includes(shotgun))) {
+     if(inventory.length > 2) //((inventory.includes(revolver)) || (inventory.includes(medicine)) || (inventory.includes(shotgun))) 
+      {
         i = 0;
         while(i < inventory.length)
         {
@@ -419,18 +429,30 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
          // let shots = shotgunDamage / 2;
           console.log("<-          Your shotgun has " + shotgun.capacity + " shots.             ->\n");
         }
+        if(hasItemType('firearm') && hasItemType('melee') && ((shotgun.capacity == 2) || (revolver.capacity > 4))){
+          console.log("You are very well-prepared to go into the Badlands!\n")
+        }
      }
-     else if (2 < inventory.length) {
+     else if (2 == inventory.length) {
        console.log("pouch 1: " + inventory[0].name);
        console.log("pouch 2: " + inventory[1].name);
        //console.log("And a trusty horse named " + inventory[2]);
+       
+       // first call of hasItemType()
+       if((hasItemType('firearm') && !hasItemType('melee')) || (!hasItemType('firearm') && hasItemType('melee'))){
+        console.log("Otherwise, you lack sufficient weapons for venturing into the Badlands!");
+       }
+       else{
+        console.log("You are reasonably prepared to go into the Badlands\n");
+       }
+     
      }
      else if (inventory.length == 1) {
       console.log("pouch 1: " + inventory[0].name);
-      console.log("Otherwise, you lack sufficient weapons appropriate for venturing into the Badlands!");
+      console.log("Otherwise, you lack sufficient weapons for venturing into the Badlands!");
      }
-     else {
-      console.log("You completely lack weapons or supplies for going into the Badlands!");
+     else { 
+       console.log("You completely lack weapons or supplies for going into the Badlands!");
      }
 }
 
