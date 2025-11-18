@@ -105,7 +105,6 @@ const tomahawk = {
   value: 1,
   effect: 1,
   description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times.",
- 
 }
 
 const sabre = {
@@ -519,7 +518,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
   {
          console.log("<-                     The Battle Begins!!!                         ->");
          sleep(1000);
- if(inventory.includes(shotgun) && inventory.includes(tomahawk) && (shotgun.capacity > 0)) {
+ if(inventory.includes(shotgun) && hasItemType('melee') && (shotgun.capacity > 0)) {
           console.log("<-            You fire your shotgun and hit the wildman!            ->");
           shotgun.capacity = shotgun.capacity - 1;
           monsterDefense = monsterDefense - shotgun.effect;
@@ -530,8 +529,8 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
 
           while((monsterDefense > 0) && (playerHealth > 30)){
 
-             if((monsterDefense < 4) && (inventory.includes(tomahawk))){
-                  console.log("<-     You strike the wildman with your tomahawk to save bullets!           ->");
+             if((monsterDefense < 4) && hasItemType('melee')){
+                  console.log("<-     You strike the wildman with your melee weapon to save bullets!           ->");
                   monsterDefense = monsterDefense - 1;
                   sleep(1500);
               }
@@ -588,10 +587,10 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                   monsterDefense = monsterDefense - 1;
                   console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
                   sleep(1500);
-                  playerHealth = playerHealth - 30;
+                  playerHealth = playerHealth - 20;
               }
-              else if((monsterDefense < 4) && (inventory.includes(tomahawk))){
-                  console.log("<-     You strike the wildman with your tomahawk to save bullets!           ->");
+              else if((monsterDefense < 4) && hasItemType('melee') ){
+                  console.log("<-     You strike the wildman with your melee weapon to save bullets!           ->");
                   monsterDefense = monsterDefense - 1;
                   sleep(1500);
               }
@@ -702,7 +701,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
     {
          console.log("<-                     The Battle Begins!!!                         ->");
          sleep(1000);
-     if(inventory.includes(shotgun) && ((inventory.includes(tomahawk)) || (inventory.includes(revolver))) && (shotgun.capacity > 0)) {
+     if(inventory.includes(shotgun) && ((hasItemType('melee')) || (inventory.includes(revolver))) && (shotgun.capacity > 0)) {
           console.log("<-              You fire your shotgun and hit the lizard-headed creature!           ->");
           shotgun.capacity = shotgun.capacity - 1;
           lizardmanDefense = lizardmanDefense - shotgun.effect;
@@ -713,11 +712,11 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
 
           while((lizardmanDefense > 0) && (playerHealth > 30)){
 
-            console.log("Ouch!\n");
+            //console.log("Ouch!\n");
 
-             if((lizardmanDefense <= 4) && (inventory.includes(tomahawk))){
-                  console.log("<-  You strike the lizardman with your tomahawk to save bullets!   ->");
-                  lizardmanDefense = lizardmanDefense - tomahawk.effect;
+             if((lizardmanDefense <= 4) && hasItemType('melee')){
+                  console.log("<-  You strike the lizardman with your melee weapon to save bullets!   ->");
+                  lizardmanDefense = lizardmanDefense - 1;
                   console.log("<-  You're too close to the lizardman and he bites you!   ->");
                   playerHealth = playerHealth - 40;
                   sleep(1500);
@@ -772,7 +771,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
           }
 
       }
- else if(((inventory.includes(revolver)) || (inventory.includes(tomahawk))) && (weaponDamage > 0))
+ else if(((inventory.includes(revolver)) || (hasItemType('melee'))) && (weaponDamage > 0))
      {  
           console.log("<-            You fire your revolver and hit the lizardman!            ->");
           revolver.capacity = revolver.capacity - 1;
@@ -795,12 +794,12 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                   sleep(1500);
                   playerHealth = playerHealth - 10;
               }
-              else if((lizardmanDefense < 4) && (inventory.includes(tomahawk))){
-                  console.log("<-     You strike the lizardman with your tomahawk to save bullets!           ->");
-                  lizardmanDefense = lizardmanDefense - tomahawk.effect;
+              else if((lizardmanDefense < 4) && (hasItemType('melee'))){
+                  console.log("<-     You strike the lizardman with your melee weapon to save bullets!           ->");
+                  lizardmanDefense = lizardmanDefense - 1;
                   if(lizardmanDefense > 2){
                      console.log("<-  You're too close to the lizardman and he bites you!   ->");
-                     playerHealth = playerHealth - 30;
+                     playerHealth = playerHealth - 40;
                      sleep(1500);
                   }
               }   //watch
@@ -1318,7 +1317,7 @@ else if(currentLocation === "hotel") {
                     throw "Cannot enter a blank space or return without a number!";
                   }
                   else if(purchaseChoice === '1'){
-                    if(inventory.includes(tomahawk) || inventory.includes("sabre")){
+                    if(hasItemType('melee')){
                        console.log("You already have a melee weapon! Return to the General Store to choose something else.");
                      }
                      else if(playerSilver >= 1) {
