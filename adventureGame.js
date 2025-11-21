@@ -1014,7 +1014,7 @@ while(gameRunning)
   if(currentLocation === "status") {
    
     let see = hasItemType('medicine');
-    console.log("\n==========" + see + "==========\n");
+    //console.log("\n==========" + see + "==========\n");
 
    // let weapon = inventory.find(item => item.type === "weapon");
 
