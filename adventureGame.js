@@ -437,6 +437,15 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
        console.log("pouch 2: " + inventory[1].name);
        //console.log("And a trusty horse named " + inventory[2]);
        
+        if(inventory.includes(revolver)) {
+          console.log("<-   Your revolver has " + revolver.capacity + " silver bullets.   ->\n");
+        }
+        if(inventory.includes(shotgun)) {
+         // let shots = shotgunDamage / 2;
+          console.log("<-          Your shotgun has " + shotgun.capacity + " shots.             ->\n");
+        }
+
+
        // first call of hasItemType()
        if((hasItemType('firearm') && !hasItemType('melee')) || (!hasItemType('firearm') && hasItemType('melee'))){
         console.log("Otherwise, you lack sufficient weapons for venturing into the Badlands!");
@@ -830,6 +839,9 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                 console.log("<-          You are too seriously injured to keep fighting.            ->");
                 sleep(1000);
                 console.log("<-  You must retreat and head back to the village!      ->");
+                sleep(1000);
+               [playerHealth, inventory] = useHealing(playerHealth, inventory);
+
               if(playerHealth <= 0){
                      console.log("<-            You have been poisoned by the lizardman's scratches and bites!               ->");
                      console.log("<-          The lizardman will drag your body down into the hole and eat you!              ->");
@@ -860,6 +872,9 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
               while(playerHealth > 0) {
                   console.log("<-      The lizardman bites you and poisons your blood!      ->");
                   playerHealth = playerHealth - 40;
+                  sleep(1000);
+                 [playerHealth, inventory] = useHealing(playerHealth, inventory);
+
                  if(playerHealth < 0){
                       console.log("<-            You have been poisoned by the lizardman's scratches and bites!               ->");
                       console.log("<-          The lizardman will drag your body down into the hole and eat you!              ->");
@@ -999,7 +1014,7 @@ while(gameRunning)
   if(currentLocation === "status") {
    
     let see = hasItemType('medicine');
-    console.log("\n==========" + see + "==========\n");
+    //console.log("\n==========" + see + "==========\n");
 
    // let weapon = inventory.find(item => item.type === "weapon");
 
