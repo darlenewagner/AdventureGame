@@ -71,49 +71,84 @@ let spokenWithInnkeeper = false;
 
 let inventory = [];
 
-// Objects that can be added to inventory: medicine, firearm, bullet, and melee weapon.
-const medicine = {
-  name: "woundKit",
-  type: "medicine",
-  value: 1,
-  effect: 10,
-  description: "Stops bleeding, slows Feral Virus infection, and stops secondary infection",
-} 
+// Available items that can be added to inventory: medicine, firearm, melee weapon, and armor.
 
-let revolver = {
-  name: "revolver",
-  type: "firearm",
-  value: 6,
-  capacity: 6,
-  effect: 1,
-  description: "A firearm that does 1 unit of damage to a monster for 6 times total (before reloading)",
-}
+let items = {
+   woundkit: {
+   name: "woundKit",
+   type: "medicine",
+   value: 1,
+   effect: 10,
+   description: "Stops bleeding, slows Feral Virus infection, and stops secondary infection",
+  }, 
 
-let shotgun = {
-  name: "shotgun",
-  type: "firearm",
-  value: 6,
-  capacity: 2,
-  effect: 2,
-  description: "A firearm that does 2 units of damage to a monster for 2 times (before reloading)",
-  
-}
+   vaccine: {
+   name: "vaccine",
+   type: "medicine",
+   value: 2,
+   effect: 20,
+   description: "Stops Feral Virus infection and partially restores health",
+  },
 
-const tomahawk = {
-  name: "tomahawk",
-  type: "melee",
-  value: 1,
-  effect: 1,
-  description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times.",
-}
+   revolver: {
+   name: "revolver",
+   type: "firearm",
+   value: 6,
+   capacity: 6,
+   effect: 1,
+   description: "A firearm that does 1 unit of damage to a monster for 6 times total (before reloading)",
+  },
 
-const sabre = {
-  name: "sabre",
-  type: "melee",
-  value: 3,
-  effect: 1,
-  description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times. Can be sold for silver."
-}
+   shotgun: {
+   name: "shotgun",
+   type: "firearm",
+   value: 6,
+   capacity: 2,
+   effect: 2,
+   description: "A firearm that does 2 units of damage to a monster for 2 times (before reloading)",
+  },
+
+   repeatingRifle: {
+   name: "rifle",
+   type: "firearm",
+   value: 10,
+   capacity: 7,
+   effect: 2,
+   description: "A firearm that does 2 units of damage to a monster for 7 times before reloading",
+  },
+
+   tomahawk: {
+   name: "tomahawk",
+   type: "melee",
+   value: 1,
+   effect: 1,
+   description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times.",
+  },
+
+    sabre: {
+    name: "sabre",
+    type: "melee",
+    value: 3,
+    effect: 1,
+    description: "A melee weapon that does 1 unit of damage to a monster wounded by a firearm for an unlimited number of times. Can be sold for silver."
+   },
+
+    shield: {
+    name: "ballisticShield",
+    type: "armor",
+    value: 2,
+    effect: 5,
+    description: "Limits damage from claw or club blows from wildman, lizardman, dogman, or werewolf, but not dogman or werewolf bites.",
+   },
+
+    gambeson: {
+    name: "gambeson",
+    type: "armor",
+    value: 4,
+    effect: 5,
+    description: "Limits damage from bites as well as claw or club blows.",
+   }
+ };
 
 //
 //* ########## HOUSEKEEPING FUNCTIONS: sleep() and helpMenu() ##########
@@ -382,15 +417,20 @@ function movePlayer(placeChoice, currentLocation, previousLocation, gameRunning)
 
 //* End declaration of function movePlayer() *
 
-//
-// ######## GAME PLAY FUNCTIONS: hasItemType(), specialInventory(), showStatus(), useHealing(), 
-// processWildmanCombat() and processLizardmanCombat() ########
-//
-
+// ######## HELPER FUNCTIONS FOR INVENTORY: hasItemType(), getItemsByType(), hasGoodEquipment(), and getBestItem() #########
 //* A helper function that returns a boolean. Checks if type equals 'firearm', 'melee', or 'medicine'.
 function hasItemType(type) {
     return inventory.some(item => item.type === type);
 }
+
+
+
+//
+// ######## GAME PLAY FUNCTIONS:  specialInventory(), showStatus(), useHealing(), 
+// processWildmanCombat() and processLizardmanCombat() ########
+//
+
+
 
 function specialInventory(playerName, inventory, weaponDamage){
   console.log("If player chooses certain names, the character comes pre-equiped with 1 special weapon and a horse.");
@@ -412,7 +452,7 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
      // check inventory if revolver, woundKit, or shotgun have been added
      // Special weapons, such as tomahawks, with which special characters begin the game,
      // Are only shown if revolver, woundKit, and/or shotgun are added.
-     if(inventory.length > 2) //((inventory.includes(revolver)) || (inventory.includes(medicine)) || (inventory.includes(shotgun))) 
+     if(inventory.length > 2) //((inventory.includes(items.revolver)) || (inventory.includes(items.woundkit)) || (inventory.includes(items.shotgun))) 
       {
         i = 0;
         while(i < inventory.length)
@@ -421,14 +461,14 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
             console.log("pouch " + disp + ": " + inventory[i].name);
             i++;
         }
-        if(inventory.includes(revolver)) {
-          console.log("<-   Your revolver has " + revolver.capacity + " silver bullets.   ->\n");
+        if(inventory.includes(items.revolver)) {
+          console.log("<-   Your revolver has " + items.revolver.capacity + " silver bullets.   ->\n");
         }
-        if(inventory.includes(shotgun)) {
+        if(inventory.includes(items.shotgun)) {
          // let shots = shotgunDamage / 2;
-          console.log("<-          Your shotgun has " + shotgun.capacity + " shots.             ->\n");
+          console.log("<-          Your shotgun has " + items.shotgun.capacity + " shots.             ->\n");
         }
-        if(hasItemType('firearm') && hasItemType('melee') && ((shotgun.capacity == 2) || (revolver.capacity > 4))){
+        if(hasItemType('firearm') && hasItemType('melee') && ((items.shotgun.capacity == 2) || (items.revolver.capacity > 4))){
           console.log("You are very well-prepared to go into the Badlands!\n")
         }
      }
@@ -437,12 +477,12 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
        console.log("pouch 2: " + inventory[1].name);
        //console.log("And a trusty horse named " + inventory[2]);
        
-        if(inventory.includes(revolver)) {
-          console.log("<-   Your revolver has " + revolver.capacity + " silver bullets.   ->\n");
+        if(inventory.includes(items.revolver)) {
+          console.log("<-   Your revolver has " + items.revolver.capacity + " silver bullets.   ->\n");
         }
-        if(inventory.includes(shotgun)) {
+        if(inventory.includes(items.shotgun)) {
          // let shots = shotgunDamage / 2;
-          console.log("<-          Your shotgun has " + shotgun.capacity + " shots.             ->\n");
+          console.log("<-          Your shotgun has " + items.shotgun.capacity + " shots.             ->\n");
         }
 
 
@@ -467,7 +507,7 @@ function showStatus(playerHealth, playerSilver, previousLocation, inventory, wea
 //* End declaration of function showStatus() *
 
 /**  Begin declaration of function useHealing()  
- * For boosting playerHealth by 10 points if woundKit is in array inventory
+ * For boosting playerHealth by 10 points if items.woundKit is in array inventory
  * @param (integer:0-100, array)
  * @returns no explicit value, only prints to console 
 */
@@ -527,10 +567,10 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
   {
          console.log("<-                     The Battle Begins!!!                         ->");
          sleep(1000);
- if(inventory.includes(shotgun) && hasItemType('melee') && (shotgun.capacity > 0)) {
+ if(inventory.includes(items.shotgun) && hasItemType('melee') && (items.shotgun.capacity > 0)) {
           console.log("<-            You fire your shotgun and hit the wildman!            ->");
-          shotgun.capacity = shotgun.capacity - 1;
-          monsterDefense = monsterDefense - shotgun.effect;
+          items.shotgun.capacity = items.shotgun.capacity - 1;
+          monsterDefense = monsterDefense - items.shotgun.effect;
           sleep(1000);
           console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
           sleep(1000);
@@ -543,10 +583,10 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                   monsterDefense = monsterDefense - 1;
                   sleep(1500);
               }
-              else if(inventory.includes(revolver)){
+              else if(inventory.includes(items.revolver)){
                   console.log("<-         You fire your revolver and hit the wildman again!                ->");
                   sleep(1500);
-                  revolver.capacity = revolver.capacity - 1;
+                  items.revolver.capacity = items.revolver.capacity - 1;
                   monsterDefense = monsterDefense - 1;
               }
           }
@@ -575,10 +615,10 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
           }
 
       }
- else if((inventory.includes(revolver)) && (revolver.capacity > 0))
+ else if((inventory.includes(items.revolver)) && (items.revolver.capacity > 0))
      {  
           console.log("<-            You fire your revolver and hit the wildman!            ->");
-          revolver.capacity = revolver.capacity - 1;
+          items.revolver.capacity = items.revolver.capacity - 1;
           monsterDefense = monsterDefense - 1;
           sleep(1000);
           console.log("<-      The wildman hits you with his club and breaks your ribs!      ->");
@@ -586,13 +626,13 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
           playerHealth = playerHealth - 20;
 
           
-      while((monsterDefense > 0) && (playerHealth > 30) && (revolver.capacity > 0)) 
+      while((monsterDefense > 0) && (playerHealth > 30) && (items.revolver.capacity > 0)) 
         {
 
              if(monsterDefense >= 4) {
                   console.log("<-                You fire and hit the wildman again!                 ->");
                   sleep(1500);
-                  revolver.capacity = revolver.capacity - 1;
+                  items.revolver.capacity = items.revolver.capacity - 1;
                   monsterDefense = monsterDefense - 1;
                   console.log("<-      The wildman hits you with his club again and breaks your arm!      ->");
                   sleep(1500);
@@ -603,10 +643,10 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                   monsterDefense = monsterDefense - 1;
                   sleep(1500);
               }
-              else if(inventory.includes(revolver)){
+              else if(inventory.includes(items.revolver)){
                   console.log("<-                You fire and hit the wildman again!                 ->");
                   sleep(1500);
-                  revolver.capacity = revolver.capacity - 1;
+                  items.revolver.capacity = items.revolver.capacity - 1;
                   monsterDefense = monsterDefense - 1;
 
               }
@@ -634,7 +674,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                     player = false;
                     }
           }
-        else if(revolver.capacity < 1)
+        else if(items.revolver.capacity < 1)
           {
                 console.log("<-           You have run out of bullets!               ->");
                 sleep(1000);
@@ -710,10 +750,10 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
     {
          console.log("<-                     The Battle Begins!!!                         ->");
          sleep(1000);
-     if(inventory.includes(shotgun) && ((hasItemType('melee')) || (inventory.includes(revolver))) && (shotgun.capacity > 0)) {
+     if(inventory.includes(items.shotgun) && ((hasItemType('melee')) || (inventory.includes(items.revolver))) && (items.shotgun.capacity > 0)) {
           console.log("<-              You fire your shotgun and hit the lizard-headed creature!           ->");
-          shotgun.capacity = shotgun.capacity - 1;
-          lizardmanDefense = lizardmanDefense - shotgun.effect;
+          items.shotgun.capacity = items.shotgun.capacity - 1;
+          lizardmanDefense = lizardmanDefense - items.shotgun.effect;
           sleep(1000);
           console.log("<- The lizardman gets back up, scratches you, and cuts open your arm! ->");
           sleep(1000);
@@ -730,20 +770,20 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                   playerHealth = playerHealth - 40;
                   sleep(1500);
               }
-             else if(inventory.includes("shotgun") && (shotgun.capacity >= 2)){
+             else if(inventory.includes("shotgun") && (items.shotgun.capacity >= 2)){
                   console.log("<-              You fire your shotgun again and hit the lizardman!         ->");
-                  shotgun.capacity = shotgun.capacity - 1;
+                  items.shotgun.capacity = items.shotgun.capacity - 1;
                   lizardmanDefense = lizardmanDefense - shotgun.effect;
                   sleep(1000);
                   console.log("<-  The lizardman gets back up, scratches you, and cuts open your arm!  ->");
                   sleep(1000);
                   playerHealth = playerHealth - 20;
                  }
-              else if(inventory.includes(revolver)){
+              else if(inventory.includes(items.revolver)){
                   console.log("<-         You fire your revolver and hit the lizardman!                 ->");
                   sleep(1500);
-                  revolver.capacity = revolver.capacity - 1;
-                  lizardmanDefense = lizardmanDefense - revolver.effect;
+                  items.revolver.capacity = items.revolver.capacity - 1;
+                  lizardmanDefense = lizardmanDefense - items.revolver.effect;
                   if(lizardmanDefense > 2){
                     console.log("<- The lizard-headed creature gets back up, scratches you, and cuts open your arm! ->");
                     sleep(1000);
@@ -780,25 +820,25 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
           }
 
       }
- else if(((inventory.includes(revolver)) || (hasItemType('melee'))) && (weaponDamage > 0))
+ else if(((inventory.includes(items.revolver)) || (hasItemType('melee'))) && (weaponDamage > 0))
      {  
           console.log("<-            You fire your revolver and hit the lizardman!            ->");
-          revolver.capacity = revolver.capacity - 1;
-          lizardmanDefense = lizardmanDefense - revolver.effect;
+          items.revolver.capacity = items.revolver.capacity - 1;
+          lizardmanDefense = lizardmanDefense - items.revolver.effect;
           sleep(1000);
           console.log("<- The lizardman gets back up, scratches you, and cuts open your arm! ->");
           sleep(1000);
           playerHealth = playerHealth - 20;
 
           
-      while((lizardmanDefense > 0) && (playerHealth > 30) && (revolver.capacity > 0)) 
+      while((lizardmanDefense > 0) && (playerHealth > 30) && (items.revolver.capacity > 0)) 
         {
 
              if(lizardmanDefense >= 4) {
                   console.log("<-                You fire and hit the lizardman again!                 ->");
                   sleep(1500);
-                  revolver.capacity = revolver.capacity - 1;
-                  lizardmanDefense = lizardmanDefense - revolver.effect;
+                  items.revolver.capacity = items.revolver.capacity - 1;
+                  lizardmanDefense = lizardmanDefense - items.revolver.effect;
                   console.log("<- The lizardman gets back up, scratches you, and cuts open your arm! ->");
                   sleep(1500);
                   playerHealth = playerHealth - 10;
@@ -815,8 +855,8 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
               else {
                   console.log("<-                You fire and hit the lizardman again!                 ->");
                   sleep(1000);
-                  revolver.capacity = revolver.capacity - 1;
-                  lizardmanDefense = lizardmanDefense - revolver.effect;
+                  items.revolver.capacity = items.revolver.capacity - 1;
+                  lizardmanDefense = lizardmanDefense - items.revolver.effect;
                   console.log("<-  You're too close to the lizardman and he bites you!   ->");
                   playerHealth = playerHealth - 40;
                   sleep(1500);
@@ -849,7 +889,7 @@ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || 
                     player = false;
                     }
           }
-        else if(revolver.damage < 1)
+        else if(items.revolver.damage < 1)
           {
                 console.log("<-           You have run out of bullets!               ->");
                 sleep(1000);
@@ -1028,7 +1068,7 @@ while(gameRunning)
 
   if((currentLocation === "blacksmith") && (visitedBlacksmith == false)) 
     { 
-      if(inventory.includes(revolver) === false)
+      if(inventory.includes(items.revolver) === false)
       {
        console.log("Greetings, Blacksmith, are you selling any weapons?\n");
        console.log("Yes, I have just the thing for you...");
@@ -1042,7 +1082,7 @@ while(gameRunning)
        // update visitedBlacksmith to true to avoid coming back and losing too much silver
        visitedBlacksmith = true;
        // decrement playerSilver to pay for revolver  
-       playerSilver = playerSilver - revolver.value;
+       playerSilver = playerSilver - items.revolver.value;
        console.log("What about bullets? Right now, this gun only does a damage of " + weaponDamage + ".");
        // pause before laugh with sleep() function
        sleep(1500);
@@ -1066,7 +1106,7 @@ while(gameRunning)
        playerSilver = playerSilver - 6;
        // increment amount of weaponDamage the revolver can do to the werewolf or other monsters.
        weaponDamage = weaponDamage + 6;
-       inventory.push(revolver);
+       inventory.push(items.revolver);
      }
        else if((currentLocation === "blacksmith") && (playerSilver < 8))
        {
@@ -1075,10 +1115,10 @@ while(gameRunning)
        }
      else {
          console.log("Howdy, Sheriff " + playerName + ". Ya need more bullets?\n");
-         let needed = 6 - revolver.capacity;
+         let needed = 6 - items.revolver.capacity;
          console.log("Why yes, I could use " + needed + ".");
          console.log("All righty Sheriff, that's " + needed + " silver dollars.");
-         revolver.capacity = revolver.capacity + needed;
+         items.revolver.capacity = items.revolver.capacity + needed;
          playerSilver = playerSilver - needed;
          visitedBlacksmith = true;
        }
@@ -1155,8 +1195,8 @@ while(gameRunning)
       console.log("Take a pack of bandages with healing poultice into the badlands with you.\n");
       console.log("How much?\n");
       console.log("One silver dollar.");
-      playerSilver = playerSilver - medicine.value;
-      inventory.push(medicine);
+      playerSilver = playerSilver - items.woundkit.value;
+      inventory.push(items.woundkit);
     }
   }
 else if(currentLocation === "hotel") {
@@ -1259,12 +1299,12 @@ else if(currentLocation === "hotel") {
            }
 
 
-           if(shotgun.capacity < 2){
-             let shotNeeded = 2 - shotgun.capacity;
+           if(items.shotgun.capacity < 2){
+             let shotNeeded = 2 - items.shotgun.capacity;
              console.log("I can take back " + shotNeeded + " silver dollars to reload your shotgun.\n");
              console.log("OK. Thanks.");
              playerSilver = playerSilver - shotNeeded;
-             shotgun.capacity = shotgun.capacity + shotNeeded;
+             items.shotgun.capacity = items.shotgun.capacity + shotNeeded;
            }
 
         if(playerSilver >= 7)
@@ -1286,12 +1326,12 @@ else if(currentLocation === "hotel") {
               lizardmanBounty = true;
            }
           
-           if(shotgunDamage < 2){
-             let shotNeeded = 2 - shotgun.capacity;
+           if(items.shotgunDamage < 2){
+             let shotNeeded = 2 - items.shotgun.capacity;
              console.log("I can take back " + shotNeeded + " silver dollars to reload your shotgun.\n");
              console.log("OK. Thanks.");
              playerSilver = playerSilver - shotNeeded;
-             shotgun.capacity = shotgun.capacity + shotNeeded;
+             items.shotgun.capacity = items.shotgun.capacity + shotNeeded;
            }
 
         if(playerSilver >= 8)
@@ -1336,23 +1376,23 @@ else if(currentLocation === "hotel") {
                        console.log("You already have a melee weapon! Return to the General Store to choose something else.");
                      }
                      else if(playerSilver >= 1) {
-                       inventory.push(tomahawk);
-                       playerSilver = playerSilver - tomahawk.value;
+                       inventory.push(items.tomahawk);
+                       playerSilver = playerSilver - items.tomahawk.value;
                      }
                      else{
                       console.log("You currently have 0 silver dollars and cannot purchase anything!");
                      }
                   }
                   else if(purchaseChoice === '2'){
-                    if(!inventory.includes(shotgun)){
+                    if(!inventory.includes(items.shotgun)){
                        console.log("You do not have a shotgun yet. Please select option 6.");
                      } 
                      else if(playerSilver >= 2) {
-                       let shotNeeded2 = 2 - shotgun.capacity;
+                       let shotNeeded2 = 2 - items.shotgun.capacity;
                        console.log("That will be " + shotNeeded2 + " silver dollars to reload your shotgun.\n");
                        console.log("OK. Thanks.");
                        playerSilver = playerSilver - shotNeeded2;
-                       shotgun.capacity = shotgun.capacity + shotNeeded2;
+                       items.shotgun.capacity = items.shotgun.capacity + shotNeeded2;
                        visitedBlacksmith = false;
                      }
                      else{
@@ -1360,25 +1400,25 @@ else if(currentLocation === "hotel") {
                          }
                   }
                   else if(purchaseChoice === '6'){
-                    if(inventory.includes(shotgun)){
+                    if(inventory.includes(items.shotgun)){
                       console.log("You already have a shotgun! Return to the General Store to choose something else.");
                     }
                     else if(playerSilver >= 6) {
-                      inventory.push(shotgun);
-                      shotgun.capacity = 2;
-                      playerSilver = playerSilver - shotgun.value;
+                      inventory.push(items.shotgun);
+                      items.shotgun.capacity = 2;
+                      playerSilver = playerSilver - items.shotgun.value;
                     }
                     else{
                           console.log("You currently do not have enough silver dollars to purchase a shotgun!");                      
                     }
                   }
                   else if(purchaseChoice === '7'){
-                    if(inventory.includes(shotgun) && (inventory.includes(tomahawk))){
+                    if(inventory.includes(items.shotgun) && (inventory.includes(items.tomahawk))){
                        console.log("You already have a both a shotgun and a tomahawk! Return to the General Store to choose one or the other.");                     
                     }
                     else if(playerSilver >= 7) {
-                    inventory.push(shotgun);
-                    shotgun.capacity = 2;
+                    inventory.push(items.shotgun);
+                    items.shotgun.capacity = 2;
                     inventory.push(tomahawk);
                     playerSilver = playerSilver - 7;
                     }
