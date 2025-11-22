@@ -11,7 +11,7 @@ const readline = require('readline-sync');
 let gameRunning = true;
 let playerName = "";
 let playerHealth = 100;
-let playerGold = 20;  // Starting gold
+let playerSilver = 20;  // Starting silver
 let currentLocation = "village";
 
 // Weapon damage (starts at 0 until player buys a sword)
@@ -26,7 +26,7 @@ let healingPotionValue = 30;  // How much health is restored
 const healthPotion = {
     name: "Health Potion",
     type: "potion",
-    value: 5,     // Cost in gold
+    value: 5,     // Cost in silver
     effect: 30,   // Healing amount
     description: "Restores 30 health points"
 };
@@ -34,7 +34,7 @@ const healthPotion = {
 const sword = {
     name: "Sword",
     type: "weapon",
-    value: 10,    // Cost in gold
+    value: 10,    // Cost in silver
     effect: 10,   // Damage amount
     description: "A sturdy blade for combat"
 };
@@ -49,16 +49,16 @@ let inventory = [];  // Will now store item objects instead of strings
 
 /**
  * Shows the player's current stats
- * Displays health, gold, and current location
+ * Displays health, silver, and current location
  */
 function showStatus() {
     console.log("\n=== " + playerName + "'s Status ===");
-    console.log("❤️  Health: " + playerHealth);
-    console.log("💰 Gold: " + playerGold);
-    console.log("📍 Location: " + currentLocation);
+    console.log(" Health: " + playerHealth);
+    console.log(" Silver: " + playerSilver);
+    console.log(" Location: " + currentLocation);
     
     // Enhanced inventory display with item details
-    console.log("🎒 Inventory: ");
+    console.log(" Inventory: ");
     if (inventory.length === 0) {
         console.log("   Nothing in inventory");
     } else {
@@ -88,7 +88,7 @@ function showLocation() {
     else if (currentLocation === "blacksmith") {
         console.log("The heat from the forge fills the air. Weapons and armor line the walls.");
         console.log("\nWhat would you like to do?");
-        console.log("1: Buy sword (" + sword.value + " gold)");
+        console.log("1: Buy sword (" + sword.value + " silver)");
         console.log("2: Return to village");
         console.log("3: Check status");
         console.log("4: Use item");
@@ -98,7 +98,7 @@ function showLocation() {
     else if (currentLocation === "market") {
         console.log("Merchants sell their wares from colorful stalls. A potion seller catches your eye.");
         console.log("\nWhat would you like to do?");
-        console.log("1: Buy potion (" + healthPotion.value + " gold)");
+        console.log("1: Buy potion (" + healthPotion.value + " silver)");
         console.log("2: Return to village");
         console.log("3: Check status");
         console.log("4: Use item");
@@ -142,8 +142,8 @@ function handleCombat() {
         let weapon = inventory.find(item => item.type === "weapon");
         console.log("You attack with your " + weapon.name + "!");
         console.log("You deal " + weapon.effect + " damage!");
-        console.log("Victory! You found 10 gold!");
-        playerGold += 10;
+        console.log("Victory! You found 10 silver!");
+        playerSilver += 10;
         return true;
     } else {
         console.log("Without a weapon, you must retreat!");
@@ -241,17 +241,17 @@ function checkInventory() {
  * Handles purchasing items at the blacksmith
  */
 function buyFromBlacksmith() {
-    if (playerGold >= sword.value) {
+    if (playerSilver >= sword.value) {
         console.log("\nBlacksmith: 'A fine blade for a brave adventurer!'");
-        playerGold -= sword.value;
+        playerSilver -= sword.value;
         
         // Add sword object to inventory instead of just the name
         inventory.push({...sword}); // Create a copy of the sword object
         
-        console.log("You bought a " + sword.name + " for " + sword.value + " gold!");
-        console.log("Gold remaining: " + playerGold);
+        console.log("You bought a " + sword.name + " for " + sword.value + " silver!");
+        console.log("Silver remaining: " + playerSilver);
     } else {
-        console.log("\nBlacksmith: 'Come back when you have more gold!'");
+        console.log("\nBlacksmith: 'Come back when you have more silver!'");
     }
 }
 
@@ -259,17 +259,17 @@ function buyFromBlacksmith() {
  * Handles purchasing items at the market
  */
 function buyFromMarket() {
-    if (playerGold >= healthPotion.value) {
+    if (playerSilver >= healthPotion.value) {
         console.log("\nMerchant: 'This potion will heal your wounds!'");
-        playerGold -= healthPotion.value;
+        playerSilver -= healthPotion.value;
         
         // Add potion object to inventory instead of just the name
         inventory.push({...healthPotion}); // Create a copy of the potion object
         
-        console.log("You bought a " + healthPotion.name + " for " + healthPotion.value + " gold!");
-        console.log("Gold remaining: " + playerGold);
+        console.log("You bought a " + healthPotion.name + " for " + healthPotion.value + " silver!");
+        console.log("Silver remaining: " + playerSilver);
     } else {
-        console.log("\nMerchant: 'No gold, no potion!'");
+        console.log("\nMerchant: 'No silver, no potion!'");
     }
 }
 
@@ -296,17 +296,17 @@ function showHelp() {
     
     console.log("\nItem Usage:");
     console.log("- Health potions restore health based on their effect value");
-    console.log("- You can buy potions at the market for " + healthPotion.value + " gold");
-    console.log("- You can buy a sword at the blacksmith for " + sword.value + " gold");
+    console.log("- You can buy potions at the market for " + healthPotion.value + " silver");
+    console.log("- You can buy a sword at the blacksmith for " + sword.value + " silver");
     
     console.log("\nOther Commands:");
-    console.log("- Choose the status option to see your health and gold");
+    console.log("- Choose the status option to see your health and silver");
     console.log("- Choose the help option to see this message again");
     console.log("- Choose the quit option to end the game");
     
     console.log("\nTips:");
     console.log("- Keep healing potions for dangerous areas");
-    console.log("- Defeat monsters to earn gold");
+    console.log("- Defeat monsters to earn silver");
     console.log("- Health can't go above 100");
 }
 
@@ -401,7 +401,7 @@ console.log("\nYour quest: Defeat the dragon in the mountains!");
 // Get player's name
 playerName = readline.question("\nWhat is your name, brave adventurer? ");
 console.log("\nWelcome, " + playerName + "!");
-console.log("You start with " + playerGold + " gold.");
+console.log("You start with " + playerSilver + " silver.");
 
 while (gameRunning) {
     // Show current location and choices
