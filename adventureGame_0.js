@@ -35,7 +35,7 @@ const sword = {
     name: "Sword",
     type: "weapon",
     value: 10,    // Cost in silver
-    effect: 10,   // Damage amount
+    effect: 1,   // Damage amount
     description: "A sturdy blade for combat"
 };
 
@@ -142,12 +142,16 @@ function hasItemType(type) {
     return inventory.some(item => item.type === type);
 }
 
+function hasItemName(name){
+    return inventory.some(item => item.name === name);
+}
+
 /**
  * Handles monster battles
  * Checks if player has weapon and manages combat results
  * @returns {boolean} true if player wins, false if they retreat
  */
-function handleCombat() {
+function handleCombat(monsterDefense) {
 
        console.log("<- Suddenly, a spiny-scaled, two-legged, lizard-headed creature comes up out of a hole in the ground ->");
        sleep(2000);
@@ -159,19 +163,30 @@ function handleCombat() {
          console.log("<-                     The Battle Begins!!!                         ->");
     // Updated to check for item type instead of specific string
     if (hasItemType("weapon")) {
-        // Find the weapon to get its properties
         let weapon = inventory.find(item => item.type === "weapon");
-        console.log("You attack with your " + weapon.name + "!");
-        console.log("You deal " + weapon.effect + " damage!");
-        console.log("Victory! You found 10 silver!");
-        playerSilver += 10;
-        return true;
+        while(monsterDefense > 0) {
+           // Find the weapon to get its properties
+            console.log("You attack with your " + weapon.name + "!");
+            sleep(1000);
+            console.log("You deal " + weapon.effect + " damage!");
+            sleep(1000);
+            monsterDefense = monsterDefense - weapon.effect;
+            console.log("The lizardman strikes back with his claws and deals 10 health points of damage to you.");
+            sleep(1000);
+            updateHealth(-10);
+         if(monsterDefense == 0){
+            console.log("Victory! The lizardman is dead and you found his hoard of 10 silver dollars!");
+            playerSilver += 10;
+            
+           }
+         }
     } else {
         console.log("Without a weapon, you must retreat!");
         updateHealth(-20);
-        return false;
+        
      }
    }
+   return monsterDefense;
 }
 
 /**
@@ -264,16 +279,16 @@ function checkInventory() {
  */
 function buyFromBlacksmith() {
     if (playerSilver >= sword.value) {
-        console.log("\nBlacksmith: 'A fine blade for a brave adventurer!'");
-        playerSilver -= sword.value;
         
-        if(inventory.includes(sword.name)){
+        if(hasItemName('Sword')){
             console.log("You already have a plain, iron sword.\n");
             console.log("Choose another item from the blacksmith.");
         }
         else {
         // Add sword object to inventory instead of just the name
         inventory.push({...sword}); // Create a copy of the sword object
+        console.log("\nBlacksmith: 'A fine blade for a brave adventurer!'");
+        playerSilver -= sword.value;
         
         console.log("You bought a " + sword.name + " for " + sword.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
@@ -368,10 +383,14 @@ function move(choiceNum) {
             validMove = true;
             
             // Trigger combat when entering forest
-            console.log("\nA monster appears!");
-            if (!handleCombat()) {
-                currentLocation = "village";
-            }
+            //console.log("\nA monster appears!");
+            console.log("Lizardman Health is " + monsterDefense);
+            monsterDefense = handleCombat(monsterDefense);
+            //if (!handleCombat(monsterDefense)) {
+            //    currentLocation = "village";
+            //}
+            console.log("Lizardman Health is " + monsterDefense);
+
         }
     }
     else if (currentLocation === "blacksmith") {
