@@ -177,15 +177,16 @@ function handleCombat(monsterDefense) {
          if(monsterDefense == 0){
             console.log("Victory! The lizardman is dead and you found his hoard of 10 silver dollars!");
             playerSilver += 10;
-            return true;
+            
            }
          }
     } else {
         console.log("Without a weapon, you must retreat!");
         updateHealth(-20);
-        return false;
+        
      }
    }
+   return monsterDefense;
 }
 
 /**
@@ -278,8 +279,6 @@ function checkInventory() {
  */
 function buyFromBlacksmith() {
     if (playerSilver >= sword.value) {
-        console.log("\nBlacksmith: 'A fine blade for a brave adventurer!'");
-        playerSilver -= sword.value;
         
         if(hasItemName('Sword')){
             console.log("You already have a plain, iron sword.\n");
@@ -288,6 +287,8 @@ function buyFromBlacksmith() {
         else {
         // Add sword object to inventory instead of just the name
         inventory.push({...sword}); // Create a copy of the sword object
+        console.log("\nBlacksmith: 'A fine blade for a brave adventurer!'");
+        playerSilver -= sword.value;
         
         console.log("You bought a " + sword.name + " for " + sword.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
@@ -382,10 +383,14 @@ function move(choiceNum) {
             validMove = true;
             
             // Trigger combat when entering forest
-            console.log("\nA monster appears!");
-            if (!handleCombat(monsterDefense)) {
-                currentLocation = "village";
-            }
+            //console.log("\nA monster appears!");
+            console.log("Lizardman Health is " + monsterDefense);
+            monsterDefense = handleCombat(monsterDefense);
+            //if (!handleCombat(monsterDefense)) {
+            //    currentLocation = "village";
+            //}
+            console.log("Lizardman Health is " + monsterDefense);
+
         }
     }
     else if (currentLocation === "blacksmith") {
