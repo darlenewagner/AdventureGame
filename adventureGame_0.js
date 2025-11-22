@@ -47,6 +47,18 @@ let inventory = [];  // Will now store item objects instead of strings
 // Functions that show game information to the player
 // ===========================
 
+/**  Define a sleep function
+ * @param (integer) for time in milliseconds
+ * @returns no explicit value just syncronously pauses program execution
+*/
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
 /**
  * Shows the player's current stats
  * Displays health, silver, and current location
@@ -83,7 +95,7 @@ function showLocation() {
         console.log("4: Check status");
         console.log("5: Use item");
         console.log("6: Help");
-        console.log("7: Quit game");
+        console.log("0: Quit game");
     } 
     else if (currentLocation === "blacksmith") {
         console.log("The heat from the forge fills the air. Weapons and armor line the walls.");
@@ -93,7 +105,7 @@ function showLocation() {
         console.log("3: Check status");
         console.log("4: Use item");
         console.log("5: Help");
-        console.log("6: Quit game");
+        console.log("0: Quit game");
     }
     else if (currentLocation === "market") {
         console.log("Merchants sell their wares from colorful stalls. A potion seller catches your eye.");
@@ -103,7 +115,7 @@ function showLocation() {
         console.log("3: Check status");
         console.log("4: Use item");
         console.log("5: Help");
-        console.log("6: Quit game");
+        console.log("0: Quit game");
     }
     else if (currentLocation === "forest") {
         console.log("The forest is dark and foreboding. You hear strange noises all around you.");
@@ -112,7 +124,7 @@ function showLocation() {
         console.log("2: Check status");
         console.log("3: Use item");
         console.log("4: Help");
-        console.log("5: Quit game");
+        console.log("0: Quit game");
     }
 }
 
@@ -136,6 +148,15 @@ function hasItemType(type) {
  * @returns {boolean} true if player wins, false if they retreat
  */
 function handleCombat() {
+
+       console.log("<- Suddenly, a spiny-scaled, two-legged, lizard-headed creature comes up out of a hole in the ground ->");
+       sleep(2000);
+       let playerFight = "N";
+       playerFight = readline.question("Do you want to fight the lizard-headed creature? \n(Reply Y, Yes, or + to fight.)\n");
+       
+ if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || (playerFight === "yes") || (playerFight === "+"))
+    {
+         console.log("<-                     The Battle Begins!!!                         ->");
     // Updated to check for item type instead of specific string
     if (hasItemType("weapon")) {
         // Find the weapon to get its properties
@@ -149,7 +170,8 @@ function handleCombat() {
         console.log("Without a weapon, you must retreat!");
         updateHealth(-20);
         return false;
-    }
+     }
+   }
 }
 
 /**
@@ -245,11 +267,17 @@ function buyFromBlacksmith() {
         console.log("\nBlacksmith: 'A fine blade for a brave adventurer!'");
         playerSilver -= sword.value;
         
+        if(inventory.includes(sword.name)){
+            console.log("You already have a plain, iron sword.\n");
+            console.log("Choose another item from the blacksmith.");
+        }
+        else {
         // Add sword object to inventory instead of just the name
         inventory.push({...sword}); // Create a copy of the sword object
         
         console.log("You bought a " + sword.name + " for " + sword.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
+        }
     } else {
         console.log("\nBlacksmith: 'Come back when you have more silver!'");
     }
@@ -396,7 +424,7 @@ function isValidChoice(input, max) {
 console.log("=================================");
 console.log("       The Dragon's Quest        ");
 console.log("=================================");
-console.log("\nYour quest: Defeat the dragon in the mountains!");
+console.log("\nYour quest: Defeat the dragon or lizardman in the mountains!");
 
 // Get player's name
 playerName = readline.question("\nWhat is your name, brave adventurer? ");
@@ -426,13 +454,13 @@ while (gameRunning) {
             
             // Handle choices based on location
             if (currentLocation === "village") {
-                if (choiceNum < 1 || choiceNum > 7) {
-                    throw "Please enter a number between 1 and 7.";
+                if (choiceNum < 0 || choiceNum > 6) {
+                    throw "Please enter a number between 0 and 6.";
                 }
                 
                 validChoice = true;
                 
-                if (choiceNum <= 3) {
+                if ((choiceNum <= 3) && (choiceNum > 0)) {
                     move(choiceNum);
                 }
                 else if (choiceNum === 4) {
@@ -444,14 +472,14 @@ while (gameRunning) {
                 else if (choiceNum === 6) {
                     showHelp();
                 }
-                else if (choiceNum === 7) {
+                else if (choiceNum === 0) {
                     gameRunning = false;
                     console.log("\nThanks for playing!");
                 }
             }
             else if (currentLocation === "blacksmith") {
-                if (choiceNum < 1 || choiceNum > 6) {
-                    throw "Please enter a number between 1 and 6.";
+                if (choiceNum < 0 || choiceNum > 5) {
+                    throw "Please enter a number between 0 and 5.";
                 }
                 
                 validChoice = true;
@@ -471,14 +499,14 @@ while (gameRunning) {
                 else if (choiceNum === 5) {
                     showHelp();
                 }
-                else if (choiceNum === 6) {
+                else if (choiceNum === 0) {
                     gameRunning = false;
                     console.log("\nThanks for playing!");
                 }
             }
             else if (currentLocation === "market") {
-                if (choiceNum < 1 || choiceNum > 6) {
-                    throw "Please enter a number between 1 and 6.";
+                if (choiceNum < 0 || choiceNum > 5) {
+                    throw "Please enter a number between 0 and 5.";
                 }
                 
                 validChoice = true;
@@ -498,13 +526,13 @@ while (gameRunning) {
                 else if (choiceNum === 5) {
                     showHelp();
                 }
-                else if (choiceNum === 6) {
+                else if (choiceNum === 0) {
                     gameRunning = false;
                     console.log("\nThanks for playing!");
                 }
             }
             else if (currentLocation === "forest") {
-                if (choiceNum < 1 || choiceNum > 5) {
+                if (choiceNum < 0 || choiceNum > 4) {
                     throw "Please enter a number between 1 and 5.";
                 }
                 
@@ -522,7 +550,7 @@ while (gameRunning) {
                 else if (choiceNum === 4) {
                     showHelp();
                 }
-                else if (choiceNum === 5) {
+                else if (choiceNum === 0) {
                     gameRunning = false;
                     console.log("\nThanks for playing!");
                 }
