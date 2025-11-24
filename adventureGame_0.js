@@ -20,7 +20,29 @@ let monsterDefense = 5;    // Monster's defense value
 let healingPotionValue = 30;  // How much health is restored
 
 // =========================================
-// START Lab: Enhanced Item System
+// Enhanced Monster System
+// =========================================
+
+let monsters = {
+    lizardman: {
+        name: 'lizardman',
+        monsterDefense: 5,
+        alive: true
+    },
+    wolfman: {
+        name: 'wolfman',
+        monsterDefense: 7,
+        alive: true
+    },
+    dragon: {
+        name: 'dragon',
+        monsterDefense: 10,
+        alive: true
+    }
+};
+
+// =========================================
+// Enhanced Item System
 // =========================================
 // Item templates with properties
 const healthPotion = {
@@ -166,9 +188,9 @@ function handleCombat(monsterDefense) {
         let weapon = inventory.find(item => item.type === "weapon");
         while(monsterDefense > 0) {
            // Find the weapon to get its properties
-            console.log("You attack with your " + weapon.name + "!");
+            console.log("You strike with your " + weapon.name + "!");
             sleep(1000);
-            console.log("You deal " + weapon.effect + " damage!");
+            console.log("You deal " + weapon.effect + " point of damage to the monster!");
             sleep(1000);
             monsterDefense = monsterDefense - weapon.effect;
             console.log("The lizardman strikes back with his claws and deals 10 health points of damage to you.");
