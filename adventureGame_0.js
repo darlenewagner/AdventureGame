@@ -76,7 +76,14 @@ const items = {
       value: 20,
       effect: 2,
       description: "A fine steel sword for combat"
-    }
+    },
+   woodenShield: {
+      name: "woodenShield",
+      type: "armor",
+      value: 8,
+      effect: 5,
+      description: "Reduces damage taken in combat"
+   }
 };
 
 // Create empty inventory array (from previous lab)
@@ -141,10 +148,11 @@ function showLocation() {
         console.log("The heat from the forge fills the air. Weapons and armor line the walls.");
         console.log("\nWhat would you like to do?");
         console.log("1: Buy sword (" + items.sword.value + " silver)");
-        console.log("2: Return to village");
-        console.log("3: Check status");
-        console.log("4: Use item");
-        console.log("5: Help");
+        console.log("2: Buy shield (" + items.woodenShield.value + " silver)");
+        console.log("3: Return to village");
+        console.log("4: Check status");
+        console.log("5: Use item");
+        console.log("6: Help");
         console.log("0: Quit game");
     }
     else if (currentLocation === "market") {
@@ -159,7 +167,7 @@ function showLocation() {
         console.log("0: Quit game");
     }
     else if (currentLocation === "forest") {
-        console.log("The forest is dark and foreboding. You hear strange noises all around you.");
+       // console.log("The forest is dark and foreboding. You hear strange noises all around you.");
         console.log("\nWhat would you like to do?");
         console.log("1: Return to village");
         console.log("2: Check status");
@@ -205,6 +213,11 @@ function handleCombat(monsterName, monsterDefense, playerHealth, playerName) {
     // Updated to check for item type instead of specific string
     if (hasItemType("weapon")) {
         let weapon = inventory.find(item => item.type === "weapon");
+        let shield = inventory.find(item => item.type === "armor");
+        let shielding = 0;
+        if(shield !== undefined){
+           shielding = shield.effect;
+        }
         while(monsterDefense > 0) {
            // Find the weapon to get its properties
             console.log("You strike with your " + weapon.name + "!");
@@ -214,7 +227,7 @@ function handleCombat(monsterName, monsterDefense, playerHealth, playerName) {
             monsterDefense = monsterDefense - weapon.effect;
             console.log("The " + monsterName + " strikes back with his claws and deals 10 health points of damage to you.");
             sleep(1000);
-            playerHealth = updateHealth(playerHealth, -10);
+            playerHealth = updateHealth(playerHealth, (shielding - 10));
            if(playerHealth <= 0){
                // Player must expire if health level reaches zero, this isn't a zombie game!
                console.log("You are now dead " + playerName + " and the " + monsterName + " will eat your body!"); 
@@ -271,7 +284,7 @@ function updateHealth(playerHealth, amount) {
 function useItem(playerHealth) {
     if (inventory.length === 0) {
         console.log("\nYou have no items!");
-        return false;
+        return playerHealth;
     }
 
     console.log("\n=== Inventory ===");
@@ -291,7 +304,7 @@ function useItem(playerHealth) {
             playerHealth = updateHealth(playerHealth, item.effect);
             inventory.splice(index, 1);
             console.log("Health restored to: " + playerHealth);
-        } else if (item.type === "Bandages") {
+        } else if (item.name === "Bandages") {
             console.log("\nYou apply the " + item.name + ".");
             playerHealth = updateHealth(playerHealth, item.effect);
             inventory.splice(index, 1);
@@ -329,10 +342,9 @@ function checkInventory() {
 /**
  * Handles purchasing items at the blacksmith
  */
-function buyFromBlacksmith() {
-    if (playerSilver >= items.sword.value) {
-        
-        if(hasItemName('Sword')){
+function buyFromBlacksmith(getSword) {
+    if ((playerSilver >= items.sword.value) && (getSword)) {
+       if(hasItemName('Sword')){
             console.log("You already have a plain, iron sword.\n");
             console.log("Choose another item from the blacksmith.");
         }
@@ -345,7 +357,21 @@ function buyFromBlacksmith() {
         console.log("You bought a " + items.sword.name + " for " + items.sword.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
         }
-    } else {
+    } else if(playerSilver >= items.woodenShield.value) {
+         if(hasItemName('woodenShield')) {
+              console.log("You already have a wooden Shield.\n");
+              console.log("Choose another item from the blacksmith.");
+          }
+        else {
+          // Add sword object to inventory instead of just the name
+          inventory.push({...items.woodenShield}); // Create a copy of the sword object
+          console.log("\nBlacksmith: 'A fine shield for a brave adventurer!'");
+          playerSilver -= items.woodenShield.value;
+          console.log("You bought a " + items.woodenShield.name + " for " + items.woodenShield.value + " silver!");
+          console.log("Silver remaining: " + playerSilver);
+          }
+        }
+       else {
         console.log("\nBlacksmith: 'Come back when you have more silver!'");
     }
 }
@@ -401,6 +427,7 @@ function showHelp() {
     console.log("- You can buy potions at the market for " + items.healthPotion.value + " silver");
     console.log("- You can buy bandages at the market for " + items.bandages.value + " silver");
     console.log("- You can buy a sword at the blacksmith for " + items.sword.value + " silver");
+    console.log("- You can buy a shield at the blacksmith for " + items.woodenShield.value + " silver");
     
     console.log("\nOther Commands:");
     console.log("- Choose the status option to see your health and silver");
@@ -469,7 +496,7 @@ function move(choiceNum) {
         }
     }
     else if (currentLocation === "blacksmith") {
-        if (choiceNum === 2) {
+        if (choiceNum === 3) {
             currentLocation = "village";
             console.log("\nYou return to the village center.");
             validMove = true;
@@ -572,25 +599,28 @@ while (gameRunning) {
                 }
             }
             else if (currentLocation === "blacksmith") {
-                if (choiceNum < 0 || choiceNum > 5) {
-                    throw "Please enter a number between 0 and 5.";
+                if (choiceNum < 0 || choiceNum > 6) {
+                    throw "Please enter a number between 0 and 6.";
                 }
                 
                 validChoice = true;
                 
                 if (choiceNum === 1) {
-                    buyFromBlacksmith();
+                    buyFromBlacksmith(true);
                 }
                 else if (choiceNum === 2) {
-                    move(choiceNum);
+                    buyFromBlacksmith(false);
                 }
                 else if (choiceNum === 3) {
-                    showStatus();
+                    move(choiceNum);
                 }
                 else if (choiceNum === 4) {
-                    playerHealth = useItem(playerHealth);
+                    showStatus();
                 }
                 else if (choiceNum === 5) {
+                    playerHealth = useItem(playerHealth);
+                }
+                else if (choiceNum === 6) {
                     showHelp();
                 }
                 else if (choiceNum === 0) {
