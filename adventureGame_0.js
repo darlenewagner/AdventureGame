@@ -27,38 +27,56 @@ let monsters = {
     lizardman: {
         name: 'lizardman',
         monsterDefense: 5,
+        habitat: 'hollow log',
         alive: true
     },
     wolfman: {
         name: 'wolfman',
         monsterDefense: 7,
+        habitat: 'den in the ground',
         alive: true
     },
     dragon: {
         name: 'dragon',
         monsterDefense: 10,
+        habitat: 'cave in a hill',
         alive: true
     }
 };
 
 // =========================================
-// Enhanced Item System: With Properties
+// Enhanced 'items' System: With Properties
 // =========================================
 
-const healthPotion = {
-    name: "Health Potion",
-    type: "medicine",
-    value: 5,     // Cost in silver
-    effect: 30,   // Healing amount
-    description: "Restores 30 health points"
-};
-
-const sword = {
-    name: "Sword",
-    type: "weapon",
-    value: 10,    // Cost in silver
-    effect: 1,   // Damage amount
-    description: "A sturdy blade for combat"
+const items = {
+    healthPotion: {
+      name: "potion",
+      type: "medicine",
+      value: 5,     // Cost in silver
+      effect: 30,   // Healing amount
+      description: "Restores 30 health points"
+    },
+    bandages: {
+        name: "Bandages",
+        type: "medicine",
+        value: 2,
+        effect: 10,
+        description: "Restores 10 health points"
+    },
+    sword: {
+      name: "Sword",
+      type: "weapon",
+      value: 10,    // Cost in silver
+      effect: 1,   // Damage amount
+      description: "A wrought-iron blade for combat"
+    },
+  steelSword: {
+      name: "steelSword",
+      type: "weapon",
+      value: 20,
+      effect: 2,
+      description: "A fine steel sword for combat"
+    }
 };
 
 // Create empty inventory array (from previous lab)
@@ -122,7 +140,7 @@ function showLocation() {
     else if (currentLocation === "blacksmith") {
         console.log("The heat from the forge fills the air. Weapons and armor line the walls.");
         console.log("\nWhat would you like to do?");
-        console.log("1: Buy sword (" + sword.value + " silver)");
+        console.log("1: Buy sword (" + items.sword.value + " silver)");
         console.log("2: Return to village");
         console.log("3: Check status");
         console.log("4: Use item");
@@ -132,11 +150,12 @@ function showLocation() {
     else if (currentLocation === "market") {
         console.log("Merchants sell their wares from colorful stalls. A potion seller catches your eye.");
         console.log("\nWhat would you like to do?");
-        console.log("1: Buy potion (" + healthPotion.value + " silver)");
-        console.log("2: Return to village");
-        console.log("3: Check status");
-        console.log("4: Use item");
-        console.log("5: Help");
+        console.log("1: Buy potion (" + items.healthPotion.value + " silver)");
+        console.log("2: Buy bandages (" + items.bandages.value + " silver)");
+        console.log("3: Return to village");
+        console.log("4: Check status");
+        console.log("5: Use item");
+        console.log("6: Help");
         console.log("0: Quit game");
     }
     else if (currentLocation === "forest") {
@@ -267,12 +286,18 @@ function useItem(playerHealth) {
     if (index >= 0 && index < inventory.length) {
         let item = inventory[index];
         
-        if (item.type === "medicine") {
+        if (item.name === "potion") {
             console.log("\nYou drink the " + item.name + ".");
             playerHealth = updateHealth(playerHealth, item.effect);
             inventory.splice(index, 1);
             console.log("Health restored to: " + playerHealth);
-        } else if (item.type === "weapon") {
+        } else if (item.type === "Bandages") {
+            console.log("\nYou apply the " + item.name + ".");
+            playerHealth = updateHealth(playerHealth, item.effect);
+            inventory.splice(index, 1);
+            console.log("Health restored to: " + playerHealth);
+        }
+            else if (item.type === "weapon") {
             console.log("\nYou ready your " + item.name + " for battle.");
         }
     } else {
@@ -305,7 +330,7 @@ function checkInventory() {
  * Handles purchasing items at the blacksmith
  */
 function buyFromBlacksmith() {
-    if (playerSilver >= sword.value) {
+    if (playerSilver >= items.sword.value) {
         
         if(hasItemName('Sword')){
             console.log("You already have a plain, iron sword.\n");
@@ -313,11 +338,11 @@ function buyFromBlacksmith() {
         }
         else {
         // Add sword object to inventory instead of just the name
-        inventory.push({...sword}); // Create a copy of the sword object
+        inventory.push({...items.sword}); // Create a copy of the sword object
         console.log("\nBlacksmith: 'A fine blade for a brave adventurer!'");
-        playerSilver -= sword.value;
+        playerSilver -= items.sword.value;
         
-        console.log("You bought a " + sword.name + " for " + sword.value + " silver!");
+        console.log("You bought a " + items.sword.name + " for " + items.sword.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
         }
     } else {
@@ -328,18 +353,25 @@ function buyFromBlacksmith() {
 /**
  * Handles purchasing items at the market
  */
-function goToMarket() {
-    if (playerSilver >= healthPotion.value) {
-        console.log("\nMerchant: 'This potion will heal your wounds!'");
-        playerSilver -= healthPotion.value;
-        
-        // Add potion object to inventory instead of just the name
-        inventory.push({...healthPotion}); // Create a copy of the potion object
-        
-        console.log("You bought a " + healthPotion.name + " for " + healthPotion.value + " silver!");
+function goToMarket(getPotion) {
+    if ((playerSilver >= items.healthPotion.value) && (getPotion)) {
+        console.log("\nMerchant: 'This potion will heal wounds and counteract dragon-poison!'");
+        playerSilver -= items.healthPotion.value;
+       // Add potion object to inventory instead of just the name
+        inventory.push({...items.healthPotion}); // Create a copy of the potion object
+        console.log("You bought a " + items.healthPotion.name + " for " + items.healthPotion.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
-    } else {
-        console.log("\nMerchant: 'No silver, no potion!'");
+    } else if(playerSilver >= items.bandages.value){
+        console.log("\nMerchant: 'These bandages will heal wounds a little bit!'");
+        playerSilver -= items.bandages.value;
+       // Add potion object to inventory instead of just the name
+        inventory.push({...items.bandages}); // Create a copy of the potion object
+        console.log("You bought a " + items.bandages.name + " for " + items.bandages.value + " silver!");
+        console.log("Silver remaining: " + playerSilver);
+    }
+    else
+    {
+        console.log("\nMerchant: 'No silver, no medicines!'");
     }
 }
 
@@ -366,8 +398,9 @@ function showHelp() {
     
     console.log("\nItem Usage:");
     console.log("- Health potions restore health based on their effect value");
-    console.log("- You can buy potions at the market for " + healthPotion.value + " silver");
-    console.log("- You can buy a sword at the blacksmith for " + sword.value + " silver");
+    console.log("- You can buy potions at the market for " + items.healthPotion.value + " silver");
+    console.log("- You can buy bandages at the market for " + items.bandages.value + " silver");
+    console.log("- You can buy a sword at the blacksmith for " + items.sword.value + " silver");
     
     console.log("\nOther Commands:");
     console.log("- Choose the status option to see your health and silver");
@@ -381,8 +414,7 @@ function showHelp() {
 }
 
 // ===========================
-// Movement Functions
-// Functions that handle player movement
+// Movement Functions: move() and () handle player movement
 // ===========================
 
 /**
@@ -444,7 +476,7 @@ function move(choiceNum) {
         }
     }
     else if (currentLocation === "market") {
-        if (choiceNum === 2) {
+        if (choiceNum === 3) {
             currentLocation = "village";
             console.log("\nYou return to the village center.");
             validMove = true;
@@ -574,18 +606,21 @@ while (gameRunning) {
                 validChoice = true;
                 
                 if (choiceNum === 1) {
-                    goToMarket();
+                    goToMarket(true);
                 }
-                else if (choiceNum === 2) {
-                    move(choiceNum);
+                if (choiceNum === 2){
+                    goToMarket(false);
                 }
                 else if (choiceNum === 3) {
-                    showStatus();
+                    move(choiceNum);
                 }
                 else if (choiceNum === 4) {
-                   playerHealth = useItem(playerHealth);
+                    showStatus();
                 }
                 else if (choiceNum === 5) {
+                   playerHealth = useItem(playerHealth);
+                }
+                else if (choiceNum === 6) {
                     showHelp();
                 }
                 else if (choiceNum === 0) {
