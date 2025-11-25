@@ -42,12 +42,12 @@ let monsters = {
 };
 
 // =========================================
-// Enhanced Item System
+// Enhanced Item System: With Properties
 // =========================================
-// Item templates with properties
+
 const healthPotion = {
     name: "Health Potion",
-    type: "potion",
+    type: "medicine",
     value: 5,     // Cost in silver
     effect: 30,   // Healing amount
     description: "Restores 30 health points"
@@ -150,10 +150,9 @@ function showLocation() {
     }
 }
 
-// ===========================
-// Combat Functions
-// Functions that handle battles and health
-// ===========================
+// ==============================================================
+// Combat Function: Handles battles with several types of monster
+// ==============================================================
 
 /**
  * Checks if player has an item of specified type 
@@ -169,11 +168,11 @@ function hasItemName(name){
 }
 
 /**
- * Handles monster battles
- * Checks if player has weapon and manages combat results
+ * Handles monster battles for any monsterName and monsterDefense
+ * Checks if player has weapon, manages combat results, and updates health
  * @returns {boolean} true if player wins, false if they retreat
  */
-function handleCombat(monsterName, monsterDefense) {
+function handleCombat(monsterName, monsterDefense, playerHealth, playerName) {
 
        let monsterAlive = true;
        console.log("<- Suddenly, a " + monsterName + " creature comes up out of a hole in the ground ->");
@@ -196,20 +195,28 @@ function handleCombat(monsterName, monsterDefense) {
             monsterDefense = monsterDefense - weapon.effect;
             console.log("The " + monsterName + " strikes back with his claws and deals 10 health points of damage to you.");
             sleep(1000);
-            updateHealth(-10);
-         if(monsterDefense == 0){
-            console.log("Victory! The " + monsterName + " is dead and you found his hoard of 10 silver dollars!");
-            playerSilver += 10;
-            monsterAlive = false;
+            playerHealth = updateHealth(playerHealth, -10);
+           if(playerHealth <= 0){
+               // Player must expire if health level reaches zero, this isn't a zombie game!
+               console.log("You are now dead " + playerName + " and the " + monsterName + " will eat your body!"); 
+               break;
+           }
+           else if(monsterDefense == 0){
+              console.log("Victory! The " + monsterName + " is dead and you found his hoard of 10 silver dollars!");
+              playerSilver += 10;
+              monsterAlive = false;
            }
          }
     } else {
         console.log("Without a weapon, you must retreat!");
-        updateHealth(-20);
+        playerHealth = updateHealth(playerHealth, -20);
+        if(playerHealth <= 0){
+
+        }
         
      }
    }
-   return [monsterDefense, monsterAlive];
+   return [monsterDefense, monsterAlive, playerHealth];
 }
 
 /**
@@ -217,7 +224,7 @@ function handleCombat(monsterName, monsterDefense) {
  * @param {number} amount Amount to change health by (positive for healing, negative for damage)
  * @returns {number} The new health value
  */
-function updateHealth(amount) {
+function updateHealth(playerHealth, amount) {
     playerHealth += amount;
     
     if (playerHealth > 100) {
@@ -226,7 +233,7 @@ function updateHealth(amount) {
     }
     if (playerHealth < 0) {
         playerHealth = 0;
-        console.log("You're gravely wounded!");
+        console.log("You're mortally wounded!");
     }
     
     console.log("Health is now: " + playerHealth);
@@ -242,7 +249,7 @@ function updateHealth(amount) {
  * Handles using items like potions
  * @returns {boolean} true if item was used successfully, false if not
  */
-function useItem() {
+function useItem(playerHealth) {
     if (inventory.length === 0) {
         console.log("\nYou have no items!");
         return false;
@@ -260,20 +267,18 @@ function useItem() {
     if (index >= 0 && index < inventory.length) {
         let item = inventory[index];
         
-        if (item.type === "potion") {
+        if (item.type === "medicine") {
             console.log("\nYou drink the " + item.name + ".");
-            updateHealth(item.effect);
+            playerHealth = updateHealth(playerHealth, item.effect);
             inventory.splice(index, 1);
             console.log("Health restored to: " + playerHealth);
-            return true;
         } else if (item.type === "weapon") {
             console.log("\nYou ready your " + item.name + " for battle.");
-            return true;
         }
     } else {
         console.log("\nInvalid item number!");
     }
-    return false;
+    return playerHealth;
 }
 
 /**
@@ -293,7 +298,7 @@ function checkInventory() {
 }
 
 // ===========================
-// Shopping Functions: buyFromBlacksmit() and goToMarket()
+// Shopping Functions: buyFromBlacksmith() and goToMarket()
 // ===========================
 
 /**
@@ -406,9 +411,26 @@ function move(choiceNum) {
             
             // BEGIN COMBAT AFTER ENTERING FOREST:
             
-            console.log(monsters.lizardman.name + " Health is " + monsters.lizardman.monsterDefense);
-            [monsters.lizardman.monsterDefense, monsters.lizardman.alive] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense);
-            console.log(monsters.lizardman.name + " Health is " + monsters.lizardman.monsterDefense);
+            
+            
+            if(monsters.lizardman.alive) {
+              console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
+              [monsters.lizardman.monsterDefense, monsters.lizardman.alive, playerHealth] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense, playerHealth, playerName);
+              console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
+            }
+            else if(monsters.wolfman.alive){
+              console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
+              [monsters.wolfman.monsterDefense, monsters.wolfman.alive, playerHealth] = handleCombat(monsters.wolfman.name, monsters.wolfman.monsterDefense, playerHealth, playerName);
+              console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
+            }
+            else if(monsters.dragon.alive){
+               console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
+               [monsters.dragon.monsterDefense, monsters.dragon.alive, playerHealth] = handleCombat(monsters.dragon.name, monsters.dragon.monsterDefense, playerHealth, playerName);
+               console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
+              }
+            else{
+                console.log("Congratultations, " + playerName + ". All monsters have been vanquished!");
+            }
             
             
 
@@ -507,7 +529,7 @@ while (gameRunning) {
                     showStatus();
                 }
                 else if (choiceNum === 5) {
-                    useItem();
+                    playerHealth = useItem(playerHealth);
                 }
                 else if (choiceNum === 6) {
                     showHelp();
@@ -534,7 +556,7 @@ while (gameRunning) {
                     showStatus();
                 }
                 else if (choiceNum === 4) {
-                    useItem();
+                    playerHealth = useItem(playerHealth);
                 }
                 else if (choiceNum === 5) {
                     showHelp();
@@ -561,7 +583,7 @@ while (gameRunning) {
                     showStatus();
                 }
                 else if (choiceNum === 4) {
-                    useItem();
+                   playerHealth = useItem(playerHealth);
                 }
                 else if (choiceNum === 5) {
                     showHelp();
@@ -585,7 +607,7 @@ while (gameRunning) {
                     showStatus();
                 }
                 else if (choiceNum === 3) {
-                    useItem();
+                    playerHealth = useItem(playerHealth);
                 }
                 else if (choiceNum === 4) {
                     showHelp();
