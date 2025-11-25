@@ -173,12 +173,13 @@ function hasItemName(name){
  * Checks if player has weapon and manages combat results
  * @returns {boolean} true if player wins, false if they retreat
  */
-function handleCombat(monsterDefense) {
+function handleCombat(monsterName, monsterDefense) {
 
-       console.log("<- Suddenly, a spiny-scaled, two-legged, lizard-headed creature comes up out of a hole in the ground ->");
+       let monsterAlive = true;
+       console.log("<- Suddenly, a " + monsterName + " creature comes up out of a hole in the ground ->");
        sleep(2000);
        let playerFight = "N";
-       playerFight = readline.question("Do you want to fight the lizard-headed creature? \n(Reply Y, Yes, or + to fight.)\n");
+       playerFight = readline.question("Do you want to fight the " + monsterName + "? \n(Reply Y, Yes, or + to fight.)\n");
        
  if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || (playerFight === "yes") || (playerFight === "+"))
     {
@@ -193,13 +194,13 @@ function handleCombat(monsterDefense) {
             console.log("You deal " + weapon.effect + " point of damage to the monster!");
             sleep(1000);
             monsterDefense = monsterDefense - weapon.effect;
-            console.log("The lizardman strikes back with his claws and deals 10 health points of damage to you.");
+            console.log("The " + monsterName + " strikes back with his claws and deals 10 health points of damage to you.");
             sleep(1000);
             updateHealth(-10);
          if(monsterDefense == 0){
-            console.log("Victory! The lizardman is dead and you found his hoard of 10 silver dollars!");
+            console.log("Victory! The " + monsterName + " is dead and you found his hoard of 10 silver dollars!");
             playerSilver += 10;
-            
+            monsterAlive = false;
            }
          }
     } else {
@@ -208,7 +209,7 @@ function handleCombat(monsterDefense) {
         
      }
    }
-   return monsterDefense;
+   return [monsterDefense, monsterAlive];
 }
 
 /**
@@ -292,8 +293,7 @@ function checkInventory() {
 }
 
 // ===========================
-// Shopping Functions
-// Functions that handle buying items
+// Shopping Functions: buyFromBlacksmit() and goToMarket()
 // ===========================
 
 /**
@@ -323,7 +323,7 @@ function buyFromBlacksmith() {
 /**
  * Handles purchasing items at the market
  */
-function buyFromMarket() {
+function goToMarket() {
     if (playerSilver >= healthPotion.value) {
         console.log("\nMerchant: 'This potion will heal your wounds!'");
         playerSilver -= healthPotion.value;
@@ -404,14 +404,13 @@ function move(choiceNum) {
             console.log("\nYou venture into the forest...");
             validMove = true;
             
-            // Trigger combat when entering forest
-            //console.log("\nA monster appears!");
-            console.log("Lizardman Health is " + monsterDefense);
-            monsterDefense = handleCombat(monsterDefense);
-            //if (!handleCombat(monsterDefense)) {
-            //    currentLocation = "village";
-            //}
-            console.log("Lizardman Health is " + monsterDefense);
+            // BEGIN COMBAT AFTER ENTERING FOREST:
+            
+            console.log(monsters.lizardman.name + " Health is " + monsters.lizardman.monsterDefense);
+            [monsters.lizardman.monsterDefense, monsters.lizardman.alive] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense);
+            console.log(monsters.lizardman.name + " Health is " + monsters.lizardman.monsterDefense);
+            
+            
 
         }
     }
@@ -553,7 +552,7 @@ while (gameRunning) {
                 validChoice = true;
                 
                 if (choiceNum === 1) {
-                    buyFromMarket();
+                    goToMarket();
                 }
                 else if (choiceNum === 2) {
                     move(choiceNum);
