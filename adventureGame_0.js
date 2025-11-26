@@ -84,9 +84,16 @@ const items = {
       effect: 5,
       description: "Reduces damage taken in combat"
    }
+   ironShield: {
+      name: "ironShield",
+      type: "armor",
+      value: 15,
+      effect: 8,
+      description: "Reduces damage taken in combat"
+   }
 };
 
-// Create empty inventory array (from previous lab)
+// Create empty inventory array 
 let inventory = [];  // Will now store item objects instead of strings
 
 // ===========================
@@ -106,7 +113,11 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
-/**
+
+// ==============================
+// GAME PLAY FUNCTIONS: showStatus(), showLocation()
+// ==============================
+/** 
  * Shows the player's current stats
  * Displays health, silver, and current location
  */
@@ -488,11 +499,9 @@ function move(choiceNum) {
                console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
               }
             else{
-                console.log("Congratultations, " + playerName + ". All monsters have been vanquished!");
+                console.log("Congratulations, " + playerName + ". All monsters have been vanquished!");
             }
-            
-            
-
+         
         }
     }
     else if (currentLocation === "blacksmith") {
