@@ -215,13 +215,18 @@ function getBestItem(type){
         let someItems = getItemsByType(type);
         let maxItem = "";
         let maxEffect = 0;
+        if(someItems.length > 0){
         someItems.forEach((item, index) => {
         //console.log( item.name + " - " + item.effect);
         if(item.effect > maxEffect){
             maxEffect = item.effect;
             maxItem = item.name;
-        }
-    });
+           }
+    });  
+   }
+ else {
+    maxItem = "missing";
+ }
     return [maxItem, maxEffect];
 }
 
@@ -236,6 +241,8 @@ function handleCombat(monsterName, monsterDefense, playerHealth, playerName) {
        console.log("<- Suddenly, a " + monsterName + " creature comes up out of a hole in the ground ->");
        sleep(2000);
        let playerFight = "N";
+       let bestWeapon = getBestItem('weapon');
+       console.log("Currently, your best weapon is " + bestWeapon[0] + " and has an effect of " + bestWeapon[1] + ".\n");
        playerFight = readline.question("Do you want to fight the " + monsterName + "? \n(Reply Y, Yes, or + to fight.)\n");
        
  if((playerFight === "Y") || (playerFight === "Yes") || (playerFight === "y") || (playerFight === "yes") || (playerFight === "+"))
@@ -253,9 +260,9 @@ function handleCombat(monsterName, monsterDefense, playerHealth, playerName) {
            // Find the weapon to get its properties
             console.log("You strike with your " + weapon.name + "!");
             sleep(1000);
-            console.log("You deal " + weapon.effect + " point of damage to the monster!");
+            console.log("You deal " + bestWeapon[1] + " point of damage to the monster!");
             sleep(1000);
-            monsterDefense = monsterDefense - weapon.effect;
+            monsterDefense = monsterDefense - bestWeapon[1];
             console.log("The " + monsterName + " strikes back with his claws and deals 10 health points of damage to you.");
             sleep(1000);
             playerHealth = updateHealth(playerHealth, (shielding - 10));
@@ -265,7 +272,7 @@ function handleCombat(monsterName, monsterDefense, playerHealth, playerName) {
                break;
            }
            else if(monsterDefense == 0){
-              console.log("Victory! The " + monsterName + " is dead and you found his hoard of 10 silver dollars!");
+              console.log("Victory! The " + monsterName + " is dead and you found his hoard of silver dollars!");
               playerSilver += 10;
               monsterAlive = false;
            }
@@ -367,8 +374,10 @@ function checkInventory() {
 
     // Show best item in 'medicine' type
      let maximum = getBestItem('medicine');
-     console.log("Your best medicine is " + maximum[0] + " with effect " + maximum[1] + ".");
-
+     console.log("\nYour best medicine is " + maximum[0] + " with effect " + maximum[1] + ".");
+     
+     let maxWeapon = getBestItem('weapon');
+     console.log("Your best weapon is " + maxWeapon[0] + " with effect " + maxWeapon[1] + ".\n");
 }
 
 // ===========================
@@ -378,18 +387,24 @@ function checkInventory() {
 /**
  * Handles purchasing items at the blacksmith
  */
-function buyFromBlacksmith(getSword) {
-    if ((playerSilver >= items.sword.value) && (getSword)) {
-       if(hasItemName('Sword')){
+function buyFromBlacksmith(getSword, getBetterSword) {
+    if (((playerSilver >= items.sword.value) && (getSword)) || ((playerSilver >= items.steelSword.value) && (getBetterSword))) {
+       if((hasItemName('Sword')) && (getBetterSword === false)){
             console.log("You already have a plain, iron sword.\n");
             console.log("Choose another item from the blacksmith.");
+        }
+        else if (getBetterSword){
+        inventory.push({...items.steelSword}); // Create a copy of the sword object
+        console.log("\nBlacksmith: 'A fine, steel blade for a brave adventurer!'");
+        playerSilver -= items.steelSword.value;
+        console.log("You bought a " + items.steelSword.name + " for " + items.steelSword.value + " silver!");
+        console.log("Silver remaining: " + playerSilver);
         }
         else {
         // Add sword object to inventory instead of just the name
         inventory.push({...items.sword}); // Create a copy of the sword object
-        console.log("\nBlacksmith: 'A fine blade for a brave adventurer!'");
+        console.log("\nBlacksmith: 'A plain, iron blade for a brave adventurer!'");
         playerSilver -= items.sword.value;
-        
         console.log("You bought a " + items.sword.name + " for " + items.sword.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
         }
@@ -641,10 +656,18 @@ while (gameRunning) {
                 validChoice = true;
                 
                 if (choiceNum === 1) {
-                    buyFromBlacksmith(true);
+                  if(monsters.wolfman.alive === false){
+                    buyFromBlacksmith(true, true);
+                  }
+                  else {
+                    buyFromBlacksmith(true, false);
+                  }
+
                 }
                 else if (choiceNum === 2) {
-                    buyFromBlacksmith(false);
+
+                    buyFromBlacksmith(false, false);
+
                 }
                 else if (choiceNum === 3) {
                     move(choiceNum);
