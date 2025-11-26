@@ -27,18 +27,21 @@ let monsters = {
     lizardman: {
         name: 'lizardman',
         monsterDefense: 5,
+        hoard: 10,
         habitat: 'hollow log',
         alive: true
     },
     wolfman: {
         name: 'wolfman',
         monsterDefense: 7,
+        hoard: 15,
         habitat: 'den in the ground',
         alive: true
     },
     dragon: {
         name: 'dragon',
         monsterDefense: 10,
+        hoard: 20,
         habitat: 'cave in a hill',
         alive: true
     }
