@@ -83,7 +83,7 @@ const items = {
       value: 8,
       effect: 5,
       description: "Reduces damage taken in combat"
-   }
+   },
    ironShield: {
       name: "ironShield",
       type: "armor",
@@ -189,7 +189,9 @@ function showLocation() {
 }
 
 // ==============================================================
-// Combat Function: Handles battles with several types of monster
+// Primary combat Function and Supporting Functions:
+// Handles battles with several types of monster
+// Along with player inventory
 // ==============================================================
 
 /**
@@ -203,6 +205,24 @@ function hasItemType(type) {
 
 function hasItemName(name){
     return inventory.some(item => item.name === name);
+}
+
+function getItemsByType(type) {
+   return inventory.filter(item => item.type === type);
+}
+
+function getBestItem(type){
+        let someItems = getItemsByType(type);
+        let maxItem = "";
+        let maxEffect = 0;
+        someItems.forEach((item, index) => {
+        //console.log( item.name + " - " + item.effect);
+        if(item.effect > maxEffect){
+            maxEffect = item.effect;
+            maxItem = item.name;
+        }
+    });
+    return [maxItem, maxEffect];
 }
 
 /**
@@ -344,6 +364,11 @@ function checkInventory() {
     inventory.forEach((item, index) => {
         console.log((index + 1) + ". " + item.name + " - " + item.description);
     });
+
+    // Show best item in 'medicine' type
+     let maximum = getBestItem('medicine');
+     console.log("Your best medicine is " + maximum[0] + " with effect " + maximum[1] + ".");
+
 }
 
 // ===========================
@@ -595,6 +620,7 @@ while (gameRunning) {
                 }
                 else if (choiceNum === 4) {
                     showStatus();
+                    checkInventory();
                 }
                 else if (choiceNum === 5) {
                     playerHealth = useItem(playerHealth);
