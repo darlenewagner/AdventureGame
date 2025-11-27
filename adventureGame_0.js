@@ -27,23 +27,29 @@ let monsters = {
     lizardman: {
         name: 'lizardman',
         monsterDefense: 5,
+        damage: 10,
         hoard: 10,
         habitat: 'hollow log',
-        alive: true
+        alive: true,
+        isDragon: false
     },
     wolfman: {
         name: 'wolfman',
-        monsterDefense: 7,
+        monsterDefense: 10,
+        damage: 10,
         hoard: 15,
         habitat: 'den in the ground',
-        alive: true
+        alive: true,
+        isDragon: false
     },
     dragon: {
         name: 'dragon',
-        monsterDefense: 10,
+        monsterDefense: 20,
+        damage: 20,
         hoard: 20,
         habitat: 'cave in a hill',
-        alive: true
+        alive: true,
+        isDragon: true
     }
 };
 
@@ -91,7 +97,7 @@ const items = {
       name: "ironShield",
       type: "armor",
       value: 15,
-      effect: 8,
+      effect: 10,
       description: "Reduces damage taken in combat"
    }
 };
@@ -174,10 +180,11 @@ function showLocation() {
         console.log("\nWhat would you like to do?");
         console.log("1: Buy potion (" + items.healthPotion.value + " silver)");
         console.log("2: Buy bandages (" + items.bandages.value + " silver)");
-        console.log("3: Return to village");
-        console.log("4: Check status");
-        console.log("5: Use item");
-        console.log("6: Help");
+        console.log("3: Clean the latrines to earn 1 silver piece");
+        console.log("4: Return to village");
+        console.log("5: Check status");
+        console.log("6: Use item");
+        console.log("7: Help");
         console.log("0: Quit game");
     }
     else if (currentLocation === "forest") {
@@ -242,7 +249,7 @@ function hasGoodEquipment(type){
  * Checks if player has weapon, manages combat results, and updates health
  * @returns {boolean} true if player wins, false if they retreat
  */
-function handleCombat(monsterName, monsterDefense, monsterHoard, playerHealth, playerName) {
+function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, playerHealth, playerName) {
 
        let monsterAlive = true;
        console.log("<- Suddenly, a " + monsterName + " creature comes up out of a hole in the ground ->");
@@ -270,9 +277,9 @@ function handleCombat(monsterName, monsterDefense, monsterHoard, playerHealth, p
             console.log("You deal " + bestWeapon[1] + " point of damage to the monster!");
             sleep(1000);
             monsterDefense = monsterDefense - bestWeapon[1];
-            console.log("The " + monsterName + " strikes back with his claws and deals 10 health points of damage to you.");
+            console.log("The " + monsterName + " strikes back with his claws and deals " + monsterHarm + " health points of damage to you.");
             sleep(1000);
-            playerHealth = updateHealth(playerHealth, Number(shielding - 10));
+            playerHealth = updateHealth(playerHealth, Number(shielding - monsterHarm));
            if(playerHealth <= 0){
                // Player must expire if health level reaches zero, this isn't a zombie game!
                console.log("You are now dead " + playerName + " and the " + monsterName + " will eat your body!"); 
@@ -394,7 +401,8 @@ function checkInventory() {
 /**
  * Handles purchasing items at the blacksmith
  */
-function buyFromBlacksmith(getSword, getBetterSword) {
+function buyFromBlacksmith(getSword, getBetterSword, getBetterShield) {
+
     if (((playerSilver >= items.sword.value) && (getSword)) || ((playerSilver >= items.steelSword.value) && (getBetterSword))) {
        if((hasItemName('Sword')) && (getBetterSword === false)){
             console.log("You already have a plain, iron sword.\n");
@@ -415,12 +423,20 @@ function buyFromBlacksmith(getSword, getBetterSword) {
         console.log("You bought a " + items.sword.name + " for " + items.sword.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
         }
-    } else if(playerSilver >= items.woodenShield.value) {
-         if(hasItemName('woodenShield')) {
+    } else if((playerSilver >= items.woodenShield.value) || ((playerSilver >= items.ironShield.value) && (getBetterShield))) {
+         if((hasItemName('woodenShield')) && (getBetterShield === false)) {
               console.log("You already have a wooden Shield.\n");
               console.log("Choose another item from the blacksmith.");
           }
-        else {
+        else if(getBetterShield) {
+          inventory.push({...items.ironShield}); // Create a copy of the sword object
+          console.log("\nBlacksmith: 'A fine shield for a brave adventurer!'");
+          playerSilver -= items.ironShield.value;
+          console.log("You bought a " + items.ironShield.name + " for " + items.ironShield.value + " silver!");
+          console.log("Silver remaining: " + playerSilver);
+
+        }
+            else {
           // Add sword object to inventory instead of just the name
           inventory.push({...items.woodenShield}); // Create a copy of the sword object
           console.log("\nBlacksmith: 'A fine shield for a brave adventurer!'");
@@ -435,7 +451,7 @@ function buyFromBlacksmith(getSword, getBetterSword) {
 }
 
 /**
- * Handles purchasing items at the market
+ * For purchasing items at the market
  */
 function goToMarket(getPotion) {
     if ((playerSilver >= items.healthPotion.value) && (getPotion)) {
@@ -484,6 +500,7 @@ function showHelp() {
     console.log("- Health potions restore health based on their effect value");
     console.log("- You can buy potions at the market for " + items.healthPotion.value + " silver");
     console.log("- You can buy bandages at the market for " + items.bandages.value + " silver");
+    console.log("- You can clean latrines at the market to earn 1 silver");
     console.log("- You can buy a sword at the blacksmith for " + items.sword.value + " silver");
     console.log("- You can buy a shield at the blacksmith for " + items.woodenShield.value + " silver");
     
@@ -532,12 +549,12 @@ function move(choiceNum) {
             
             if(monsters.lizardman.alive) {
               //console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
-              [monsters.lizardman.monsterDefense, monsters.lizardman.alive, playerHealth] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense, monsters.lizardman.hoard, playerHealth, playerName);
+              [monsters.lizardman.monsterDefense, monsters.lizardman.alive, playerHealth] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense, monsters.lizardman.damage, monsters.lizardman.hoard, playerHealth, playerName);
               //console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
             }
             else if(monsters.wolfman.alive){
               //console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
-              [monsters.wolfman.monsterDefense, monsters.wolfman.alive, playerHealth] = handleCombat(monsters.wolfman.name, monsters.wolfman.monsterDefense, monsters.wolfman.hoard, playerHealth, playerName);
+              [monsters.wolfman.monsterDefense, monsters.wolfman.alive, playerHealth] = handleCombat(monsters.wolfman.name, monsters.wolfman.monsterDefense, monsters.wolfman.damage, monsters.wolfman.hoard, playerHealth, playerName);
               //console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
             }
             else if(monsters.dragon.alive){
@@ -546,7 +563,7 @@ function move(choiceNum) {
                //let weaponReady = getBestItem('weapon');
                if(hasGoodEquipment('weapon') > 1) {
                  console.log("You are sufficiently armed to fight the dragon!");
-                 [monsters.dragon.monsterDefense, monsters.dragon.alive, playerHealth] = handleCombat(monsters.dragon.name, monsters.dragon.monsterDefense, monsters.dragon.hoard, playerHealth, playerName);
+                 [monsters.dragon.monsterDefense, monsters.dragon.alive, playerHealth] = handleCombat(monsters.dragon.name, monsters.dragon.monsterDefense, monsters.dragon.damage, monsters.dragon.hoard, playerHealth, playerName);
                  console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
                }
                else{
@@ -567,7 +584,7 @@ function move(choiceNum) {
         }
     }
     else if (currentLocation === "market") {
-        if (choiceNum === 3) {
+        if (choiceNum === 4) {
             currentLocation = "village";
             console.log("\nYou return to the village center.");
             validMove = true;
@@ -671,17 +688,21 @@ while (gameRunning) {
                 validChoice = true;
                 
                 if (choiceNum === 1) {
-                  if(monsters.wolfman.alive === false){
-                    buyFromBlacksmith(true, true);
+                  if(monsters.wolfman.alive === false) {
+                    buyFromBlacksmith(true, true, false);
                   }
                   else {
-                    buyFromBlacksmith(true, false);
+                    buyFromBlacksmith(true, false, false);
                   }
 
                 }
                 else if (choiceNum === 2) {
-
-                    buyFromBlacksmith(false, false);
+                  if(monsters.wolfman.alive === false) {
+                    buyFromBlacksmith(true, false, true);
+                  }
+                  else {
+                    buyFromBlacksmith(false, false, false);
+                  }
 
                 }
                 else if (choiceNum === 3) {
@@ -702,8 +723,8 @@ while (gameRunning) {
                 }
             }
             else if (currentLocation === "market") {
-                if (choiceNum < 0 || choiceNum > 5) {
-                    throw "Please enter a number between 0 and 5.";
+                if (choiceNum < 0 || choiceNum > 6) {
+                    throw "Please enter a number between 0 and 6.";
                 }
                 
                 validChoice = true;
@@ -714,16 +735,22 @@ while (gameRunning) {
                 if (choiceNum === 2){
                     goToMarket(false);
                 }
-                else if (choiceNum === 3) {
-                    move(choiceNum);
+                if (choiceNum === 3) {
+                    console.log("You clean the latrines - a smelly, dirty job!");
+                    sleep(1000);
+                    playerSilver = playerSilver + 1;
+                    console.log("You just earned 1 silver dollar for your effort.");
                 }
                 else if (choiceNum === 4) {
-                    showStatus();
+                    move(choiceNum);
                 }
                 else if (choiceNum === 5) {
-                   playerHealth = useItem(playerHealth);
+                    showStatus();
                 }
                 else if (choiceNum === 6) {
+                   playerHealth = useItem(playerHealth);
+                }
+                else if (choiceNum === 7) {
                     showHelp();
                 }
                 else if (choiceNum === 0) {
