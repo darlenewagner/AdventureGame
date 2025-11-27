@@ -194,7 +194,7 @@ function showLocation() {
 // ==============================================================
 // Primary combat Function and Supporting Functions:
 // Handles battles with several types of monster
-// Along with player inventory
+// Along with player inventory and player health
 // ==============================================================
 
 /**
@@ -220,7 +220,6 @@ function getBestItem(type){
         let maxEffect = 0;
         if(someItems.length > 0){
         someItems.forEach((item, index) => {
-        //console.log( item.name + " - " + item.effect);
         if(item.effect > maxEffect){
             maxEffect = item.effect;
             maxItem = item.name;
@@ -233,12 +232,17 @@ function getBestItem(type){
     return [maxItem, maxEffect];
 }
 
+function hasGoodEquipment(type){
+    let ready = getBestItem(type);
+    return ready[1];
+}
+
 /**
- * Handles monster battles for any monsterName and monsterDefense
+ * Handles monster battles for any monsterName, monsterDefense, and monsterHoard
  * Checks if player has weapon, manages combat results, and updates health
  * @returns {boolean} true if player wins, false if they retreat
  */
-function handleCombat(monsterName, monsterDefense, playerHealth, playerName) {
+function handleCombat(monsterName, monsterDefense, monsterHoard, playerHealth, playerName) {
 
        let monsterAlive = true;
        console.log("<- Suddenly, a " + monsterName + " creature comes up out of a hole in the ground ->");
@@ -268,15 +272,15 @@ function handleCombat(monsterName, monsterDefense, playerHealth, playerName) {
             monsterDefense = monsterDefense - bestWeapon[1];
             console.log("The " + monsterName + " strikes back with his claws and deals 10 health points of damage to you.");
             sleep(1000);
-            playerHealth = updateHealth(playerHealth, (shielding - 10));
+            playerHealth = updateHealth(playerHealth, Number(shielding - 10));
            if(playerHealth <= 0){
                // Player must expire if health level reaches zero, this isn't a zombie game!
                console.log("You are now dead " + playerName + " and the " + monsterName + " will eat your body!"); 
                break;
            }
            else if(monsterDefense == 0){
-              console.log("Victory! The " + monsterName + " is dead and you found his hoard of silver dollars!");
-              playerSilver += 10;
+              console.log("Victory! The " + monsterName + " is dead and you found his hoard of " + monsterHoard + " silver dollars!");
+              playerSilver += monsterHoard;
               monsterAlive = false;
            }
          }
@@ -527,19 +531,27 @@ function move(choiceNum) {
             
             
             if(monsters.lizardman.alive) {
-              console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
-              [monsters.lizardman.monsterDefense, monsters.lizardman.alive, playerHealth] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense, playerHealth, playerName);
-              console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
+              //console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
+              [monsters.lizardman.monsterDefense, monsters.lizardman.alive, playerHealth] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense, monsters.lizardman.hoard, playerHealth, playerName);
+              //console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
             }
             else if(monsters.wolfman.alive){
-              console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
-              [monsters.wolfman.monsterDefense, monsters.wolfman.alive, playerHealth] = handleCombat(monsters.wolfman.name, monsters.wolfman.monsterDefense, playerHealth, playerName);
-              console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
+              //console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
+              [monsters.wolfman.monsterDefense, monsters.wolfman.alive, playerHealth] = handleCombat(monsters.wolfman.name, monsters.wolfman.monsterDefense, monsters.wolfman.hoard, playerHealth, playerName);
+              //console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
             }
             else if(monsters.dragon.alive){
                console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
-               [monsters.dragon.monsterDefense, monsters.dragon.alive, playerHealth] = handleCombat(monsters.dragon.name, monsters.dragon.monsterDefense, playerHealth, playerName);
-               console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
+               
+               //let weaponReady = getBestItem('weapon');
+               if(hasGoodEquipment('weapon') > 1) {
+                 console.log("You are sufficiently armed to fight the dragon!");
+                 [monsters.dragon.monsterDefense, monsters.dragon.alive, playerHealth] = handleCombat(monsters.dragon.name, monsters.dragon.monsterDefense, monsters.dragon.hoard, playerHealth, playerName);
+                 console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
+               }
+               else{
+                 console.log("You are not sufficiently armed to fight the dragon. Go back to the blacksmith shop or market.");
+               }
               }
             else{
                 console.log("Congratulations, " + playerName + ". All monsters have been vanquished!");
@@ -740,7 +752,7 @@ while (gameRunning) {
                 }
                 else if (choiceNum === 0) {
                     gameRunning = false;
-                    console.log("\nThanks for playing!");
+                    console.log("\nThank you for playing!");
                 }
             }
             
@@ -757,6 +769,3 @@ while (gameRunning) {
     }
 }
 
-// =========================================
-// END Lab: Enhanced Item System
-// =========================================
