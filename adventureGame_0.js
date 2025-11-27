@@ -89,14 +89,14 @@ const items = {
    woodenShield: {
       name: "woodenShield",
       type: "armor",
-      value: 8,
+      value: 6,
       effect: 5,
       description: "Reduces damage taken in combat"
    },
    ironShield: {
       name: "ironShield",
       type: "armor",
-      value: 15,
+      value: 12,
       effect: 10,
       description: "Reduces damage taken in combat"
    }
@@ -256,6 +256,7 @@ function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, pl
        sleep(2000);
        let playerFight = "N";
        let bestWeapon = getBestItem('weapon');
+       let bestArmor = getBestItem('armor');
        console.log("Currently, your best weapon is " + bestWeapon[0] + " and has an effect of " + bestWeapon[1] + ".\n");
        playerFight = readline.question("Do you want to fight the " + monsterName + "? \n(Reply Y, Yes, or + to fight.)\n");
        
@@ -267,9 +268,16 @@ function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, pl
         let weapon = inventory.find(item => item.type === "weapon");
         let shield = inventory.find(item => item.type === "armor");
         let shielding = 0;
-        if(shield !== undefined){
-           shielding = shield.effect;
-        }
+        if(inventory.some(item => item.name === "woodenShield")){
+            shielding = 5;
+           // console.log("Your shielding is " + shielding)
+           
+         }
+        else if(inventory.some(item => item.name === "ironShield")){
+            shielding = 10;
+           // console.log("Your shielding is " + shielding);
+           
+         }
         while(monsterDefense > 0) {
            // Find the weapon to get its properties
             console.log("You strike with your " + weapon.name + "!");
@@ -279,7 +287,7 @@ function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, pl
             monsterDefense = monsterDefense - bestWeapon[1];
             console.log("The " + monsterName + " strikes back with his claws and deals " + monsterHarm + " health points of damage to you.");
             sleep(1000);
-            playerHealth = updateHealth(playerHealth, Number(shielding - monsterHarm));
+            playerHealth = updateHealth(playerHealth, Number(bestArmor[1] - monsterHarm));
            if(playerHealth <= 0){
                // Player must expire if health level reaches zero, this isn't a zombie game!
                console.log("You are now dead " + playerName + " and the " + monsterName + " will eat your body!"); 
@@ -698,7 +706,7 @@ while (gameRunning) {
                 }
                 else if (choiceNum === 2) {
                   if(monsters.wolfman.alive === false) {
-                    buyFromBlacksmith(true, false, true);
+                    buyFromBlacksmith(false, false, true);
                   }
                   else {
                     buyFromBlacksmith(false, false, false);
