@@ -12,6 +12,7 @@ let gameRunning = true;
 let playerName = "";
 let playerHealth = 100;
 let playerSilver = 20;  // Starting silver
+let purchaseSuccess = true; // Set to false only when purchase amount exceed playerSilver
 let currentLocation = "village";
 
 // Weapon damage (starts at 0 until player buys a sword)
@@ -285,9 +286,11 @@ function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, pl
             console.log("You deal " + bestWeapon[1] + " point of damage to the monster!");
             sleep(1000);
             monsterDefense = monsterDefense - bestWeapon[1];
-            console.log("The " + monsterName + " strikes back with his claws and deals " + monsterHarm + " health points of damage to you.");
-            sleep(1000);
-            playerHealth = updateHealth(playerHealth, Number(bestArmor[1] - monsterHarm));
+            if(monsterDefense > 1) {
+              console.log("The " + monsterName + " strikes back with his claws and deals " + (Number(monsterHarm) - Number(bestArmor[1])) + " health points of damage to you.");
+              sleep(1000);
+              playerHealth = updateHealth(playerHealth, Number(bestArmor[1] - monsterHarm));
+            }
            if(playerHealth <= 0){
                // Player must expire if health level reaches zero, this isn't a zombie game!
                console.log("You are now dead " + playerName + " and the " + monsterName + " will eat your body!"); 
@@ -295,7 +298,7 @@ function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, pl
            }
            else if(monsterDefense == 0){
               console.log("Victory! The " + monsterName + " is dead and you found his hoard of " + monsterHoard + " silver dollars!");
-              playerSilver += monsterHoard;
+              [playerSilver, purchaseSuccess] = updateSilver(playerSilver, monsterHoard);
               monsterAlive = false;
            }
          }
@@ -322,7 +325,7 @@ function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, pl
  * @param {number} amount Amount to change health by (positive for healing, negative for damage)
  * @returns {number} The new health value
  */
-function updateHealth(playerHealth, amount) {
+function updateHealth(playerHealth, amount){
     playerHealth += amount;
     
     if (playerHealth > 100) {
@@ -336,6 +339,26 @@ function updateHealth(playerHealth, amount) {
     
     console.log("Health is now: " + playerHealth);
     return playerHealth;
+}
+
+/**
+ * Updates player silver, keeping it at 0 or above
+ * @param {number} amount Amount to change silver by
+ * @returns {number} The new silver amount 
+ */
+
+function updateSilver(playerSilver, amount) {
+    playerSilver += amount;
+    let successful = true;
+    // You cannot have too much silver, 
+    // But you cannot have negative silver
+    if (playerSilver < 0) {
+        successful = false;
+        playerSilver = 0;
+    }
+    
+    console.log("Player Silver is now: " + playerSilver);
+    return [playerSilver, successful];
 }
 
 // ===========================
@@ -423,17 +446,24 @@ function buyFromBlacksmith(getSword, getBetterSword, getBetterShield) {
             console.log("Choose another item from the blacksmith.");
         }
         else if (getBetterSword){
-        inventory.push({...items.steelSword}); // Create a copy of the sword object
-        console.log("\nBlacksmith: 'A fine, steel blade for a brave adventurer!'");
-        playerSilver -= items.steelSword.value;
-        console.log("You bought a " + items.steelSword.name + " for " + items.steelSword.value + " silver!");
-        console.log("Silver remaining: " + playerSilver);
+        [playerSilver, purchaseSuccess] = updateSilver(playerSilver, -items.steelSword.value);
+        if(purchaseSuccess){
+           inventory.push({...items.steelSword}); // Create a copy of the sword object
+           console.log("\nBlacksmith: 'A fine, steel blade for a brave adventurer!'");
+           console.log("You bought a " + items.steelSword.name + " for " + items.steelSword.value + " silver!");
+           console.log("Silver remaining: " + playerSilver);
+         }
+         else{
+            console.log("You don't have enough silver to complete the purchase.");
+            [playerSilver, purchaseSuccess] = updateSilver(playerSilver, items.steelSword.value);
+         }
+
         }
         else {
         // Add sword object to inventory instead of just the name
         inventory.push({...items.sword}); // Create a copy of the sword object
         console.log("\nBlacksmith: 'A plain, iron blade for a brave adventurer!'");
-        playerSilver -= items.sword.value;
+        [playerSilver, purchaseSuccess] = updateSilver(playerSilver, -items.sword.value);
         console.log("You bought a " + items.sword.name + " for " + items.sword.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
         }
@@ -443,18 +473,23 @@ function buyFromBlacksmith(getSword, getBetterSword, getBetterShield) {
               console.log("Choose another item from the blacksmith.");
           }
         else if(getBetterShield) {
-          inventory.push({...items.ironShield}); // Create a copy of the sword object
-          console.log("\nBlacksmith: 'A fine shield for a brave adventurer!'");
-          playerSilver -= items.ironShield.value;
-          console.log("You bought a " + items.ironShield.name + " for " + items.ironShield.value + " silver!");
-          console.log("Silver remaining: " + playerSilver);
-
+          [playerSilver, purchaseSuccess] = updateSilver(playerSilver, -items.ironShield.value);
+          if(purchaseSuccess){
+            inventory.push({...items.ironShield}); // Create a copy of the sword object
+            console.log("\nBlacksmith: 'A fine shield for a brave adventurer!'");
+            console.log("You bought a " + items.ironShield.name + " for " + items.ironShield.value + " silver!");
+            console.log("Silver remaining: " + playerSilver);
+          }
+          else{
+            console.log("You don't have enough silver to complete the purchase.");
+            [playerSilver, purchaseSuccess] = updateSilver(playerSilver, items.ironShield.value);
+          }
         }
             else {
           // Add sword object to inventory instead of just the name
           inventory.push({...items.woodenShield}); // Create a copy of the sword object
           console.log("\nBlacksmith: 'A fine shield for a brave adventurer!'");
-          playerSilver -= items.woodenShield.value;
+          [playerSilver, purchaseSuccess] = updateSilver(playerSilver, -items.woodenShield.value);
           console.log("You bought a " + items.woodenShield.name + " for " + items.woodenShield.value + " silver!");
           console.log("Silver remaining: " + playerSilver);
           }
@@ -470,14 +505,14 @@ function buyFromBlacksmith(getSword, getBetterSword, getBetterShield) {
 function goToMarket(getPotion) {
     if ((playerSilver >= items.healthPotion.value) && (getPotion)) {
         console.log("\nMerchant: 'This potion will heal wounds and counteract dragon-poison!'");
-        playerSilver -= items.healthPotion.value;
+        [playerSilver, purchaseSuccess] = updateSilver(playerSilver, -items.healthPotion.value);
        // Add potion object to inventory instead of just the name
         inventory.push({...items.healthPotion}); // Create a copy of the potion object
         console.log("You bought a " + items.healthPotion.name + " for " + items.healthPotion.value + " silver!");
         console.log("Silver remaining: " + playerSilver);
     } else if(playerSilver >= items.bandages.value){
         console.log("\nMerchant: 'These bandages will heal wounds a little bit!'");
-        playerSilver -= items.bandages.value;
+        [playerSilver, purchaseSuccess] = updateSilver(playerSilver, -items.bandages.value);
        // Add potion object to inventory instead of just the name
         inventory.push({...items.bandages}); // Create a copy of the potion object
         console.log("You bought a " + items.bandages.name + " for " + items.bandages.value + " silver!");
@@ -750,7 +785,7 @@ while (gameRunning) {
                 if (choiceNum === 3) {
                     console.log("You clean the latrines - a smelly, dirty job!");
                     sleep(1000);
-                    playerSilver = playerSilver + 1;
+                    [playerSilver, purchaseSuccess] = updateSilver(playerSilver, 1);
                     console.log("You just earned 1 silver dollar for your effort.");
                 }
                 else if (choiceNum === 4) {
