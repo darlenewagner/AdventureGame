@@ -97,7 +97,7 @@ const items = {
       name: "ironShield",
       type: "armor",
       value: 12,
-      effect: 10,
+      effect: 15,
       description: "Reduces damage taken in combat"
    }
 };
@@ -310,6 +310,12 @@ function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, pl
    }
    return [monsterDefense, monsterAlive, playerHealth];
 }
+
+
+// =======================================
+// FUNCTIONS FOR PLAYER HEALTH AND SILVER
+// updateHealth() and updateSilver()
+// =======================================
 
 /**
  * Updates player health, keeping it between 0 and 100
@@ -552,9 +558,7 @@ function move(choiceNum) {
             validMove = true;
             
             // BEGIN COMBAT AFTER ENTERING FOREST:
-            
-            
-            
+                        
             if(monsters.lizardman.alive) {
               //console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
               [monsters.lizardman.monsterDefense, monsters.lizardman.alive, playerHealth] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense, monsters.lizardman.damage, monsters.lizardman.hoard, playerHealth, playerName);
@@ -569,7 +573,7 @@ function move(choiceNum) {
                console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
                
                //let weaponReady = getBestItem('weapon');
-               if(hasGoodEquipment('weapon') > 1) {
+               if((hasGoodEquipment('weapon') > 1) || (hasGoodEquipment('armor') > 5)) {
                  console.log("You are sufficiently armed to fight the dragon!");
                  [monsters.dragon.monsterDefense, monsters.dragon.alive, playerHealth] = handleCombat(monsters.dragon.name, monsters.dragon.monsterDefense, monsters.dragon.damage, monsters.dragon.hoard, playerHealth, playerName);
                  console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
