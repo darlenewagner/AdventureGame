@@ -665,7 +665,7 @@ function move(choiceNum) {
  */
 function isValidChoice(input, max) {
     if (input === "") return false;
-    let num = parseInt(input);
+    let num = Number(input);
     return num >= 1 && num <= max;
 }
 
@@ -700,7 +700,7 @@ while (gameRunning) {
             }
             
             // Convert to number and check if it's a valid number
-            let choiceNum = parseInt(choice);
+            let choiceNum = Number(choice);
             if (isNaN(choiceNum)) {
                 throw "That's not a number! Please enter a number.";
             }
@@ -710,9 +710,9 @@ while (gameRunning) {
                 if (choiceNum < 0 || choiceNum > 6) {
                     throw "Please enter a number between 0 and 6.";
                 }
-                
-                validChoice = true;
-                
+                else if(isValidChoice(choiceNum, 6)){
+                    validChoice = true;
+                }
                 if ((choiceNum <= 3) && (choiceNum > 0)) {
                     move(choiceNum);
                 }
@@ -735,9 +735,10 @@ while (gameRunning) {
                 if (choiceNum < 0 || choiceNum > 6) {
                     throw "Please enter a number between 0 and 6.";
                 }
-                
-                validChoice = true;
-                
+            else if(isValidChoice(choiceNum, 6)){            
+                    validChoice = true;
+                }
+
                 if (choiceNum === 1) {
                   if(monsters.wolfman.alive === false) {
                     buyFromBlacksmith(true, true, false);
@@ -777,9 +778,10 @@ while (gameRunning) {
                 if (choiceNum < 0 || choiceNum > 6) {
                     throw "Please enter a number between 0 and 6.";
                 }
-                
+            else if(isValidChoice(choiceNum, 6)){ 
                 validChoice = true;
-                
+              } 
+
                 if (choiceNum === 1) {
                     goToMarket(true);
                 }
@@ -813,9 +815,10 @@ while (gameRunning) {
                 if (choiceNum < 0 || choiceNum > 4) {
                     throw "Please enter a number between 1 and 5.";
                 }
-                
+            else if(isValidChoice(choiceNum, 6)){
                 validChoice = true;
-                
+                }
+                    
                 if (choiceNum === 1) {
                     move(choiceNum);
                 }
