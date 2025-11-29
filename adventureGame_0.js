@@ -38,7 +38,7 @@ let monsters = {
         name: 'wolfman',
         monsterDefense: 10,
         damage: 10,
-        hoard: 15,
+        hoard: 18,
         habitat: 'den in the ground',
         alive: true,
         isDragon: false
@@ -47,7 +47,7 @@ let monsters = {
         name: 'dragon',
         monsterDefense: 20,
         damage: 20,
-        hoard: 20,
+        hoard: 24,
         habitat: 'cave in a hill',
         alive: true,
         isDragon: true
@@ -250,7 +250,7 @@ function hasGoodEquipment(type){
  * Checks if player has weapon, manages combat results, and updates health
  * @returns {boolean} true if player wins, false if they retreat
  */
-function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, playerHealth, playerName) {
+function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, isDragon, playerHealth, playerName) {
 
        let monsterAlive = true;
        console.log("<- Suddenly, a " + monsterName + " creature comes up out of a hole in the ground ->");
@@ -265,6 +265,10 @@ function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, pl
     {
          console.log("<-                     The Battle Begins!!!                         ->");
     // Updated to check for item type instead of specific string
+    if(isDragon){
+        console.log("The Dragon bites you and you lose " + (Number(monsterHarm) - Number(bestArmor[1])) + " health points.");
+        playerHealth = updateHealth(playerHealth, Number(bestArmor[1] - monsterHarm));
+    }
     if (hasItemType("weapon")) {
         let weapon = inventory.find(item => item.type === "weapon");
         let shield = inventory.find(item => item.type === "armor");
@@ -291,7 +295,7 @@ function handleCombat(monsterName, monsterDefense, monsterHarm, monsterHoard, pl
               sleep(1000);
               playerHealth = updateHealth(playerHealth, Number(bestArmor[1] - monsterHarm));
             }
-           if(playerHealth <= 0){
+           if(playerHealth <= 0) {
                // Player must expire if health level reaches zero, this isn't a zombie game!
                console.log("You are now dead " + playerName + " and the " + monsterName + " will eat your body!"); 
                break;
@@ -596,12 +600,12 @@ function move(choiceNum) {
                         
             if(monsters.lizardman.alive) {
               //console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
-              [monsters.lizardman.monsterDefense, monsters.lizardman.alive, playerHealth] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense, monsters.lizardman.damage, monsters.lizardman.hoard, playerHealth, playerName);
+              [monsters.lizardman.monsterDefense, monsters.lizardman.alive, playerHealth] = handleCombat(monsters.lizardman.name, monsters.lizardman.monsterDefense, monsters.lizardman.damage, monsters.lizardman.hoard, monsters.lizardman.isDragon, playerHealth, playerName);
               //console.log(monsters.lizardman.name + " health is " + monsters.lizardman.monsterDefense);
             }
             else if(monsters.wolfman.alive){
               //console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
-              [monsters.wolfman.monsterDefense, monsters.wolfman.alive, playerHealth] = handleCombat(monsters.wolfman.name, monsters.wolfman.monsterDefense, monsters.wolfman.damage, monsters.wolfman.hoard, playerHealth, playerName);
+              [monsters.wolfman.monsterDefense, monsters.wolfman.alive, playerHealth] = handleCombat(monsters.wolfman.name, monsters.wolfman.monsterDefense, monsters.wolfman.damage, monsters.wolfman.hoard, monsters.wolfman.isDragon, playerHealth, playerName);
               //console.log(monsters.wolfman.name + " health is " + monsters.wolfman.monsterDefense);
             }
             else if(monsters.dragon.alive){
@@ -610,7 +614,7 @@ function move(choiceNum) {
                //let weaponReady = getBestItem('weapon');
                if((hasGoodEquipment('weapon') > 1) || (hasGoodEquipment('armor') > 5)) {
                  console.log("You are sufficiently armed to fight the dragon!");
-                 [monsters.dragon.monsterDefense, monsters.dragon.alive, playerHealth] = handleCombat(monsters.dragon.name, monsters.dragon.monsterDefense, monsters.dragon.damage, monsters.dragon.hoard, playerHealth, playerName);
+                 [monsters.dragon.monsterDefense, monsters.dragon.alive, playerHealth] = handleCombat(monsters.dragon.name, monsters.dragon.monsterDefense, monsters.dragon.damage, monsters.dragon.hoard, monsters.dragon.isDragon, playerHealth, playerName);
                  console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
                }
                else{
@@ -661,7 +665,7 @@ function move(choiceNum) {
  */
 function isValidChoice(input, max) {
     if (input === "") return false;
-    let num = parseInt(input);
+    let num = Number(input);
     return num >= 1 && num <= max;
 }
 
@@ -696,7 +700,7 @@ while (gameRunning) {
             }
             
             // Convert to number and check if it's a valid number
-            let choiceNum = parseInt(choice);
+            let choiceNum = Number(choice);
             if (isNaN(choiceNum)) {
                 throw "That's not a number! Please enter a number.";
             }
@@ -706,9 +710,9 @@ while (gameRunning) {
                 if (choiceNum < 0 || choiceNum > 6) {
                     throw "Please enter a number between 0 and 6.";
                 }
-                
-                validChoice = true;
-                
+                else if(isValidChoice(choiceNum, 6)){
+                    validChoice = true;
+                }
                 if ((choiceNum <= 3) && (choiceNum > 0)) {
                     move(choiceNum);
                 }
@@ -731,9 +735,10 @@ while (gameRunning) {
                 if (choiceNum < 0 || choiceNum > 6) {
                     throw "Please enter a number between 0 and 6.";
                 }
-                
-                validChoice = true;
-                
+            else if(isValidChoice(choiceNum, 6)){            
+                    validChoice = true;
+                }
+
                 if (choiceNum === 1) {
                   if(monsters.wolfman.alive === false) {
                     buyFromBlacksmith(true, true, false);
@@ -773,9 +778,10 @@ while (gameRunning) {
                 if (choiceNum < 0 || choiceNum > 6) {
                     throw "Please enter a number between 0 and 6.";
                 }
-                
+            else if(isValidChoice(choiceNum, 6)){ 
                 validChoice = true;
-                
+              } 
+
                 if (choiceNum === 1) {
                     goToMarket(true);
                 }
@@ -809,9 +815,10 @@ while (gameRunning) {
                 if (choiceNum < 0 || choiceNum > 4) {
                     throw "Please enter a number between 1 and 5.";
                 }
-                
+            else if(isValidChoice(choiceNum, 6)){
                 validChoice = true;
-                
+                }
+                    
                 if (choiceNum === 1) {
                     move(choiceNum);
                 }
