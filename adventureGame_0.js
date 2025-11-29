@@ -168,8 +168,14 @@ function showLocation() {
     else if (currentLocation === "blacksmith") {
         console.log("The heat from the forge fills the air. Weapons and armor line the walls.");
         console.log("\nWhat would you like to do?");
-        console.log("1: Buy sword (" + items.sword.value + " silver)");
-        console.log("2: Buy shield (" + items.woodenShield.value + " silver)");
+        if(monsters.wolfman.alive === false){
+           console.log("1: Buy sword (" + items.steelSword.value + " silver)");
+           console.log("2: Buy shield (" + items.ironShield.value + " silver)");
+         }
+        else{
+          console.log("1: Buy sword (" + items.sword.value + " silver)");
+          console.log("2: Buy shield (" + items.woodenShield.value + " silver)");
+        }
         console.log("3: Return to village");
         console.log("4: Check status");
         console.log("5: Use item");
@@ -556,6 +562,8 @@ function showHelp() {
     console.log("- You can clean latrines at the market to earn 1 silver");
     console.log("- You can buy a sword at the blacksmith for " + items.sword.value + " silver");
     console.log("- You can buy a shield at the blacksmith for " + items.woodenShield.value + " silver");
+    console.log("- After defeating the wolfman, you can buy a steel sword at the blacksmith for " + items.steelSword.value + " silver");
+    console.log("- After defeating the wolfman, you can buy an iron shield at the blacksmith for " + items.ironShield.value + " silver");
     
     console.log("\nOther Commands:");
     console.log("- Choose the status option to see your health and silver");
@@ -616,6 +624,9 @@ function move(choiceNum) {
                  console.log("You are sufficiently armed to fight the dragon!");
                  [monsters.dragon.monsterDefense, monsters.dragon.alive, playerHealth] = handleCombat(monsters.dragon.name, monsters.dragon.monsterDefense, monsters.dragon.damage, monsters.dragon.hoard, monsters.dragon.isDragon, playerHealth, playerName);
                  console.log(monsters.dragon.name + " health is " + monsters.dragon.monsterDefense);
+                 if((monsters.dragon.alive === false) || (playerHealth < 1)){
+                     gameRunning = false;
+                 }
                }
                else{
                  console.log("You are not sufficiently armed to fight the dragon. Go back to the blacksmith shop or market.");
@@ -818,7 +829,7 @@ while (gameRunning) {
             else if(isValidChoice(choiceNum, 6)){
                 validChoice = true;
                 }
-                    
+
                 if (choiceNum === 1) {
                     move(choiceNum);
                 }
