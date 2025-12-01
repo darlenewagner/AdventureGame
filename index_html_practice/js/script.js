@@ -1,18 +1,20 @@
-employees = {
-    1047: {
-        firstname: 'Seamus',
-        lastname: 'Rightheart',
-        salary: 450,
-        designation: "Deputy",
-        hasMedicalInsurance: false
-    },
-    1050: {
-        firstname: 'Rory',
-        lastname: 'Rightheart',
-        salary: 250,
-        designation: 'lieutenant',
-        hasMedicalInsurance: true
-    }
+let product = {
+    productId: "10-665740",
+    costPrice: 2500,
+    profitPercentage: 15,
+    sellingPrice: 0
 }
 
-console.log("Employee List: ", employees);
+// function calculateSellingPrice(product){
+//    let sellingPrice = product.costPrice + (product.profitPercentage / 100 * product.costPrice);
+//    product.sellingPrice = sellingPrice;
+// }
+
+const calculateSellingPrice = (product) => {
+    let sellingPrice = product.costPrice + (product.profitPercentage / 100 * product.costPrice);
+    product.sellingPrice = sellingPrice;
+}
+
+calculateSellingPrice(product);
+
+console.log("Cost Price: ", product.costPrice, "Selling Price: ", product.sellingPrice);
