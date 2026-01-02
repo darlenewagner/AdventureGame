@@ -69,6 +69,7 @@ const droneArray1 = drones.filter(([key, value]) => key === "borg").map(([key, v
   return {...value};
 });
 
+
 console.log(droneArray);
 
 console.log(droneArray1);
