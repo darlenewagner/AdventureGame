@@ -65,6 +65,11 @@ const droneArray = drones.filter(([key, value]) => key === "tasks").forEach(([ke
   }
 });
 
+const droneArray1 = drones.filter(([key, value]) => key === "borg").map(([key, value]) => {
+  return {borgJob: value[0].borgJob};
+});
 
 
 console.log(droneArray);
+
+console.log(droneArray1);
