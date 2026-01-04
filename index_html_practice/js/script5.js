@@ -2077,19 +2077,31 @@ Object.entries(sample).forEach(([key, value]) => {
   
 });
 
-const drones = Object.entries(sample);
 
-// const droneArray = drones.filter(([key, value]) => key === "tasks").map(([key, value]) => value);
 
-const droneArray = drones.filter(([key, value]) => key === "cards").forEach(([key, value]) => {
-  if (Array.isArray(value)){
-    value.forEach((item, index) => {
-      if(item.listId === 1000) {
-        console.log(item.cardTitle);
-      }
+Object.entries(sample).forEach(([key, value]) => {
+ if(key === "lists"){
+    console.log(key);
+    const drones = Object.entries(sample);
+    const listOfInterest = 1000;
+    //if (Array.isArray(value)){
+      //value.forEach((item, index) => {
+         const droneArray = drones.filter(([key, value]) => key === "cards").forEach(([key, value]) => {
+            if(Array.isArray(value)){
+                value.forEach((item, index) => {
+                 if(item.listId === listOfInterest){
+                    console.log(`In ${item.listId} : ${item.cardTitle} with ${item.cardId}`);
+                 } 
+                });
+                
+            }       
+        });
+      //});
+     //}
+    }
     });
-  }
-});
+
+
 
 //const droneArray1 = drones.filter(([key, value]) => key === "borg").map(([key, value]) => {
 //  return {borgJob: value[0].borgJob};
