@@ -46,14 +46,26 @@ export const transform = (data) => {
 
    //console.log(listsOfInterest);
 
+  let head = 0;
+
+
   listsOfInterest.forEach((ident) => {
 
-   Object.entries(data).forEach(([key, value]) => {
+    Object.entries(data).forEach(([key, value]) => {
         if(key === "boards"){
-            newData = {"boards": { "boardId": value[0].boardId, "boardTitle": value[0].boardTitle }};
-            console.log(newData);
+                Object.entries(data).filter(([key, value]) => key === "boards" ).forEach(([key, value]) => {
+                if(Array.isArray(value)) {
+                   value.forEach((item, index) => {
+                      if((item.boardId === 110) && (head === 0)){
+                        newData = {"boards": { "boardId": value[0].boardId, "boardTitle": value[0].boardTitle }};
+                        console.log(newData);
+                      }
+                      head++;
+                   });
+                }
+           });
         }
-        else if(key === "lists"){
+     else if(key === "lists"){
 
            // const filteredCards = Object.fromEntries(
                 Object.entries(data).filter(([key, value]) => key === "lists" ).forEach(([key, value]) => {
