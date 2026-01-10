@@ -19,7 +19,9 @@ export const transform = (data) => {
     // Provide Solution Code Here
     // console.log(data.boards);
     var boardOfInterest = 0;
-    var listsOfInterest = [];
+    var listSeen = [];
+    var cardSeen = [];
+    var commentSeen = [];
 
     // The loop for the priming read
     Object.entries(data).forEach(([key, value]) => {
@@ -33,12 +35,45 @@ export const transform = (data) => {
           }
         else if(key === "lists"){
             value.forEach((item, index) => {
-                if(item.boardId === boardOfInterest){
-                    listsOfInterest.push(item.listId);
-                    //console.log(`${item.listId} from ${item.boardId}`);
+                console.log(`${item.boardId} -> ${item.listId}`);
+                if(!listSeen.includes(item.listId)){
+                    var lookFor = item.listId;
+                   Object.entries(data).forEach(([key, value]) => {
+                      value.forEach((item, index) => {
+                          if(item.listId === lookFor){
+                              console.log(`${lookFor} has ${item.cardId}`);
+                              if(!cardSeen.includes(item.cardId)){
+                                var findCard = item.cardId;
+                                Object.entries(data).forEach(([key, value]) => {
+                                  value.forEach((item, index) => {
+                                    if(item.cardId === findCard){
+                                        console.log(`Found ${item.cardId} for ${item.listId}`);
+                                    }
+                                  });
+                                });
+                                cardSeen.push(item.cardId);
+                              }
+                          }
+                      });
+                   });
+                    listSeen.push(item.listId);
                 }
-            })
-        }
+                else{
+                    console.log(index);
+                }
+            });
+          }
+       // else if(key === "cards"){
+       //     value.forEach((item, index) =>{
+       //         console.log(`${item.listId} -> ${item.cardId}`);
+       //     });
+       // }
+       // else if(key === "comments"){
+       //     value.forEach((item, index) => {
+       //         console.log(`${item.cardId} -> ${item.commentId}`);
+       //     });
+       // }
+
 
     });
 
@@ -47,9 +82,11 @@ export const transform = (data) => {
    //console.log(listsOfInterest);
 
   let head = 0;
+  let currentListId = 0;
+  let currentCardId = 0;
 
 
-  listsOfInterest.forEach((ident) => {
+ // listsOfInterest.forEach((ident) => {
 
     Object.entries(data).forEach(([key, value]) => {
         if(key === "boards"){
@@ -58,9 +95,10 @@ export const transform = (data) => {
                    value.forEach((item, index) => {
                       if((item.boardId === 110) && (head === 0)){
                         newData = {"boards": { "boardId": value[0].boardId, "boardTitle": value[0].boardTitle }};
-                        console.log(newData);
+                        head = value[0].boardId;
+                        //console.log(newData);
                       }
-                      head++;
+                      //head++;
                    });
                 }
            });
@@ -71,8 +109,9 @@ export const transform = (data) => {
                 Object.entries(data).filter(([key, value]) => key === "lists" ).forEach(([key, value]) => {
                 if(Array.isArray(value)) {
                     value.forEach((item, index) => {
-                      if(item.listId === ident){
-                          console.log(`In ${item.listId}`);
+                      if(item.boardId === head){
+                          //console.log(`In ${item.listId}`);
+                          currentListId = item.listId;
                           // : ${item.cardTitle} with ${item.cardId}`);
                         }
                        });
@@ -86,15 +125,28 @@ export const transform = (data) => {
                 Object.entries(data).filter(([key, value]) => key === "cards" ).forEach(([key, value]) => {
                     if(Array.isArray(value)) {
                         value.forEach((item, index) => {
-                            if(item.listId === ident){
-                                console.log(`${item.cardId} with ${item.cardTitle} for CardID ${item.listId}`);
+                            if(item.listId === currentListId){
+                            //    console.log(`${item.cardId} with ${item.cardTitle} for ListID ${item.listId}`);
+                                currentCardId = item.cardId;
+                            }
+                                                    
+                        });
+                    }
+                });            
+        }
+      else if (key === "comments"){
+                Object.entries(data).filter(([key, value]) => key === "comments" ).forEach(([key, value]) => {
+                    if(Array.isArray(value)) {
+                        value.forEach((item, index) => {
+                            if(item.cardId === currentCardId){
+                              //  console.log(`${item.commentId} with ${item.commentText} for CardID ${item.cardId}`);
                             }
                            
                         });
                     }
-                });            
+                });
       }
-  }); 
-  });
+    }); 
+ // });
     return newData;
 };
