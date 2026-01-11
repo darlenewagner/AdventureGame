@@ -35,19 +35,19 @@ export const transform = (data) => {
           }
         else if(key === "lists"){
             value.forEach((item, index) => {
-                console.log(`${item.boardId} -> ${item.listId}`);
+                console.log(`{lists: { boardId: ${item.boardId}, listId: ${item.listId}}, `);
                 if(!listSeen.includes(item.listId)){
                     var lookFor = item.listId;
-                   Object.entries(data).forEach(([key, value]) => {
+                   Object.entries(data).filter(([key, value]) => key === "cards").forEach(([key, value]) => {
                       value.forEach((item, index) => {
                           if(item.listId === lookFor){
-                              console.log(`${lookFor} has ${item.cardId}`);
+                              console.log(`{cards: [ {listId: ${lookFor}, cardId: ${item.cardId}}, `);
                               if(!cardSeen.includes(item.cardId)){
                                 var findCard = item.cardId;
-                                Object.entries(data).forEach(([key, value]) => {
+                                Object.entries(data).filter(([key, value]) => key === "comments").forEach(([key, value]) => {
                                   value.forEach((item, index) => {
                                     if(item.cardId === findCard){
-                                        console.log(`Found ${item.cardId} for ${item.listId}`);
+                                        console.log(`{comments: [{cardId: ${item.cardId}, commentId: ${item.commentId}}]`);
                                     }
                                   });
                                 });
