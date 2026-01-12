@@ -41,17 +41,28 @@ export const transform = (data) => {
                    Object.entries(data).filter(([key, value]) => key === "cards").forEach(([key, value]) => {
                       value.forEach((item, index) => {
                           if(item.listId === lookFor){
-                              console.log(`{cards: [ {listId: ${lookFor}, cardId: ${item.cardId}}, `);
+                              console.log(`{listId: ${lookFor}, cardId: ${item.cardId}}, `);
+                              var findCard = item.cardId;
+
                               if(!cardSeen.includes(item.cardId)){
-                                var findCard = item.cardId;
-                                Object.entries(data).filter(([key, value]) => key === "comments").forEach(([key, value]) => {
+                                  Object.entries(data).filter(([key, value]) => key === "comments").forEach(([key, value]) => {
                                   value.forEach((item, index) => {
                                     if(item.cardId === findCard){
-                                        console.log(`{comments: [{cardId: ${item.cardId}, commentId: ${item.commentId}}]`);
+                                        console.log(`{cardId: ${item.cardId}, commentId: ${item.commentId}}`);
                                     }
                                   });
                                 });
                                 cardSeen.push(item.cardId);
+                              }
+                              else {
+                                    Object.entries(data).filter(([key, value]) => key === "comments").forEach(([key, value]) => {
+                                    value.forEach((item, index) => {
+                                    if(item.cardId === findCard){
+                                        console.log(`{cardId: ${item.cardId}, commentId: ${item.commentId}}`);
+                                    }
+                                  });
+                                });
+
                               }
                           }
                       });
@@ -59,7 +70,7 @@ export const transform = (data) => {
                     listSeen.push(item.listId);
                 }
                 else{
-                    console.log(index);
+                    //console.log(index);
                 }
             });
           }
